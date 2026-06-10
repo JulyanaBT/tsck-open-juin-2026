@@ -238,8 +238,8 @@ function renderHeader(){
         </div>
 
         <div class="public-header-title">
-          <strong>Tournoi Beach Tennis<br>TSCK</strong>
-          <span>Dimanche 28 juin 2026 — Kourou</span>
+          <strong>Open BT TSCK</strong>
+          <span>28 juin 2026</span>
         </div>
 
         <div class="public-header-logo">
