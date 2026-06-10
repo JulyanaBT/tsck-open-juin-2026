@@ -1,0 +1,565 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin — Inscriptions — Tournoi Beach Tennis TSCK</title>
+
+  <style>
+    :root{
+      --palm:#0b7a3b;
+      --palm-dark:#064d28;
+      --palm-light:#15a658;
+      --navy:#06284a;
+      --navy-dark:#03172b;
+      --sun:#ffd21f;
+      --sun-dark:#f3b800;
+      --sand:#fff4d4;
+      --pink:#d83d7f;
+      --text:#17212b;
+      --muted:#667085;
+      --card:rgba(255,255,255,.95);
+      --shadow:0 16px 40px rgba(16,24,40,.12);
+      --container:1180px;
+    }
+
+    *{box-sizing:border-box;}
+
+    body{
+      margin:0;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at 10% 0%, rgba(255,210,31,.20), transparent 26%),
+        radial-gradient(circle at 90% 8%, rgba(11,122,59,.16), transparent 26%),
+        linear-gradient(180deg,#eaf9ff 0%,#fff4d4 52%,#ffffff 100%);
+    }
+
+    a{color:inherit;text-decoration:none;}
+
+    .container{
+      width:min(var(--container), calc(100% - 28px));
+      margin:0 auto;
+    }
+
+    main{
+      padding-top:calc(var(--admin-total-top, 230px) + 42px);
+      padding-bottom:42px;
+    }
+
+    .section{margin-top:18px;}
+
+    .panel{
+      background:var(--card);
+      border:1px solid rgba(255,255,255,.7);
+      border-radius:26px;
+      box-shadow:var(--shadow);
+      padding:18px;
+    }
+
+    .panel-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:12px;
+      margin-bottom:14px;
+    }
+
+    .panel-title{
+      margin:0;
+      font-size:27px;
+      line-height:1.05;
+      letter-spacing:-.03em;
+      color:var(--navy-dark);
+    }
+
+    .panel-text{
+      margin:7px 0 0;
+      color:var(--muted);
+      font-size:15px;
+      line-height:1.45;
+    }
+
+    .panel-tag{
+      flex-shrink:0;
+      padding:8px 13px;
+      border-radius:999px;
+      background:#e6f7ee;
+      color:var(--palm-dark);
+      font-size:12px;
+      font-weight:1000;
+      text-transform:uppercase;
+      letter-spacing:.06em;
+    }
+
+    .status-box{
+      margin-top:12px;
+      padding:14px 16px;
+      border-radius:18px;
+      background:linear-gradient(135deg,rgba(11,122,59,.10),rgba(255,210,31,.18));
+      border:1px solid rgba(11,122,59,.18);
+      color:#344054;
+      font-size:15px;
+      line-height:1.45;
+    }
+
+    .status-box strong{
+      color:var(--navy-dark);
+      font-weight:1000;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:10px;
+    }
+
+    .btn{
+      appearance:none;
+      border:1px solid rgba(16,24,40,.10);
+      background:#fff;
+      border-radius:18px;
+      min-height:54px;
+      padding:13px 15px;
+      font-size:15px;
+      font-weight:1000;
+      cursor:pointer;
+      color:#1c2430;
+      text-align:center;
+      box-shadow:0 8px 16px rgba(16,24,40,.04);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-family:inherit;
+    }
+
+    .btn.primary{
+      background:linear-gradient(180deg,var(--sun),var(--sun-dark));
+      color:var(--navy-dark);
+      border-color:var(--sun-dark);
+    }
+
+    .btn.green{
+      background:linear-gradient(135deg,var(--palm),var(--palm-light));
+      color:#fff;
+      border-color:var(--palm);
+    }
+
+    .btn.navy{
+      background:linear-gradient(135deg,var(--navy-dark),var(--navy));
+      color:#fff;
+      border-color:var(--navy);
+    }
+
+    .btn.danger{
+      background:#fff5f5;
+      color:#8a1f1f;
+      border-color:#f1b2b2;
+    }
+
+    .btn:disabled{
+      opacity:.55;
+      cursor:not-allowed;
+    }
+
+    .stats-grid{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:10px;
+      margin-top:12px;
+    }
+
+    .stat-card{
+      border-radius:20px;
+      padding:15px;
+      background:#fff;
+      border:1px solid rgba(16,24,40,.08);
+      box-shadow:0 8px 18px rgba(16,24,40,.06);
+    }
+
+    .stat-label{
+      color:var(--muted);
+      font-size:13px;
+      font-weight:1000;
+      text-transform:uppercase;
+      letter-spacing:.06em;
+    }
+
+    .stat-value{
+      margin-top:5px;
+      font-size:32px;
+      font-weight:1000;
+      color:var(--navy-dark);
+      line-height:1;
+    }
+
+    .muted{
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.45;
+    }
+
+    .sep{
+      border:none;
+      border-top:1px solid rgba(16,24,40,.08);
+      margin:18px 0;
+    }
+
+    @media (min-width:760px){
+      .panel{padding:24px;}
+      .grid.actions{grid-template-columns:repeat(4,1fr);}
+      .stats-grid{grid-template-columns:repeat(3,1fr);}
+    }
+
+    @media (max-width:759px){
+      main{
+        padding-top:calc(var(--admin-total-top, 222px) + 34px);
+      }
+
+      .panel-title{font-size:24px;}
+    }
+  </style>
+</head>
+
+<body data-zone-selector="none">
+
+<div id="adminHeader"></div>
+
+<main class="container">
+
+  <section class="section panel" id="accessDenied" style="display:none;">
+    <h2 class="panel-title">⛔ Accès refusé</h2>
+    <p class="panel-text">Cette page est réservée aux administrateurs.</p>
+  </section>
+
+  <section class="section panel" id="pageContent" style="display:none;">
+    <div class="panel-head">
+      <div>
+        <h1 class="panel-title">📝 Gestion des inscriptions</h1>
+        <p class="panel-text">
+          Pilote l’ouverture des inscriptions publiques pour le tournoi Beach Tennis TSCK.
+        </p>
+      </div>
+      <div class="panel-tag">Admin</div>
+    </div>
+
+    <div class="status-box">
+      <strong>Statut actuel :</strong>
+      <span id="currentState">Chargement…</span>
+      <br>
+      <span id="publicMessage">Lecture du statut public…</span>
+    </div>
+
+    <div class="grid actions" style="margin-top:14px;">
+      <button class="btn" id="btnNotOpen" type="button">💤 Pas encore ouvertes</button>
+      <button class="btn green" id="btnOpen" type="button">✅ Ouvrir</button>
+      <button class="btn primary" id="btnPause" type="button">⏸️ Suspendre</button>
+      <button class="btn navy" id="btnClose" type="button">🔒 Clôturer</button>
+    </div>
+
+    <p class="muted" id="statusMsg" style="margin-top:10px;"></p>
+
+    <hr class="sep">
+
+    <h2 class="panel-title" style="font-size:24px;">📊 Équipes inscrites</h2>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">Total</div>
+        <div class="stat-value" id="countTotal">0</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-label">Double Messieurs</div>
+        <div class="stat-value" id="countDM">0</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-label">Double Dames</div>
+        <div class="stat-value" id="countDD">0</div>
+      </div>
+    </div>
+
+    <hr class="sep">
+
+    <h2 class="panel-title" style="font-size:24px;">🧹 Réinitialisation</h2>
+    <p class="panel-text">
+      Cette action supprime toutes les équipes inscrites et remet le statut des inscriptions à “Pas encore ouvertes”.
+      Elle est irréversible.
+    </p>
+
+    <div class="grid" style="margin-top:12px;">
+      <button class="btn danger" id="btnRAZ" type="button">
+        🧨 Réinitialiser toutes les inscriptions
+      </button>
+    </div>
+
+    <p class="muted" id="razStatus" style="margin-top:10px;"></p>
+  </section>
+
+</main>
+
+<script type="module" src="../assets/js/admin-header.js"></script>
+
+<script type="module">
+  import { auth, db } from "../assets/js/firebase.js?v=tsck-inscriptions1";
+  import { getRoleByUid } from "../assets/js/session.js?v=tsck-inscriptions1";
+
+  import {
+    onAuthStateChanged
+  } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+
+  import {
+    collection,
+    doc,
+    setDoc,
+    onSnapshot,
+    serverTimestamp,
+    getDocs,
+    writeBatch
+  } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
+  const EVENT_ID = "tsck-open-juin-2026";
+
+  const accessDenied = document.getElementById("accessDenied");
+  const pageContent = document.getElementById("pageContent");
+
+  const currentState = document.getElementById("currentState");
+  const publicMessage = document.getElementById("publicMessage");
+  const statusMsg = document.getElementById("statusMsg");
+  const razStatus = document.getElementById("razStatus");
+
+  const btnNotOpen = document.getElementById("btnNotOpen");
+  const btnOpen = document.getElementById("btnOpen");
+  const btnPause = document.getElementById("btnPause");
+  const btnClose = document.getElementById("btnClose");
+  const btnRAZ = document.getElementById("btnRAZ");
+
+  const countTotal = document.getElementById("countTotal");
+  const countDM = document.getElementById("countDM");
+  const countDD = document.getElementById("countDD");
+
+  const cfgRef = doc(db, "config", EVENT_ID);
+  const equipesRef = collection(db, "events", EVENT_ID, "equipes");
+
+  let unsubscribeConfig = null;
+  let unsubscribeEquipes = null;
+  let currentStatus = "not_open";
+
+  function normState(value){
+    if(value === "suspended") return "paused";
+    return value || "not_open";
+  }
+
+  function labelFor(state){
+    switch(normState(state)){
+      case "not_open": return "💤 Pas encore ouvertes";
+      case "open": return "✅ Ouvertes";
+      case "paused": return "⏸️ Suspendues";
+      case "closed": return "🔒 Clôturées";
+      default: return "—";
+    }
+  }
+
+  function messageFor(state){
+    switch(normState(state)){
+      case "not_open": return "Le public verra que les inscriptions ne sont pas encore ouvertes.";
+      case "open": return "Le formulaire public est actif.";
+      case "paused": return "Le public verra que les inscriptions sont suspendues.";
+      case "closed": return "Le public verra que les inscriptions sont clôturées.";
+      default: return "";
+    }
+  }
+
+  function setButtonsDisabled(disabled){
+    [btnNotOpen, btnOpen, btnPause, btnClose, btnRAZ].forEach(btn => {
+      btn.disabled = disabled;
+    });
+  }
+
+  async function setState(next){
+    if(next === "closed"){
+      const ok = confirm("Clôturer les inscriptions ?\n\nLe formulaire public sera bloqué.");
+      if(!ok) return;
+    }
+
+    if(next === "not_open"){
+      const ok = confirm("Repasser les inscriptions en “pas encore ouvertes” ?\n\nLe formulaire public sera bloqué.");
+      if(!ok) return;
+    }
+
+    setButtonsDisabled(true);
+    statusMsg.textContent = "Mise à jour du statut…";
+
+    try{
+      await setDoc(cfgRef, {
+        inscriptionsState: next,
+        updatedAt: serverTimestamp(),
+        updatedBy: auth.currentUser?.uid || null
+      }, { merge:true });
+
+      statusMsg.textContent = "✅ Statut mis à jour.";
+    }catch(error){
+      console.error(error);
+      statusMsg.textContent = "❌ Erreur : impossible de mettre à jour le statut.";
+    }finally{
+      setButtonsDisabled(false);
+    }
+  }
+
+  async function deleteEquipesInBatches(batchSize = 450){
+    let deleted = 0;
+
+    while(true){
+      const snap = await getDocs(equipesRef);
+      if(snap.empty) break;
+
+      const docs = snap.docs.slice(0, batchSize);
+      const batch = writeBatch(db);
+
+      docs.forEach(docSnap => {
+        batch.delete(docSnap.ref);
+      });
+
+      await batch.commit();
+      deleted += docs.length;
+
+      if(docs.length < batchSize) break;
+    }
+
+    return deleted;
+  }
+
+  async function doRAZ(){
+    const ok1 = confirm(
+      "⚠️ RÉINITIALISATION\n\nCette action supprime toutes les équipes inscrites.\n\nContinuer ?"
+    );
+    if(!ok1) return;
+
+    const typed = prompt('Tape exactement : RAZ\n\npour confirmer la suppression complète.');
+    if(typed !== "RAZ"){
+      alert("Annulé.");
+      return;
+    }
+
+    setButtonsDisabled(true);
+    razStatus.textContent = "Réinitialisation en cours…";
+
+    try{
+      const deleted = await deleteEquipesInBatches();
+
+      await setDoc(cfgRef, {
+        inscriptionsState: "not_open",
+        updatedAt: serverTimestamp(),
+        updatedBy: auth.currentUser?.uid || null
+      }, { merge:true });
+
+      razStatus.textContent = `✅ RAZ terminée — ${deleted} équipe(s) supprimée(s).`;
+      alert(`RAZ terminée ✅\n\n${deleted} équipe(s) supprimée(s).\nStatut remis à “Pas encore ouvertes”.`);
+    }catch(error){
+      console.error(error);
+      razStatus.textContent = "❌ Erreur pendant la réinitialisation.";
+    }finally{
+      setButtonsDisabled(false);
+    }
+  }
+
+  function startConfigListener(){
+    if(unsubscribeConfig) unsubscribeConfig();
+
+    unsubscribeConfig = onSnapshot(cfgRef, (snap) => {
+      const data = snap.exists() ? (snap.data() || {}) : {};
+      currentStatus = normState(data.inscriptionsState);
+
+      currentState.textContent = labelFor(currentStatus);
+      publicMessage.textContent = messageFor(currentStatus);
+
+      btnPause.textContent = currentStatus === "paused" ? "▶️ Réactiver" : "⏸️ Suspendre";
+
+    }, (error) => {
+      console.error(error);
+      currentState.textContent = "❌ Impossible de lire le statut.";
+      publicMessage.textContent = "";
+    });
+  }
+
+  function startEquipesListener(){
+    if(unsubscribeEquipes) unsubscribeEquipes();
+
+    unsubscribeEquipes = onSnapshot(equipesRef, (snap) => {
+      let total = 0;
+      let dm = 0;
+      let dd = 0;
+
+      snap.forEach(docSnap => {
+        const data = docSnap.data() || {};
+        total++;
+
+        if(data.epreuve === "DM") dm++;
+        if(data.epreuve === "DD") dd++;
+      });
+
+      countTotal.textContent = total;
+      countDM.textContent = dm;
+      countDD.textContent = dd;
+
+    }, (error) => {
+      console.error(error);
+      countTotal.textContent = "—";
+      countDM.textContent = "—";
+      countDD.textContent = "—";
+    });
+  }
+
+  function stopListeners(){
+    if(unsubscribeConfig){
+      unsubscribeConfig();
+      unsubscribeConfig = null;
+    }
+
+    if(unsubscribeEquipes){
+      unsubscribeEquipes();
+      unsubscribeEquipes = null;
+    }
+  }
+
+  btnNotOpen.onclick = () => setState("not_open");
+  btnOpen.onclick = () => setState("open");
+  btnPause.onclick = () => {
+    const next = currentStatus === "paused" ? "open" : "paused";
+    setState(next);
+  };
+  btnClose.onclick = () => setState("closed");
+  btnRAZ.onclick = doRAZ;
+
+  onAuthStateChanged(auth, async (user) => {
+    accessDenied.style.display = "none";
+    pageContent.style.display = "none";
+    stopListeners();
+
+    if(!user){
+      accessDenied.style.display = "block";
+      return;
+    }
+
+    try{
+      const role = await getRoleByUid(user.uid);
+
+      if(role !== "admin"){
+        accessDenied.style.display = "block";
+        return;
+      }
+
+      pageContent.style.display = "block";
+      startConfigListener();
+      startEquipesListener();
+
+    }catch(error){
+      console.error(error);
+      accessDenied.style.display = "block";
+    }
+  });
+</script>
+
+</body>
+</html>
