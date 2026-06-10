@@ -13,12 +13,14 @@ function injectStyles(){
   style.id = "publicHeaderStyles";
   style.textContent = `
     :root{
-      --clay:#c65a1e;
-      --clay-dark:#8e3a13;
-      --clay-light:#ee8a3a;
-      --blue:#075b9a;
-      --blue-dark:#063b72;
-      --sky:#27bced;
+      --palm:#0b7a3b;
+      --palm-dark:#064d28;
+      --palm-light:#15a658;
+      --navy:#06284a;
+      --navy-dark:#03172b;
+      --sun:#ffd21f;
+      --sand:#f4d9a4;
+      --white:#ffffff;
       --container:1180px;
       --public-header-h:158px;
       --public-total-top:158px;
@@ -35,8 +37,12 @@ function injectStyles(){
       left:0;
       right:0;
       z-index:1000;
-      background:linear-gradient(135deg,var(--clay-dark),var(--clay),var(--clay-light));
-      box-shadow:0 10px 26px rgba(142,58,19,.28);
+      background:
+        radial-gradient(circle at 8% 0%, rgba(255,210,31,.30), transparent 28%),
+        radial-gradient(circle at 92% 0%, rgba(244,217,164,.22), transparent 28%),
+        linear-gradient(135deg,var(--palm-dark),var(--palm),var(--palm-light));
+      box-shadow:0 10px 26px rgba(6,77,40,.34);
+      border-bottom:4px solid var(--sun);
     }
 
     .public-header-inner{
@@ -55,18 +61,22 @@ function injectStyles(){
       display:flex;
       align-items:center;
       justify-content:center;
+      border-radius:22px;
+      background:rgba(255,255,255,.12);
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.18);
     }
 
     .public-header-logo img{
       max-width:100%;
       max-height:100%;
       object-fit:contain;
-      filter:drop-shadow(0 6px 10px rgba(0,0,0,.18));
+      filter:drop-shadow(0 6px 10px rgba(0,0,0,.22));
     }
 
     .public-header-title{
       text-align:center;
       color:#fff;
+      text-shadow:0 6px 18px rgba(0,0,0,.26);
     }
 
     .public-header-title strong{
@@ -76,6 +86,16 @@ function injectStyles(){
       letter-spacing:-.04em;
       text-transform:uppercase;
       font-weight:1000;
+    }
+
+    .public-header-title span{
+      display:block;
+      margin-top:6px;
+      color:var(--sun);
+      font-size:13px;
+      font-weight:1000;
+      text-transform:uppercase;
+      letter-spacing:.08em;
     }
 
     .public-nav-wrap{
@@ -98,12 +118,12 @@ function injectStyles(){
 
     .public-nav-wrap::before{
       left:0;
-      background:linear-gradient(90deg, rgba(142,58,19,.98), rgba(142,58,19,0));
+      background:linear-gradient(90deg, rgba(6,77,40,.98), rgba(6,77,40,0));
     }
 
     .public-nav-wrap::after{
       right:0;
-      background:linear-gradient(270deg, rgba(198,90,30,.98), rgba(198,90,30,0));
+      background:linear-gradient(270deg, rgba(11,122,59,.98), rgba(11,122,59,0));
     }
 
     .public-nav-arrow{
@@ -117,11 +137,11 @@ function injectStyles(){
       display:flex;
       align-items:center;
       justify-content:center;
-      background:rgba(255,255,255,.88);
-      color:var(--clay-dark);
+      background:rgba(255,210,31,.96);
+      color:var(--navy-dark);
       font-size:20px;
       font-weight:1000;
-      box-shadow:0 6px 14px rgba(0,0,0,.18);
+      box-shadow:0 6px 14px rgba(0,0,0,.20);
       pointer-events:none;
     }
 
@@ -146,7 +166,7 @@ function injectStyles(){
       padding:10px 17px;
       border-radius:999px;
       background:rgba(255,255,255,.92);
-      color:#344054;
+      color:var(--navy);
       font-size:14px;
       font-weight:900;
       white-space:nowrap;
@@ -155,8 +175,9 @@ function injectStyles(){
     }
 
     .public-nav-link.primary{
-      background:linear-gradient(180deg,var(--blue),var(--blue-dark));
-      color:#fff;
+      background:linear-gradient(180deg,var(--sun),#f3b800);
+      color:var(--navy-dark);
+      box-shadow:0 10px 20px rgba(255,210,31,.22);
     }
 
     @media (min-width:760px){
@@ -217,7 +238,8 @@ function renderHeader(){
         </div>
 
         <div class="public-header-title">
-          <strong>Open Beach Tennis<br>TSCK</strong>
+          <strong>Tournoi Beach Tennis<br>TSCK</strong>
+          <span>Dimanche 28 juin 2026 — Kourou</span>
         </div>
 
         <div class="public-header-logo">
