@@ -228,7 +228,7 @@ function renderHeader(){
           <span class="public-nav-arrow left">‹</span>
           <nav class="public-nav" aria-label="Navigation publique">
             <a class="public-nav-link" href="../index.html">🏠 Accueil</a>
-            <a class="${navClass("inscription.html")}" href="inscription.html">📝 Inscription</a>
+            <a class="${navClass("equipes.html")}" href="equipes.html">👥 Équipes</a>
             <a class="${navClass("programmation.html")}" href="programmation.html">📅 Programmation</a>
             <a class="${navClass("matchs-direct.html")}" href="matchs-direct.html">🔴 Match en direct</a>
             <a class="${navClass("reglement.html")}" href="reglement.html">📘 Règlement</a>
