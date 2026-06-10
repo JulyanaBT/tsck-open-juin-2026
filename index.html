@@ -3,13 +3,23 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Open Beach Tennis TSCK - Juin 2026</title>
+  <title>Tournoi Beach Tennis TSCK - 28 juin 2026</title>
 
   <style>
     :root{
-      --clay:#c65a1e; --clay-dark:#8e3a13; --clay-light:#ee8a3a;
-      --sky:#27bced; --aqua:#00a9c8; --blue:#075b9a; --blue-dark:#063b72;
-      --text:#17212b; --muted:#667085; --card:rgba(255,255,255,.94);
+      --palm:#0b7a3b;
+      --palm-dark:#064d28;
+      --palm-light:#15a658;
+      --navy:#06284a;
+      --navy-dark:#03172b;
+      --sun:#ffd21f;
+      --sun-dark:#f3b800;
+      --sand:#f4d9a4;
+      --sand-light:#fff4d4;
+      --pink:#d83d7f;
+      --text:#17212b;
+      --muted:#667085;
+      --card:rgba(255,255,255,.94);
       --shadow:0 16px 40px rgba(16,24,40,.12);
       --container:1180px;
       --public-header-h:158px;
@@ -23,9 +33,9 @@
       font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
       color:var(--text);
       background:
-        radial-gradient(circle at 20% 0%, rgba(39,188,237,.22), transparent 28%),
-        radial-gradient(circle at 85% 10%, rgba(0,169,200,.16), transparent 26%),
-        linear-gradient(180deg,#f4fcff 0%,#e9f8ff 48%,#ffffff 100%);
+        radial-gradient(circle at 10% 0%, rgba(255,210,31,.22), transparent 26%),
+        radial-gradient(circle at 90% 8%, rgba(11,122,59,.18), transparent 26%),
+        linear-gradient(180deg,#eaf9ff 0%,#fff4d4 46%,#ffffff 100%);
     }
 
     a{color:inherit;text-decoration:none;}
@@ -41,8 +51,12 @@
       position:fixed;
       top:0;left:0;right:0;
       z-index:1000;
-      background:linear-gradient(135deg,var(--clay-dark),var(--clay),var(--clay-light));
-      box-shadow:0 10px 26px rgba(142,58,19,.28);
+      background:
+        radial-gradient(circle at 8% 0%, rgba(255,210,31,.30), transparent 28%),
+        radial-gradient(circle at 92% 0%, rgba(244,217,164,.22), transparent 28%),
+        linear-gradient(135deg,var(--palm-dark),var(--palm),var(--palm-light));
+      box-shadow:0 10px 26px rgba(6,77,40,.34);
+      border-bottom:4px solid var(--sun);
     }
 
     .public-header-inner{
@@ -58,14 +72,21 @@
     .public-header-logo{
       width:80px;height:80px;
       display:flex;align-items:center;justify-content:center;
+      border-radius:22px;
+      background:rgba(255,255,255,.12);
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.18);
     }
 
     .public-header-logo img{
       max-width:100%;max-height:100%;object-fit:contain;
-      filter:drop-shadow(0 6px 10px rgba(0,0,0,.18));
+      filter:drop-shadow(0 6px 10px rgba(0,0,0,.22));
     }
 
-    .public-header-title{text-align:center;color:#fff;}
+    .public-header-title{
+      text-align:center;
+      color:#fff;
+      text-shadow:0 6px 18px rgba(0,0,0,.26);
+    }
 
     .public-header-title strong{
       display:block;
@@ -74,6 +95,16 @@
       letter-spacing:-.04em;
       text-transform:uppercase;
       font-weight:1000;
+    }
+
+    .public-header-title span{
+      display:block;
+      margin-top:6px;
+      color:var(--sun);
+      font-size:13px;
+      font-weight:1000;
+      text-transform:uppercase;
+      letter-spacing:.08em;
     }
 
     .public-nav-wrap{
@@ -95,12 +126,12 @@
 
     .public-nav-wrap::before{
       left:0;
-      background:linear-gradient(90deg, rgba(142,58,19,.98), rgba(142,58,19,0));
+      background:linear-gradient(90deg, rgba(6,77,40,.98), rgba(6,77,40,0));
     }
 
     .public-nav-wrap::after{
       right:0;
-      background:linear-gradient(270deg, rgba(198,90,30,.98), rgba(198,90,30,0));
+      background:linear-gradient(270deg, rgba(11,122,59,.98), rgba(11,122,59,0));
     }
 
     .public-nav-arrow{
@@ -111,11 +142,11 @@
       width:28px;height:28px;
       border-radius:999px;
       display:flex;align-items:center;justify-content:center;
-      background:rgba(255,255,255,.88);
-      color:var(--clay-dark);
+      background:rgba(255,210,31,.96);
+      color:var(--navy-dark);
       font-size:20px;
       font-weight:1000;
-      box-shadow:0 6px 14px rgba(0,0,0,.18);
+      box-shadow:0 6px 14px rgba(0,0,0,.20);
       pointer-events:none;
     }
 
@@ -140,16 +171,18 @@
       padding:10px 17px;
       border-radius:999px;
       background:rgba(255,255,255,.92);
-      color:#344054;
+      color:var(--navy);
       font-size:14px;
       font-weight:900;
       white-space:nowrap;
       box-shadow:0 8px 16px rgba(0,0,0,.14);
+      text-decoration:none;
     }
 
     .public-nav-link.primary{
-      background:linear-gradient(180deg,var(--blue),var(--blue-dark));
-      color:#fff;
+      background:linear-gradient(180deg,var(--sun),var(--sun-dark));
+      color:var(--navy-dark);
+      box-shadow:0 10px 20px rgba(255,210,31,.22);
     }
 
     main{
@@ -162,14 +195,15 @@
     .hero{
       position:relative;
       overflow:hidden;
-      border-radius:26px;
-      padding:22px 18px;
+      border-radius:28px;
+      padding:24px 18px;
       color:#fff;
       background:
-        radial-gradient(circle at 18% 10%, rgba(255,255,255,.42), transparent 24%),
-        radial-gradient(circle at 80% 24%, rgba(255,255,255,.26), transparent 24%),
-        linear-gradient(135deg,#23b7ea 0%,#7fdfff 48%,#f5fdff 100%);
+        radial-gradient(circle at 12% 0%, rgba(255,210,31,.42), transparent 25%),
+        radial-gradient(circle at 85% 15%, rgba(244,217,164,.24), transparent 24%),
+        linear-gradient(135deg,var(--navy-dark),var(--navy) 42%,var(--palm) 100%);
       box-shadow:var(--shadow);
+      border:3px solid rgba(255,210,31,.35);
     }
 
     .hero::before{
@@ -177,8 +211,8 @@
       position:absolute;
       inset:0;
       background:
-        linear-gradient(90deg,rgba(6,59,114,.36),rgba(6,59,114,.06)),
-        radial-gradient(circle at 50% 110%,rgba(0,169,200,.28),transparent 36%);
+        linear-gradient(0deg,rgba(244,217,164,.18),transparent 48%),
+        radial-gradient(circle at 50% 115%,rgba(255,210,31,.24),transparent 34%);
       pointer-events:none;
     }
 
@@ -200,39 +234,44 @@
     .pill{
       padding:8px 12px;
       border-radius:999px;
-      background:rgba(255,255,255,.22);
+      background:rgba(255,255,255,.16);
       color:#fff;
       font-size:12px;
-      font-weight:900;
-      box-shadow:inset 0 0 0 1px rgba(255,255,255,.28);
+      font-weight:1000;
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.24);
       backdrop-filter:blur(8px);
     }
 
     .hero-title{
       margin:0;
-      font-size:clamp(30px,7vw,68px);
-      line-height:.92;
+      font-size:clamp(34px,7vw,76px);
+      line-height:.88;
       letter-spacing:-.06em;
       font-weight:1000;
       text-transform:uppercase;
-      text-shadow:0 10px 24px rgba(6,59,114,.24);
+      text-shadow:0 12px 26px rgba(0,0,0,.32);
     }
 
     .hero-date{
-      margin-top:8px;
-      font-size:clamp(24px,5vw,48px);
+      display:inline-block;
+      margin-top:10px;
+      padding:8px 18px;
+      border-radius:18px;
+      font-size:clamp(25px,5vw,50px);
       font-weight:1000;
-      color:var(--blue-dark);
+      color:var(--sun);
       text-transform:uppercase;
+      background:rgba(3,23,43,.62);
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.14);
     }
 
     .hero-sub{
       max-width:760px;
       margin:8px auto 0;
       font-size:15px;
-      line-height:1.4;
-      color:#073b68;
-      font-weight:700;
+      line-height:1.45;
+      color:#fff8d8;
+      font-weight:800;
     }
 
     .hero-infos{
@@ -245,14 +284,14 @@
       text-align:left;
       padding:13px 14px;
       border-radius:18px;
-      background:rgba(255,255,255,.78);
+      background:rgba(255,255,255,.88);
       color:#12324c;
       box-shadow:inset 0 0 0 1px rgba(255,255,255,.5);
     }
 
     .hero-info strong{
       display:block;
-      color:var(--clay-dark);
+      color:var(--palm-dark);
       font-size:12px;
       text-transform:uppercase;
       letter-spacing:.08em;
@@ -262,8 +301,9 @@
     .hero-info span{
       display:block;
       font-size:15px;
-      font-weight:900;
+      font-weight:1000;
       line-height:1.25;
+      color:var(--navy-dark);
     }
 
     .hero-actions{
@@ -285,18 +325,18 @@
     }
 
     .hero-btn-primary{
-      background:linear-gradient(135deg,var(--clay),var(--clay-light));
-      color:#fff;
+      background:linear-gradient(180deg,var(--sun),var(--sun-dark));
+      color:var(--navy-dark);
     }
 
     .hero-btn-secondary{
       background:#fff;
-      color:var(--blue-dark);
+      color:var(--palm-dark);
     }
 
     .panel{
       background:var(--card);
-      border:1px solid rgba(255,255,255,.6);
+      border:1px solid rgba(255,255,255,.7);
       border-radius:24px;
       box-shadow:var(--shadow);
       padding:18px;
@@ -315,6 +355,7 @@
       font-size:24px;
       line-height:1.05;
       letter-spacing:-.03em;
+      color:var(--navy-dark);
     }
 
     .panel-text{
@@ -328,8 +369,8 @@
       flex-shrink:0;
       padding:8px 13px;
       border-radius:999px;
-      background:#e4f7ff;
-      color:var(--blue-dark);
+      background:#e6f7ee;
+      color:var(--palm-dark);
       font-size:12px;
       font-weight:1000;
       text-transform:uppercase;
@@ -376,13 +417,14 @@
       max-width:96%;
     }
 
-    .card-clay{background:linear-gradient(135deg,var(--clay-dark),var(--clay),var(--clay-light));}
-    .card-blue{background:linear-gradient(135deg,var(--blue-dark),var(--blue),var(--sky));}
-    .card-aqua{background:linear-gradient(135deg,#008da8,var(--aqua),#62ddf0);}
+    .card-green{background:linear-gradient(135deg,var(--palm-dark),var(--palm),var(--palm-light));}
+    .card-navy{background:linear-gradient(135deg,var(--navy-dark),var(--navy),#0d4f82);}
+    .card-sun{background:linear-gradient(135deg,#b38300,var(--sun-dark),var(--sun));color:var(--navy-dark);}
+    .card-pink{background:linear-gradient(135deg,#8f1f4f,var(--pink),#ff6fa5);}
     .card-white{
       color:#12324c;
-      background:linear-gradient(135deg,#ffffff,#e6faff);
-      box-shadow:inset 0 0 0 1px rgba(7,91,154,.12), 0 10px 22px rgba(16,24,40,.10);
+      background:linear-gradient(135deg,#ffffff,#fff4d4);
+      box-shadow:inset 0 0 0 1px rgba(11,122,59,.12), 0 10px 22px rgba(16,24,40,.10);
     }
 
     .category-box{
@@ -394,11 +436,11 @@
     .category-item{
       border-radius:16px;
       padding:12px;
-      background:#f4fbff;
-      border:1px solid rgba(7,91,154,.10);
+      background:#fffaf0;
+      border:1px solid rgba(11,122,59,.14);
       text-align:center;
       font-weight:1000;
-      color:var(--blue-dark);
+      color:var(--palm-dark);
     }
 
     .category-item small{
@@ -406,45 +448,21 @@
       font-weight:900;
     }
 
-    .note,
-    .status-box{
+    .note{
       margin-top:12px;
       padding:13px 14px;
       border-radius:18px;
-      background:linear-gradient(135deg,rgba(39,188,237,.12),rgba(198,90,30,.08));
-      border:1px solid rgba(39,188,237,.22);
+      background:linear-gradient(135deg,rgba(11,122,59,.10),rgba(255,210,31,.16));
+      border:1px solid rgba(11,122,59,.18);
       color:#475467;
       font-size:14px;
       line-height:1.45;
     }
 
-    .status-box strong{color:#1d2733;}
-
-    .mini-link{
-      min-height:50px;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      text-align:center;
-      border-radius:18px;
-      background:#fff;
-      border:1px solid rgba(16,24,40,.06);
-      color:#344054;
-      font-size:15px;
-      font-weight:900;
-      padding:12px 14px;
-      box-shadow:0 8px 18px rgba(16,24,40,.05);
-    }
-
     @media (min-width:760px){
-      :root{
-        --public-header-h:158px;
-        --public-total-top:158px;
-      }
-
       .public-header-inner{grid-template-columns:100px 1fr 100px;}
       .public-header-logo{width:96px;height:80px;}
-      .hero{padding:32px 30px;}
+      .hero{padding:36px 32px;}
       .hero-infos{grid-template-columns:1fr 1fr 1fr;}
 
       .hero-actions{
@@ -455,7 +473,6 @@
       }
 
       .grid-main{grid-template-columns:1fr 1fr;}
-      .category-box{grid-template-columns:repeat(2,1fr);}
       .panel{padding:22px;}
       .panel-title{font-size:28px;}
     }
@@ -491,10 +508,10 @@
         </div>
 
         <div>
-          <h1 class="hero-title">Open Beach Tennis TSCK</h1>
+          <h1 class="hero-title">Tournoi Beach Tennis</h1>
           <div class="hero-date">28 juin 2026</div>
           <p class="hero-sub">
-            Mini-site officiel du tournoi : inscriptions, programmation, matchs en direct, tirage, restauration et infos pratiques.
+            Au club du Tennis Squash Club de Kourou : sable, soleil et sport. Retrouvez ici les inscriptions, les équipes, la programmation, les matchs en direct et les infos pratiques.
           </p>
         </div>
 
@@ -517,7 +534,7 @@
 
         <div class="hero-actions">
           <a class="hero-btn hero-btn-primary" href="join.html">📝 S’inscrire au tournoi</a>
-          <a class="hero-btn hero-btn-secondary" href="public/programmation.html">📅 Voir la programmation</a>
+          <a class="hero-btn hero-btn-secondary" href="public/equipes.html">👥 Voir les équipes</a>
         </div>
 
       </div>
@@ -556,28 +573,28 @@
       </div>
 
       <div class="grid-main">
-        <a class="entry-card card-clay" href="join.html">
+        <a class="entry-card card-green" href="join.html">
           <div class="entry-kicker">Inscriptions</div>
           <h3 class="entry-title">S’inscrire</h3>
           <div class="entry-sub">Inscrire une équipe en Double Dames ou Double Messieurs.</div>
         </a>
 
-        <a class="entry-card card-blue" href="public/programmation.html">
+        <a class="entry-card card-navy" href="public/equipes.html">
+          <div class="entry-kicker">Participants</div>
+          <h3 class="entry-title">Équipes</h3>
+          <div class="entry-sub">Voir les équipes engagées par épreuve.</div>
+        </a>
+
+        <a class="entry-card card-sun" href="public/programmation.html">
           <div class="entry-kicker">Planning</div>
           <h3 class="entry-title">Programmation</h3>
           <div class="entry-sub">Horaires, terrains et déroulement du tournoi.</div>
         </a>
 
-        <a class="entry-card card-aqua" href="public/matchs-direct.html">
+        <a class="entry-card card-pink" href="public/matchs-direct.html">
           <div class="entry-kicker">Live</div>
           <h3 class="entry-title">Matchs en direct</h3>
           <div class="entry-sub">Suivre les matchs et les scores en direct.</div>
-        </a>
-
-        <a class="entry-card card-white" href="public/tirage.html">
-          <div class="entry-kicker">Tableaux</div>
-          <h3 class="entry-title">Tirage</h3>
-          <div class="entry-sub">Consulter le tirage et la composition des tableaux.</div>
         </a>
       </div>
     </div>
@@ -588,34 +605,34 @@
       <div class="panel-head">
         <div>
           <h2 class="panel-title">Infos pratiques</h2>
-          <p class="panel-text">Règlement, restauration et contact organisation.</p>
+          <p class="panel-text">Règlement, tirage, restauration et contact organisation.</p>
         </div>
         <div class="panel-tag">Infos</div>
       </div>
 
       <div class="grid-main">
-        <a class="entry-card card-clay" href="public/reglement.html">
+        <a class="entry-card card-navy" href="public/reglement.html">
           <div class="entry-kicker">Compétition</div>
           <h3 class="entry-title">Règlement</h3>
           <div class="entry-sub">Formats, règles et conditions de participation.</div>
         </a>
 
-        <a class="entry-card card-blue" href="public/restauration.html">
+        <a class="entry-card card-green" href="public/tirage.html">
+          <div class="entry-kicker">Tableaux</div>
+          <h3 class="entry-title">Tirage</h3>
+          <div class="entry-sub">Consulter le tirage et la composition des tableaux.</div>
+        </a>
+
+        <a class="entry-card card-sun" href="public/restauration.html">
           <div class="entry-kicker">Sur place</div>
           <h3 class="entry-title">Restauration</h3>
           <div class="entry-sub">Repas, buvette et infos restauration.</div>
         </a>
 
-        <a class="entry-card card-aqua" href="public/contact.html">
+        <a class="entry-card card-white" href="public/contact.html">
           <div class="entry-kicker">Besoin d’aide</div>
           <h3 class="entry-title">Contact</h3>
           <div class="entry-sub">Contacter l’organisation du tournoi.</div>
-        </a>
-
-        <a class="entry-card card-white" href="index.html">
-          <div class="entry-kicker">Accueil</div>
-          <h3 class="entry-title">Retour accueil</h3>
-          <div class="entry-sub">Revenir à la page principale du tournoi.</div>
         </a>
       </div>
     </div>
@@ -658,7 +675,8 @@
         </div>
 
         <div class="public-header-title">
-          <strong>Open Beach Tennis<br>TSCK</strong>
+          <strong>Tournoi Beach Tennis<br>TSCK</strong>
+          <span>Dimanche 28 juin 2026 — Kourou</span>
         </div>
 
         <div class="public-header-logo">
@@ -669,9 +687,9 @@
           <span class="public-nav-arrow left">‹</span>
           <nav class="public-nav" aria-label="Navigation principale">
             <a class="public-nav-link primary" href="index.html">🏠 Accueil</a>
-            <a class="public-nav-link" href="join.html">📝 Inscription</a>
+            <a class="public-nav-link" href="public/equipes.html">👥 Équipes</a>
             <a class="public-nav-link" href="public/programmation.html">📅 Programmation</a>
-            <a class="public-nav-link" href="public/matchs-direct.html">🎾 Match en direct</a>
+            <a class="public-nav-link" href="public/matchs-direct.html">🔴 Match en direct</a>
             <a class="public-nav-link" href="public/reglement.html">📘 Règlement</a>
             <a class="public-nav-link" href="public/tirage.html">🎲 Tirage</a>
             <a class="public-nav-link" href="public/restauration.html">🍽️ Restauration</a>
