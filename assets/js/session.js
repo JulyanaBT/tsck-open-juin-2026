@@ -2,17 +2,14 @@ import { auth, db } from "./firebase.js";
 
 import {
   signInWithEmailAndPassword,
-  signOut
+  signOut,
+  createUserWithEmailAndPassword
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 
 import {
   doc,
   getDoc
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
-
-/* =========================
-   LOGIN
-========================= */
 
 export async function login(email, password){
   const credential = await signInWithEmailAndPassword(
@@ -24,23 +21,24 @@ export async function login(email, password){
   return credential.user;
 }
 
-/* =========================
-   LOGOUT
-========================= */
+export async function register(email, password){
+  const credential = await createUserWithEmailAndPassword(
+    auth,
+    email,
+    password
+  );
+
+  return credential.user;
+}
 
 export async function logout(){
   await signOut(auth);
 }
 
-/* =========================
-   ROLE
-========================= */
+export async function getRoleByUid(uid){
+  if(!uid) return null;
 
-export async function getRoleByEmail(email){
-
-  if(!email) return null;
-
-  const ref = doc(db, "roles", email.toLowerCase());
+  const ref = doc(db, "roles", uid);
   const snap = await getDoc(ref);
 
   if(!snap.exists()) return null;
@@ -48,17 +46,13 @@ export async function getRoleByEmail(email){
   return snap.data()?.role || null;
 }
 
-/* =========================
-   ADMIN ?
-========================= */
+export async function getRoleByEmail(email){
+  if(!email) return null;
 
-export async function isAdmin(){
+  const ref = doc(db, "rolesByEmail", email.toLowerCase());
+  const snap = await getDoc(ref);
 
-  const user = auth.currentUser;
+  if(!snap.exists()) return null;
 
-  if(!user) return false;
-
-  const role = await getRoleByEmail(user.email);
-
-  return role === "admin";
+  return snap.data()?.role || null;
 }
