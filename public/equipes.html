@@ -1,0 +1,625 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Équipes — Open Beach Tennis TSCK</title>
+
+  <style>
+    :root{
+      --clay:#c65a1e; --clay-dark:#8e3a13; --clay-light:#ee8a3a;
+      --sky:#27bced; --aqua:#00a9c8; --blue:#075b9a; --blue-dark:#063b72;
+      --text:#17212b; --muted:#667085; --card:rgba(255,255,255,.94);
+      --shadow:0 16px 40px rgba(16,24,40,.12);
+      --container:1180px;
+    }
+
+    *{box-sizing:border-box;}
+
+    body{
+      margin:0;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at 20% 0%, rgba(39,188,237,.22), transparent 28%),
+        radial-gradient(circle at 85% 10%, rgba(0,169,200,.16), transparent 26%),
+        linear-gradient(180deg,#f4fcff 0%,#e9f8ff 48%,#fff 100%);
+    }
+
+    a{color:inherit;text-decoration:none;}
+    .container{width:min(var(--container), calc(100% - 28px));margin:0 auto;}
+
+    main{
+      padding-top:calc(var(--public-total-top, 158px) + 30px);
+      padding-bottom:42px;
+    }
+
+    .section{margin-top:16px;}
+
+    .panel{
+      background:var(--card);
+      border:1px solid rgba(255,255,255,.6);
+      border-radius:24px;
+      box-shadow:var(--shadow);
+      padding:18px;
+    }
+
+    .panel-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:12px;
+      margin-bottom:10px;
+    }
+
+    .panel-title{
+      margin:0;
+      font-size:26px;
+      line-height:1.05;
+      letter-spacing:-.03em;
+    }
+
+    .panel-text{
+      margin:6px 0 0;
+      color:var(--muted);
+      font-size:15px;
+      line-height:1.35;
+    }
+
+    .panel-tag{
+      flex-shrink:0;
+      padding:8px 13px;
+      border-radius:999px;
+      background:#e4f7ff;
+      color:var(--blue-dark);
+      font-size:12px;
+      font-weight:1000;
+      text-transform:uppercase;
+      letter-spacing:.06em;
+    }
+
+    .signup-box{
+      margin-top:12px;
+      padding:15px;
+      border-radius:20px;
+      background:linear-gradient(135deg,var(--clay),var(--clay-light));
+      color:#fff;
+      box-shadow:0 10px 22px rgba(198,90,30,.18);
+      display:grid;
+      gap:10px;
+    }
+
+    .signup-box strong{
+      font-size:19px;
+      font-weight:1000;
+    }
+
+    .signup-box span{
+      font-size:14px;
+      line-height:1.4;
+      opacity:.96;
+    }
+
+    .signup-btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:46px;
+      padding:12px 16px;
+      border-radius:999px;
+      background:#fff;
+      color:var(--clay-dark);
+      font-weight:1000;
+      width:max-content;
+      max-width:100%;
+      box-shadow:0 8px 16px rgba(0,0,0,.12);
+    }
+
+    .summary-box{
+      margin-top:12px;
+      padding:13px 15px;
+      border-radius:18px;
+      background:linear-gradient(135deg,rgba(39,188,237,.12),rgba(198,90,30,.08));
+      border:1px solid rgba(39,188,237,.22);
+      color:#475467;
+      font-size:15px;
+      line-height:1.45;
+    }
+
+    .summary-box strong{
+      color:var(--blue-dark);
+      font-weight:1000;
+    }
+
+    .subtabs{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:12px;
+    }
+
+    .subtab{
+      border:1px solid rgba(16,24,40,.10);
+      background:#fff;
+      border-radius:999px;
+      padding:10px 14px;
+      font-weight:1000;
+      cursor:pointer;
+      color:#344054;
+      touch-action:manipulation;
+    }
+
+    .subtab[aria-selected="true"]{
+      background:#e4f7ff;
+      color:var(--blue-dark);
+      box-shadow:0 6px 14px rgba(7,91,154,.08);
+    }
+
+    .status-box{
+      margin-top:12px;
+      padding:12px 14px;
+      border-radius:18px;
+      background:#f8fcff;
+      border:1px solid rgba(39,188,237,.18);
+      color:#475467;
+      font-size:14px;
+      line-height:1.4;
+    }
+
+    .muted{color:var(--muted);}
+
+    .teams-list{
+      display:grid;
+      gap:10px;
+      margin-top:12px;
+    }
+
+    .team-card{
+      border:1px solid rgba(16,24,40,.08);
+      border-radius:18px;
+      background:#fff;
+      padding:13px;
+      box-shadow:0 6px 16px rgba(0,0,0,.04);
+      display:flex;
+      gap:12px;
+      justify-content:space-between;
+      align-items:center;
+      width:100%;
+      min-width:0;
+    }
+
+    .team-left{
+      min-width:0;
+      flex:1 1 auto;
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+    }
+
+    .team-line1{
+      display:flex;
+      align-items:baseline;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .team-num{
+      color:#667085;
+      font-variant-numeric:tabular-nums;
+      font-weight:900;
+    }
+
+    .team-name{
+      font-weight:1000;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+      max-width:100%;
+    }
+
+    .team-line2,
+    .team-line3{
+      color:#222;
+      font-weight:400;
+      line-height:1.25;
+    }
+
+    .ranked-card{align-items:center;}
+
+    .ranked-rank{
+      flex:0 0 auto;
+      min-width:58px;
+      min-height:58px;
+      border-radius:18px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      background:linear-gradient(180deg,#e4f7ff,#c9f0ff);
+      color:var(--blue-dark);
+      border:1px solid rgba(39,188,237,.28);
+      font-size:20px;
+      font-weight:1000;
+      box-shadow:0 6px 14px rgba(7,91,154,.08);
+    }
+
+    .pill{
+      display:inline-block;
+      padding:4px 10px;
+      border-radius:999px;
+      font-size:12px;
+      border:1px solid #eee;
+      background:#fafafa;
+      color:#333;
+      font-weight:1000;
+      white-space:nowrap;
+    }
+
+    .pill.stby{
+      border-color:#ffd37a;
+      background:#fff7e6;
+    }
+
+    @media (min-width:760px){
+      .panel{padding:22px;}
+    }
+
+    @media (max-width:759px){
+      main{
+        padding-top:calc(var(--public-total-top, 150px) + 28px);
+      }
+
+      .panel-title{font-size:24px;}
+    }
+  </style>
+</head>
+
+<body>
+
+<div id="publicHeader"></div>
+
+<main class="container">
+
+  <section class="section">
+    <div class="panel">
+      <div class="panel-head">
+        <div>
+          <h1 class="panel-title">👥 Équipes inscrites</h1>
+          <p class="panel-text">Suivez les équipes engagées en Double Dames et Double Messieurs Seniors.</p>
+        </div>
+        <div class="panel-tag">Seniors</div>
+      </div>
+
+      <div class="signup-box">
+        <strong>Pas encore inscrit ?</strong>
+        <span>Inscrivez votre équipe pour l’Open Beach Tennis TSCK du dimanche 28 juin 2026.</span>
+        <a class="signup-btn" href="inscription.html">📝 Inscrire une équipe</a>
+      </div>
+
+      <div class="summary-box">
+        <strong id="currentLabel">Double Messieurs</strong>
+        <br>
+        <span id="totalCount">0</span> équipe(s) inscrite(s)
+      </div>
+
+      <div class="subtabs">
+        <button class="subtab epreuve-btn" data-epreuve="DM" type="button" aria-selected="true">👨 Double Messieurs</button>
+        <button class="subtab epreuve-btn" data-epreuve="DD" type="button" aria-selected="false">👩 Double Dames</button>
+        <button class="subtab" id="tabClassees" type="button" aria-selected="false">🏷️ Classées</button>
+      </div>
+
+      <div class="status-box" id="status">Interface prête — connexion Firestore en cours…</div>
+    </div>
+  </section>
+
+  <div id="panelInscrits">
+    <section class="section">
+      <div class="panel">
+        <h2 style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin:0;">
+          <span>✅ Liste principale</span>
+          <span class="muted" style="font-weight:700;"><span id="mainCount2">0</span></span>
+        </h2>
+        <div id="mainList" class="teams-list"></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="panel">
+        <h2 style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin:0;">
+          <span>⏳ Liste d’attente</span>
+          <span class="muted" style="font-weight:700;"><span id="waitCount2">0</span></span>
+        </h2>
+        <div id="waitList" class="teams-list"></div>
+      </div>
+    </section>
+  </div>
+
+  <div id="panelClassees" style="display:none;">
+    <section class="section">
+      <div class="panel">
+        <h2 style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin:0;">
+          <span>🏷️ Équipes classées</span>
+          <span class="muted" style="font-weight:700;"><span id="rankedCount">0</span></span>
+        </h2>
+        <div id="rankedList" class="teams-list"></div>
+        <p class="muted" style="margin:10px 0 0;">
+          Les classements affichés sont donnés à titre indicatif et pourront être ajustés par l’organisation.
+        </p>
+      </div>
+    </section>
+  </div>
+
+</main>
+
+<script type="module" src="../assets/js/public-header.js"></script>
+
+<script type="module">
+  const EVENT_ID = "tsck-open-juin-2026";
+
+  const EPREUVE_LABELS = {
+    DM: "Double Messieurs",
+    DD: "Double Dames"
+  };
+
+  let currentEpreuve = "DM";
+  let currentView = "inscrits";
+  let allRows = [];
+
+  const statusEl = document.getElementById("status");
+  const currentLabelEl = document.getElementById("currentLabel");
+
+  const totalCountEl = document.getElementById("totalCount");
+  const mainCount2El = document.getElementById("mainCount2");
+  const waitCount2El = document.getElementById("waitCount2");
+  const rankedCountEl = document.getElementById("rankedCount");
+
+  const mainList = document.getElementById("mainList");
+  const waitList = document.getElementById("waitList");
+  const rankedList = document.getElementById("rankedList");
+
+  const tabClassees = document.getElementById("tabClassees");
+  const panelInscrits = document.getElementById("panelInscrits");
+  const panelClassees = document.getElementById("panelClassees");
+
+  const epreuveButtons = Array.from(document.querySelectorAll(".epreuve-btn"));
+
+  function esc(s){
+    return (s ?? "").toString()
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;");
+  }
+
+  function toNum(v){
+    if(v === null || v === undefined || v === "") return null;
+    const n = typeof v === "number" ? v : Number(String(v).replace(",", ".").trim());
+    return Number.isFinite(n) ? n : null;
+  }
+
+  function fmtRank(n){
+    return (n === null || n === undefined) ? "—" : String(n);
+  }
+
+  function statusPill(r){
+    return r.stby
+      ? `<span class="pill stby">STBY</span>`
+      : "";
+  }
+
+  function cardInscritHtml(idx, r){
+    return `
+      <div class="team-card">
+        <div class="team-left">
+          <div class="team-line1">
+            <span class="team-num">#${idx}</span>
+            <span class="team-name">${esc(r.teamName || "Équipe sans nom")}</span>
+          </div>
+        </div>
+        <div>${statusPill(r)}</div>
+      </div>
+    `;
+  }
+
+  function cardClasseeHtml(idx, r){
+    const p1 = toNum(r.p1Rank);
+    const p2 = toNum(r.p2Rank);
+    const teamRank = (p1 !== null && p2 !== null) ? (p1 + p2) : null;
+
+    return `
+      <div class="team-card ranked-card">
+        <div class="team-left">
+          <div class="team-line1">
+            <span class="team-num">#${idx}</span>
+            <span class="team-name">${esc(r.teamName || "Équipe sans nom")}</span>
+          </div>
+
+          <div class="team-line2">
+            ${esc(r.joueur1FirstName || "Joueur 1")} (${esc(fmtRank(p1))})
+          </div>
+
+          <div class="team-line3">
+            ${esc(r.joueur2FirstName || "Joueur 2")} (${esc(fmtRank(p2))})
+          </div>
+        </div>
+
+        <div class="ranked-rank">
+          ${esc(fmtRank(teamRank))}
+        </div>
+
+        <div>${statusPill(r)}</div>
+      </div>
+    `;
+  }
+
+  function updateButtons(){
+    epreuveButtons.forEach(btn => {
+      btn.setAttribute("aria-selected", btn.dataset.epreuve === currentEpreuve && currentView === "inscrits" ? "true" : "false");
+    });
+
+    tabClassees.setAttribute("aria-selected", currentView === "classees" ? "true" : "false");
+
+    currentLabelEl.textContent = EPREUVE_LABELS[currentEpreuve];
+  }
+
+  function getFiltered(){
+    return allRows.filter(r =>
+      String(r.epreuve || "").trim() === currentEpreuve
+    );
+  }
+
+  function render(){
+    updateButtons();
+
+    const filtered = getFiltered();
+    filtered.sort((a,b) => (a.createdAtMs || 0) - (b.createdAtMs || 0));
+
+    const main = filtered.filter(r => r.list !== "wait");
+    const wait = filtered.filter(r => r.list === "wait");
+
+    totalCountEl.textContent = filtered.length;
+    mainCount2El.textContent = main.length;
+    waitCount2El.textContent = wait.length;
+
+    mainList.innerHTML = main.length
+      ? main.map((r,i) => cardInscritHtml(i+1, r)).join("")
+      : `<p class="muted" style="margin:0;">Aucune équipe inscrite pour le moment.</p>`;
+
+    waitList.innerHTML = wait.length
+      ? wait.map((r,i) => cardInscritHtml(main.length+i+1, r)).join("")
+      : `<p class="muted" style="margin:0;">Aucune équipe en liste d’attente.</p>`;
+
+    const ranked = [...main].sort((a,b)=>{
+      const a1 = toNum(a.p1Rank), a2 = toNum(a.p2Rank);
+      const b1 = toNum(b.p1Rank), b2 = toNum(b.p2Rank);
+      const at = (a1 !== null && a2 !== null) ? (a1+a2) : Number.POSITIVE_INFINITY;
+      const bt = (b1 !== null && b2 !== null) ? (b1+b2) : Number.POSITIVE_INFINITY;
+      if(at !== bt) return at - bt;
+      return (a.createdAtMs||0) - (b.createdAtMs||0);
+    });
+
+    rankedCountEl.textContent = ranked.length;
+
+    rankedList.innerHTML = ranked.length
+      ? ranked.map((r,i) => cardClasseeHtml(i+1, r)).join("")
+      : `<p class="muted" style="margin:0;">Aucune équipe classée pour le moment.</p>`;
+  }
+
+  function showInscrits(epreuve){
+    currentView = "inscrits";
+    if(epreuve) currentEpreuve = epreuve;
+
+    panelInscrits.style.display = "block";
+    panelClassees.style.display = "none";
+
+    try{
+      localStorage.setItem("tsck_equipes_view", currentView);
+      localStorage.setItem("tsck_equipes_epreuve", currentEpreuve);
+    }catch(e){}
+
+    render();
+    statusEl.textContent = `🟢 En direct — ${EPREUVE_LABELS[currentEpreuve]}`;
+  }
+
+  function showClassees(){
+    currentView = "classees";
+
+    panelInscrits.style.display = "none";
+    panelClassees.style.display = "block";
+
+    try{
+      localStorage.setItem("tsck_equipes_view", currentView);
+      localStorage.setItem("tsck_equipes_epreuve", currentEpreuve);
+    }catch(e){}
+
+    render();
+    statusEl.textContent = `🟢 Classement indicatif — ${EPREUVE_LABELS[currentEpreuve]}`;
+  }
+
+  function bindUI(){
+    epreuveButtons.forEach(btn => {
+      btn.onclick = () => showInscrits(btn.dataset.epreuve);
+      btn.addEventListener("touchend", (e) => {
+        e.preventDefault();
+        showInscrits(btn.dataset.epreuve);
+      }, { passive:false });
+    });
+
+    tabClassees.onclick = showClassees;
+    tabClassees.addEventListener("touchend", (e) => {
+      e.preventDefault();
+      showClassees();
+    }, { passive:false });
+  }
+
+  function restoreState(){
+    try{
+      const savedEpreuve = localStorage.getItem("tsck_equipes_epreuve");
+      const savedView = localStorage.getItem("tsck_equipes_view");
+
+      if(["DM","DD"].includes(savedEpreuve)) currentEpreuve = savedEpreuve;
+
+      if(savedView === "classees") showClassees();
+      else showInscrits(currentEpreuve);
+    }catch(e){
+      showInscrits(currentEpreuve);
+    }
+  }
+
+  bindUI();
+  restoreState();
+  render();
+
+  async function connectFirestore(){
+    try{
+      const firebaseModule = await import("../assets/js/firebase.js");
+      const firestoreModule = await import("https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js");
+
+      const { db } = firebaseModule;
+      const { collection, query, orderBy, onSnapshot } = firestoreModule;
+
+      statusEl.textContent = "Connexion Firestore…";
+
+      const q = query(
+        collection(db, "events", EVENT_ID, "equipes"),
+        orderBy("createdAt", "asc")
+      );
+
+      onSnapshot(q, (snap) => {
+        allRows = [];
+
+        snap.forEach(docSnap => {
+          const d = docSnap.data() || {};
+
+          allRows.push({
+            id: docSnap.id,
+            teamName: d.teamName || "",
+            categorie: d.categorie || "Seniors",
+            epreuve: d.epreuve || "",
+            joueur1FirstName: d.joueur1FirstName || "",
+            joueur2FirstName: d.joueur2FirstName || "",
+            createdAtMs: d.createdAt?.toMillis ? d.createdAt.toMillis() : 0,
+            list: d.list || "main",
+            stby: d.stby === true,
+            p1Rank: d.p1Rank ?? null,
+            p2Rank: d.p2Rank ?? null
+          });
+        });
+
+        render();
+        statusEl.textContent = `🟢 En direct — ${EPREUVE_LABELS[currentEpreuve]}`;
+      }, (err) => {
+        console.error(err);
+        statusEl.textContent = "🔴 Erreur Firestore : " + (err?.message || "connexion impossible");
+      });
+
+    }catch(error){
+      console.error(error);
+      statusEl.textContent = "🔴 Erreur Firebase : " + (error?.message || "import impossible");
+    }
+  }
+
+  connectFirestore();
+</script>
+
+</body>
+</html>
