@@ -14,7 +14,6 @@
       --navy-dark:#03172b;
       --sun:#ffd21f;
       --sun-dark:#f3b800;
-      --sand:#f4d9a4;
       --sand-light:#fff4d4;
       --pink:#d83d7f;
       --text:#17212b;
@@ -22,8 +21,6 @@
       --card:rgba(255,255,255,.94);
       --shadow:0 16px 40px rgba(16,24,40,.12);
       --container:1180px;
-      --public-header-h:158px;
-      --public-total-top:158px;
     }
 
     *{box-sizing:border-box;}
@@ -39,150 +36,10 @@
     }
 
     a{color:inherit;text-decoration:none;}
-    img{display:block;max-width:100%;}
 
-    .container,
-    .public-container{
+    .container{
       width:min(var(--container), calc(100% - 28px));
       margin:0 auto;
-    }
-
-    .public-site-header{
-      position:fixed;
-      top:0;left:0;right:0;
-      z-index:1000;
-      background:
-        radial-gradient(circle at 8% 0%, rgba(255,210,31,.30), transparent 28%),
-        radial-gradient(circle at 92% 0%, rgba(244,217,164,.22), transparent 28%),
-        linear-gradient(135deg,var(--palm-dark),var(--palm),var(--palm-light));
-      box-shadow:0 10px 26px rgba(6,77,40,.34);
-      border-bottom:4px solid var(--sun);
-    }
-
-    .public-header-inner{
-      min-height:var(--public-header-h);
-      display:grid;
-      grid-template-columns:80px 1fr 80px;
-      grid-template-rows:auto auto;
-      align-items:center;
-      gap:10px 18px;
-      padding:12px 0 14px;
-    }
-
-    .public-header-logo{
-      width:80px;height:80px;
-      display:flex;align-items:center;justify-content:center;
-      border-radius:22px;
-      background:rgba(255,255,255,.12);
-      box-shadow:inset 0 0 0 1px rgba(255,255,255,.18);
-    }
-
-    .public-header-logo img{
-      max-width:100%;max-height:100%;object-fit:contain;
-      filter:drop-shadow(0 6px 10px rgba(0,0,0,.22));
-    }
-
-    .public-header-title{
-      text-align:center;
-      color:#fff;
-      text-shadow:0 6px 18px rgba(0,0,0,.26);
-    }
-
-    .public-header-title strong{
-      display:block;
-      font-size:clamp(22px,4vw,42px);
-      line-height:.95;
-      letter-spacing:-.04em;
-      text-transform:uppercase;
-      font-weight:1000;
-    }
-
-    .public-header-title span{
-      display:block;
-      margin-top:6px;
-      color:var(--sun);
-      font-size:13px;
-      font-weight:1000;
-      text-transform:uppercase;
-      letter-spacing:.08em;
-    }
-
-    .public-nav-wrap{
-      grid-column:1 / 4;
-      position:relative;
-      overflow:hidden;
-      padding:0 34px;
-    }
-
-    .public-nav-wrap::before,
-    .public-nav-wrap::after{
-      content:"";
-      position:absolute;
-      top:0;bottom:0;
-      width:40px;
-      z-index:2;
-      pointer-events:none;
-    }
-
-    .public-nav-wrap::before{
-      left:0;
-      background:linear-gradient(90deg, rgba(6,77,40,.98), rgba(6,77,40,0));
-    }
-
-    .public-nav-wrap::after{
-      right:0;
-      background:linear-gradient(270deg, rgba(11,122,59,.98), rgba(11,122,59,0));
-    }
-
-    .public-nav-arrow{
-      position:absolute;
-      top:50%;
-      transform:translateY(-50%);
-      z-index:3;
-      width:28px;height:28px;
-      border-radius:999px;
-      display:flex;align-items:center;justify-content:center;
-      background:rgba(255,210,31,.96);
-      color:var(--navy-dark);
-      font-size:20px;
-      font-weight:1000;
-      box-shadow:0 6px 14px rgba(0,0,0,.20);
-      pointer-events:none;
-    }
-
-    .public-nav-arrow.left{left:2px;}
-    .public-nav-arrow.right{right:2px;}
-
-    .public-nav{
-      display:flex;
-      gap:10px;
-      overflow-x:auto;
-      padding:2px 4px;
-      scrollbar-width:none;
-      -webkit-overflow-scrolling:touch;
-      scroll-behavior:smooth;
-    }
-
-    .public-nav::-webkit-scrollbar{display:none;}
-
-    .public-nav-link{
-      flex:0 0 auto;
-      min-height:42px;
-      padding:10px 17px;
-      border-radius:999px;
-      background:rgba(255,255,255,.92);
-      color:var(--navy);
-      font-size:14px;
-      font-weight:900;
-      white-space:nowrap;
-      box-shadow:0 8px 16px rgba(0,0,0,.14);
-      text-decoration:none;
-    }
-
-    .public-nav-link.primary{
-      background:linear-gradient(180deg,var(--sun),var(--sun-dark));
-      color:var(--navy-dark);
-      box-shadow:0 10px 20px rgba(255,210,31,.22);
     }
 
     main{
@@ -448,7 +305,8 @@
       font-weight:900;
     }
 
-    .note{
+    .note,
+    .status-box{
       margin-top:12px;
       padding:13px 14px;
       border-radius:18px;
@@ -459,9 +317,44 @@
       line-height:1.45;
     }
 
+    .status-box strong{color:var(--navy-dark);}
+
+    .mini-link{
+      min-height:50px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      border-radius:18px;
+      background:#fff;
+      border:1px solid rgba(16,24,40,.06);
+      color:#344054;
+      font-size:15px;
+      font-weight:900;
+      padding:12px 14px;
+      box-shadow:0 8px 18px rgba(16,24,40,.05);
+    }
+
+    .role-badge{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:6px 12px;
+      border-radius:999px;
+      font-weight:1000;
+      font-size:12px;
+      letter-spacing:.06em;
+      text-transform:uppercase;
+      margin-left:8px;
+      vertical-align:middle;
+    }
+
+    .role-badge.admin{background:linear-gradient(135deg,var(--palm),var(--palm-light));color:#fff;}
+    .role-badge.jat{background:linear-gradient(135deg,#5322a8,#a457f0);color:#fff;}
+    .role-badge.arbitre{background:linear-gradient(135deg,var(--navy),#0d4f82);color:#fff;}
+    .role-badge.none{background:#eef2f6;color:#475467;}
+
     @media (min-width:760px){
-      .public-header-inner{grid-template-columns:100px 1fr 100px;}
-      .public-header-logo{width:96px;height:80px;}
       .hero{padding:36px 32px;}
       .hero-infos{grid-template-columns:1fr 1fr 1fr;}
 
@@ -478,11 +371,6 @@
     }
 
     @media (max-width:759px){
-      :root{
-        --public-header-h:150px;
-        --public-total-top:150px;
-      }
-
       main{
         padding-top:calc(var(--public-total-top, 150px) + 16px);
       }
@@ -502,8 +390,7 @@
 
         <div class="hero-pills">
           <span class="pill">Dimanche 28 juin 2026</span>
-      
-        
+          <span class="pill">Kourou</span>
           <span class="pill">Double Dames • Double Messieurs</span>
         </div>
 
@@ -511,7 +398,7 @@
           <h1 class="hero-title">Tournoi Beach Tennis</h1>
           <div class="hero-date">28 juin 2026</div>
           <p class="hero-sub">
-            Au club du Tennis Squash Club de Kourou : sable, soleil et sport. Retrouvez ici les inscriptions, les équipes, la programmation, les matchs en direct et les infos pratiques.
+            Au Tennis Squash Club de Kourou : sable, soleil et sport. Retrouvez ici les inscriptions, les équipes, la programmation, les matchs en direct et les infos pratiques.
           </p>
         </div>
 
@@ -533,7 +420,7 @@
         </div>
 
         <div class="hero-actions">
-          <a class="hero-btn hero-btn-primary" href="join.html">📝 S’inscrire au tournoi</a>
+          <a class="hero-btn hero-btn-primary" href="public/inscriptions.html">📝 S’inscrire au tournoi</a>
           <a class="hero-btn hero-btn-secondary" href="public/equipes.html">👥 Voir les équipes</a>
         </div>
 
@@ -557,7 +444,7 @@
       </div>
 
       <div class="note">
-        Les inscriptions se font par équipe. Le formulaire permettra de renseigner les deux joueurs de l’équipe.
+        Les inscriptions se font par équipe. Le formulaire permet de renseigner les deux joueurs de l’équipe.
       </div>
     </div>
   </section>
@@ -573,7 +460,7 @@
       </div>
 
       <div class="grid-main">
-        <a class="entry-card card-green" href="join.html">
+        <a class="entry-card card-green" href="public/inscriptions.html">
           <div class="entry-kicker">Inscriptions</div>
           <h3 class="entry-title">S’inscrire</h3>
           <div class="entry-sub">Inscrire une équipe en Double Dames ou Double Messieurs.</div>
@@ -638,71 +525,200 @@
     </div>
   </section>
 
+  <section class="section">
+    <div class="panel">
+      <div class="panel-head">
+        <div>
+          <h2 class="panel-title">Espace organisateurs</h2>
+          <p class="panel-text">Accès sécurisé pour l’administration, le juge-arbitre et les arbitres.</p>
+        </div>
+        <div class="panel-tag">Sécurisé</div>
+      </div>
+
+      <div class="grid-main">
+        <a class="entry-card card-green" href="#" id="btnAdmin">
+          <div class="entry-kicker">Gestion</div>
+          <h3 class="entry-title">Admin</h3>
+          <div class="entry-sub">Administration générale du tournoi.</div>
+        </a>
+
+        <a class="entry-card card-navy" href="#" id="btnJAT">
+          <div class="entry-kicker">Officiel</div>
+          <h3 class="entry-title">Juge-arbitre</h3>
+          <div class="entry-sub">Gestion sportive et suivi officiel.</div>
+        </a>
+
+        <a class="entry-card card-pink" href="#" id="btnArbitre">
+          <div class="entry-kicker">Terrain</div>
+          <h3 class="entry-title">Arbitre</h3>
+          <div class="entry-sub">Suivi terrain et saisies autorisées.</div>
+        </a>
+
+        <a class="entry-card card-white" href="public/equipes.html">
+          <div class="entry-kicker">Lecture</div>
+          <h3 class="entry-title">Vue publique</h3>
+          <div class="entry-sub">Retour aux informations visibles par tous.</div>
+        </a>
+      </div>
+
+      <div class="status-box">
+        <strong>Statut :</strong>
+        <span id="authHint">Vérification de la connexion…</span>
+        <span id="roleBadge" class="role-badge none" style="display:none;"></span>
+      </div>
+
+      <div style="margin-top:12px;">
+        <a class="mini-link" href="#" id="btnLogout">🚪 Déconnexion</a>
+      </div>
+    </div>
+  </section>
+
 </main>
 
-<script>
-  const headerMount = document.getElementById("publicHeader");
+<script type="module" src="assets/js/public-header.js"></script>
 
-  function centerActiveNav(){
-    const nav = document.querySelector(".public-nav");
-    const active = document.querySelector(".public-nav-link.primary");
-    if(!nav || !active) return;
+<script type="module">
+  import { auth } from "./assets/js/firebase.js?v=tsck-index1";
+  import {
+    login,
+    logout,
+    getRoleByUid
+  } from "./assets/js/session.js?v=tsck-index1";
 
-    const navRect = nav.getBoundingClientRect();
-    const activeRect = active.getBoundingClientRect();
-    const activeCenter = active.offsetLeft + (activeRect.width / 2);
-    const target = activeCenter - (navRect.width / 2);
+  import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 
-    nav.scrollTo({
-      left:Math.max(0, target),
-      behavior:"auto"
-    });
+  const btnAdmin = document.getElementById("btnAdmin");
+  const btnJAT = document.getElementById("btnJAT");
+  const btnArbitre = document.getElementById("btnArbitre");
+  const btnLogout = document.getElementById("btnLogout");
+  const hint = document.getElementById("authHint");
+  const roleBadge = document.getElementById("roleBadge");
+
+  function setRoleBadge(role){
+    roleBadge.style.display = "inline-flex";
+    roleBadge.className = "role-badge";
+
+    if(role === "admin"){
+      roleBadge.textContent = "ADMIN";
+      roleBadge.classList.add("admin");
+      return;
+    }
+
+    if(role === "jat"){
+      roleBadge.textContent = "JAT";
+      roleBadge.classList.add("jat");
+      return;
+    }
+
+    if(role === "arbitre"){
+      roleBadge.textContent = "ARBITRE";
+      roleBadge.classList.add("arbitre");
+      return;
+    }
+
+    roleBadge.textContent = "AUCUN RÔLE";
+    roleBadge.classList.add("none");
   }
 
-  function centerActiveNavAfterLoad(){
-    centerActiveNav();
-    requestAnimationFrame(centerActiveNav);
-    setTimeout(centerActiveNav, 80);
-    setTimeout(centerActiveNav, 250);
-    setTimeout(centerActiveNav, 600);
+  function clearRoleBadge(){
+    roleBadge.textContent = "";
+    roleBadge.style.display = "none";
+    roleBadge.className = "role-badge none";
   }
 
-  headerMount.innerHTML = `
-    <header class="public-site-header">
-      <div class="public-container public-header-inner">
-        <div class="public-header-logo">
-          <img src="assets/img/logo-tsck.png" alt="Tennis Squash Club de Kourou">
-        </div>
+  async function askLogin(){
+    const email = prompt("Email organisateur ?");
+    if(!email) return null;
 
-        <div class="public-header-title">
-          <strong>OPEN BT TSCK<br>TSCK</strong>
-          <span>28 juin 2026</span>
-        </div>
+    const password = prompt("Mot de passe ?");
+    if(!password) return null;
 
-        <div class="public-header-logo">
-          <img src="assets/img/logo-julyana.png" alt="Jul’Yana BT">
-        </div>
+    try{
+      return await login(email.trim(), password);
+    }catch(error){
+      alert("Connexion impossible : " + (error?.message || "Erreur inconnue"));
+      return null;
+    }
+  }
 
-        <div class="public-nav-wrap">
-          <span class="public-nav-arrow left">‹</span>
-          <nav class="public-nav" aria-label="Navigation principale">
-            <a class="public-nav-link primary" href="index.html">🏠 Accueil</a>
-            <a class="public-nav-link" href="public/equipes.html">👥 Équipes</a>
-            <a class="public-nav-link" href="public/programmation.html">📅 Programmation</a>
-            <a class="public-nav-link" href="public/matchs-direct.html">🔴 Match en direct</a>
-            <a class="public-nav-link" href="public/reglement.html">📘 Règlement</a>
-            <a class="public-nav-link" href="public/tirage.html">🎲 Tirage</a>
-            <a class="public-nav-link" href="public/restauration.html">🍽️ Restauration</a>
-            <a class="public-nav-link" href="public/contact.html">📩 Contact</a>
-          </nav>
-          <span class="public-nav-arrow right">›</span>
-        </div>
-      </div>
-    </header>
-  `;
+  async function ensureUser(){
+    if(auth.currentUser) return auth.currentUser;
+    return await askLogin();
+  }
 
-  centerActiveNavAfterLoad();
-  window.addEventListener("resize", centerActiveNavAfterLoad);
+  async function getCurrentRole(){
+    const user = await ensureUser();
+    if(!user) return null;
+
+    const role = await getRoleByUid(user.uid);
+    return { user, role };
+  }
+
+  btnAdmin.onclick = async (event) => {
+    event.preventDefault();
+
+    const ctx = await getCurrentRole();
+    if(!ctx) return;
+
+    if(ctx.role !== "admin"){
+      alert("Accès réservé aux administrateurs.");
+      return;
+    }
+
+    window.location.href = "admin/index.html";
+  };
+
+  btnJAT.onclick = async (event) => {
+    event.preventDefault();
+
+    const ctx = await getCurrentRole();
+    if(!ctx) return;
+
+    if(ctx.role !== "admin" && ctx.role !== "jat"){
+      alert("Accès réservé au juge-arbitre et aux administrateurs.");
+      return;
+    }
+
+    window.location.href = "jat/index.html";
+  };
+
+  btnArbitre.onclick = async (event) => {
+    event.preventDefault();
+
+    const ctx = await getCurrentRole();
+    if(!ctx) return;
+
+    if(ctx.role !== "admin" && ctx.role !== "jat" && ctx.role !== "arbitre"){
+      alert("Accès réservé aux arbitres, juge-arbitres et administrateurs.");
+      return;
+    }
+
+    window.location.href = "arbitre/index.html";
+  };
+
+  btnLogout.onclick = async (event) => {
+    event.preventDefault();
+    await logout();
+    hint.textContent = "Non connecté.";
+    clearRoleBadge();
+  };
+
+  onAuthStateChanged(auth, async (user) => {
+    if(!user){
+      hint.textContent = "Non connecté.";
+      clearRoleBadge();
+      return;
+    }
+
+    try{
+      const role = await getRoleByUid(user.uid);
+      hint.textContent = `Connecté : ${user.email}`;
+      setRoleBadge(role);
+    }catch(error){
+      hint.textContent = `Connecté : ${user.email} — rôle non trouvé`;
+      setRoleBadge(null);
+    }
+  });
 </script>
 
 </body>
