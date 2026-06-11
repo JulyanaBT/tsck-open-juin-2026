@@ -1,6 +1,10 @@
 const headerMount = document.getElementById("publicHeader");
 
 const currentPage = location.pathname.split("/").pop() || "index.html";
+const isPublicPage = location.pathname.includes("/public/");
+
+const rootPath = isPublicPage ? "../" : "";
+const publicPath = isPublicPage ? "" : "public/";
 
 function navClass(page){
   return currentPage === page ? "public-nav-link primary" : "public-nav-link";
@@ -20,7 +24,6 @@ function injectStyles(){
       --navy-dark:#03172b;
       --sun:#ffd21f;
       --sand:#f4d9a4;
-      --white:#ffffff;
       --container:1180px;
       --public-header-h:158px;
       --public-total-top:158px;
@@ -61,9 +64,10 @@ function injectStyles(){
       display:flex;
       align-items:center;
       justify-content:center;
-      border-radius:22px;
-      background:rgba(255,255,255,.12);
-      box-shadow:inset 0 0 0 1px rgba(255,255,255,.18);
+      background:transparent;
+      border:none;
+      box-shadow:none;
+      border-radius:0;
     }
 
     .public-header-logo img{
@@ -105,24 +109,27 @@ function injectStyles(){
       padding:0 34px;
     }
 
-    .public-nav-wrap::before,
+    .public-nav-wrap::before{
+      content:"";
+      position:absolute;
+      top:0;
+      bottom:0;
+      left:0;
+      width:40px;
+      z-index:2;
+      pointer-events:none;
+      background:linear-gradient(90deg, rgba(6,77,40,.98), rgba(6,77,40,0));
+    }
+
     .public-nav-wrap::after{
       content:"";
       position:absolute;
       top:0;
       bottom:0;
+      right:0;
       width:40px;
       z-index:2;
       pointer-events:none;
-    }
-
-    .public-nav-wrap::before{
-      left:0;
-      background:linear-gradient(90deg, rgba(6,77,40,.98), rgba(6,77,40,0));
-    }
-
-    .public-nav-wrap::after{
-      right:0;
       background:linear-gradient(270deg, rgba(11,122,59,.98), rgba(11,122,59,0));
     }
 
@@ -209,7 +216,6 @@ function centerActiveNav(){
 
   const navRect = nav.getBoundingClientRect();
   const activeRect = active.getBoundingClientRect();
-
   const activeCenter = active.offsetLeft + (activeRect.width / 2);
   const target = activeCenter - (navRect.width / 2);
 
@@ -234,7 +240,7 @@ function renderHeader(){
     <header class="public-site-header">
       <div class="public-container public-header-inner">
         <div class="public-header-logo">
-          <img src="../assets/img/logo-tsck.png" alt="Tennis Squash Club de Kourou">
+          <img src="${rootPath}assets/img/logo-tsck.png" alt="Tennis Squash Club de Kourou">
         </div>
 
         <div class="public-header-title">
@@ -243,20 +249,20 @@ function renderHeader(){
         </div>
 
         <div class="public-header-logo">
-          <img src="../assets/img/logo-julyana.png" alt="Jul’Yana BT">
+          <img src="${rootPath}assets/img/logo-julyana.png" alt="Jul’Yana BT">
         </div>
 
         <div class="public-nav-wrap">
           <span class="public-nav-arrow left">‹</span>
           <nav class="public-nav" aria-label="Navigation publique">
-            <a class="public-nav-link" href="../index.html">🏠 Accueil</a>
-            <a class="${navClass("equipes.html")}" href="public/equipes.html">👥 Équipes</a>
-            <a class="${navClass("programmation.html")}" href="public/programmation.html">📅 Programmation</a>
-            <a class="${navClass("matchs-direct.html")}" href="public/matchs-direct.html">🔴 Match en direct</a>
-            <a class="${navClass("reglement.html")}" href="public/reglement.html">📘 Règlement</a>
-            <a class="${navClass("tirage.html")}" href="public/tirage.html">🎲 Tirage</a>
-            <a class="${navClass("restauration.html")}" href="public/restauration.html">🍽️ Restauration</a>
-            <a class="${navClass("contact.html")}" href="public/contact.html">📩 Contact</a>
+            <a class="${currentPage === "index.html" ? "public-nav-link primary" : "public-nav-link"}" href="${rootPath}index.html">🏠 Accueil</a>
+            <a class="${navClass("equipes.html")}" href="${publicPath}equipes.html">👥 Équipes</a>
+            <a class="${navClass("programmation.html")}" href="${publicPath}programmation.html">📅 Programmation</a>
+            <a class="${navClass("matchs-direct.html")}" href="${publicPath}matchs-direct.html">🔴 Match en direct</a>
+            <a class="${navClass("reglement.html")}" href="${publicPath}reglement.html">📘 Règlement</a>
+            <a class="${navClass("tirage.html")}" href="${publicPath}tirage.html">🎲 Tirage</a>
+            <a class="${navClass("restauration.html")}" href="${publicPath}restauration.html">🍽️ Restauration</a>
+            <a class="${navClass("contact.html")}" href="${publicPath}contact.html">📩 Contact</a>
           </nav>
           <span class="public-nav-arrow right">›</span>
         </div>
