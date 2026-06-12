@@ -1,84 +1,668 @@
 <!doctype html>
 <html lang="fr">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Règlement — Open Beach Tennis TSCK</title>
 
-<title>Règlement - Open Beach Tennis TSCK</title>
+  <style>
+    :root{
+      --clay:#c65a1e; --clay-dark:#8e3a13; --clay-light:#ee8a3a;
+      --sky:#27bced; --aqua:#00a9c8; --blue:#075b9a; --blue-dark:#063b72;
+      --text:#17212b; --muted:#667085; --card:rgba(255,255,255,.94);
+      --shadow:0 16px 40px rgba(16,24,40,.12);
+      --container:1180px;
+    }
 
-<style>
-:root{
-  --bg:#f4f8fb;
-  --card:#ffffff;
-  --text:#17212b;
-  --blue:#075b9a;
-  --clay:#c65a1e;
-  --shadow:0 16px 40px rgba(16,24,40,.12);
-}
+    *{box-sizing:border-box;}
 
-*{box-sizing:border-box}
+    html,body{max-width:100%;overflow-x:hidden;}
 
-body{
-  margin:0;
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
-  background:var(--bg);
-  color:var(--text);
-}
+    body{
+      margin:0;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at 20% 0%, rgba(39,188,237,.22), transparent 28%),
+        radial-gradient(circle at 85% 10%, rgba(0,169,200,.16), transparent 26%),
+        linear-gradient(180deg,#f4fcff 0%,#e9f8ff 48%,#ffffff 100%);
+    }
 
-main{
-  max-width:900px;
-  margin:auto;
-  padding:190px 20px 40px;
-}
+    a{color:inherit;text-decoration:none;}
+    .container{width:min(var(--container), calc(100% - 28px));margin:0 auto;}
 
-.card{
-  background:var(--card);
-  border-radius:24px;
-  padding:40px 30px;
-  text-align:center;
-  box-shadow:var(--shadow);
-}
+    main{
+      padding-top:calc(var(--public-total-top, 230px) + 30px);
+      padding-bottom:42px;
+    }
 
-h1{
-  margin:0 0 15px;
-  color:var(--clay);
-}
+    .section{margin-top:16px;}
 
-p{
-  font-size:18px;
-  line-height:1.6;
-}
+    .panel{
+      background:var(--card);
+      border:1px solid rgba(255,255,255,.6);
+      border-radius:24px;
+      box-shadow:var(--shadow);
+      padding:18px;
+    }
 
-.small{
-  color:#667085;
-  font-size:14px;
-}
-</style>
+    .panel-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:12px;
+      margin-bottom:14px;
+    }
+
+    .panel-title{
+      margin:0;
+      font-size:26px;
+      line-height:1.05;
+      letter-spacing:-.03em;
+    }
+
+    .panel-text{
+      margin:6px 0 0;
+      color:var(--muted);
+      font-size:15px;
+      line-height:1.35;
+    }
+
+    .panel-tag{
+      flex-shrink:0;
+      padding:8px 13px;
+      border-radius:999px;
+      background:#e4f7ff;
+      color:var(--blue-dark);
+      font-size:12px;
+      font-weight:1000;
+      text-transform:uppercase;
+      letter-spacing:.06em;
+    }
+
+    .controls{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:10px;
+      margin-top:14px;
+    }
+
+    .toggle-line{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .toggle-btn{
+      appearance:none;
+      border:1px solid rgba(7,91,154,.14);
+      background:#fff;
+      border-radius:999px;
+      min-height:42px;
+      padding:10px 15px;
+      font-size:14px;
+      font-weight:1000;
+      cursor:pointer;
+      color:#1c2430;
+      text-align:center;
+      box-shadow:0 6px 14px rgba(16,24,40,.05);
+      white-space:nowrap;
+      font-family:inherit;
+    }
+
+    .toggle-btn[aria-selected="true"]{
+      background:linear-gradient(180deg,var(--blue),var(--blue-dark));
+      color:#fff;
+      border-color:var(--blue);
+      box-shadow:0 10px 22px rgba(7,91,154,.22);
+    }
+
+    .intro-box{
+      margin-top:14px;
+      padding:15px 16px;
+      border-radius:18px;
+      background:linear-gradient(135deg,rgba(39,188,237,.12),rgba(198,90,30,.08));
+      border:1px solid rgba(39,188,237,.22);
+      color:#475467;
+      font-size:14px;
+      line-height:1.5;
+    }
+
+    .intro-box strong{color:var(--blue-dark);}
+
+    .content{
+      margin-top:16px;
+      display:grid;
+      gap:14px;
+    }
+
+    .rule-card{
+      border-radius:18px;
+      padding:15px 16px;
+      background:#fff;
+      border:1px solid rgba(16,24,40,.08);
+      box-shadow:0 8px 18px rgba(16,24,40,.05);
+    }
+
+    .rule-card h2{
+      margin:0 0 8px;
+      color:var(--blue-dark);
+      font-size:20px;
+      line-height:1.15;
+      letter-spacing:-.02em;
+    }
+
+    .rule-card p{
+      margin:8px 0 0;
+      color:#344054;
+      font-size:14px;
+      line-height:1.55;
+    }
+
+    .rule-card ul{
+      margin:8px 0 0;
+      padding-left:20px;
+      color:#344054;
+      font-size:14px;
+      line-height:1.55;
+    }
+
+    .summary-grid{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:10px;
+      margin-top:16px;
+    }
+
+    .summary-card{
+      border-radius:16px;
+      padding:13px 14px;
+      background:#fff;
+      border:1px solid rgba(16,24,40,.08);
+      box-shadow:0 6px 14px rgba(16,24,40,.04);
+    }
+
+    .summary-card strong{
+      display:block;
+      color:var(--blue-dark);
+      margin-bottom:5px;
+      font-weight:1000;
+    }
+
+    .summary-card span{
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.4;
+    }
+
+    .hidden{display:none !important;}
+
+    @media (min-width:760px){
+      .panel{padding:22px;}
+      .controls{grid-template-columns:1fr 1fr;align-items:center;}
+      .summary-grid{grid-template-columns:repeat(3,1fr);}
+    }
+
+    @media (max-width:759px){
+      main{
+        padding-top:calc(var(--public-total-top, 222px) + 28px);
+      }
+
+      .panel-title{font-size:24px;}
+      .panel-head{flex-direction:column;}
+      .toggle-btn{flex:1;}
+    }
+  </style>
 </head>
 
-<body>
+<body data-zone-selector="none">
 
 <div id="publicHeader"></div>
 
-<main>
-  <div class="card">
-    <h1>📘 Règlement</h1>
+<main class="container">
 
-    <p>
-      Le règlement du tournoi sera publié prochainement.
-    </p>
+  <section class="section">
+    <div class="panel">
+      <div class="panel-head">
+        <div>
+          <h1 class="panel-title">📘 Règlement</h1>
+          <p class="panel-text">Formats, règles sportives et conditions de participation.</p>
+        </div>
+        <div class="panel-tag">Officiel</div>
+      </div>
 
-    <p>
-      Vous y retrouverez les formats des rencontres, les modalités d'inscription, les règles sportives et les informations relatives à l'organisation.
-    </p>
+      <div class="controls">
+        <div class="toggle-line" aria-label="Choix de la langue">
+          <button class="toggle-btn" id="btnFr" type="button" aria-selected="true">🇫🇷 Français</button>
+          <button class="toggle-btn" id="btnPt" type="button" aria-selected="false">🇧🇷 Português</button>
+        </div>
 
-    <p class="small">
-      Open Beach Tennis TSCK – 28 juin 2026
-    </p>
-  </div>
+        <div class="toggle-line" aria-label="Choix du niveau de détail">
+          <button class="toggle-btn" id="btnFull" type="button" aria-selected="true">📘 Règlement complet</button>
+          <button class="toggle-btn" id="btnSummary" type="button" aria-selected="false">⚡ Résumé</button>
+        </div>
+      </div>
+
+      <div class="intro-box" id="introBox"></div>
+
+      <div id="summaryFr" class="summary-grid hidden">
+        <div class="summary-card">
+          <strong>🎾 Compétition</strong>
+          <span>Open Beach Tennis TSCK, organisé le dimanche 28 juin 2026 au Tennis Squash Club de Kourou.</span>
+        </div>
+        <div class="summary-card">
+          <strong>📌 Épreuves</strong>
+          <span>Seniors Double Messieurs et Seniors Double Dames.</span>
+        </div>
+        <div class="summary-card">
+          <strong>✅ Participation</strong>
+          <span>Licence FFT Beach Tennis ou Multi-Raquettes 2026 obligatoire. Joueurs à jour administrativement avant la compétition.</span>
+        </div>
+        <div class="summary-card">
+          <strong>💳 Inscriptions</strong>
+          <span>10 € par joueur, soit 20 € par équipe. Inscription par équipe complète.</span>
+        </div>
+        <div class="summary-card">
+          <strong>🏆 Formats</strong>
+          <span>Formules possibles : poules, tableaux, multi-chances ou formule mixte. Demi-finales et finales au format 4 ; autres matchs au format 3 sauf précision.</span>
+        </div>
+        <div class="summary-card">
+          <strong>⏱️ Convocation</strong>
+          <span>Rendez-vous à 12h00. Les horaires publiés sont indicatifs et peuvent évoluer selon l’organisation.</span>
+        </div>
+        <div class="summary-card">
+          <strong>📊 Poules</strong>
+          <span>Victoire : 2 points, défaite : 1 point, forfait ou disqualification : 0 point.</span>
+        </div>
+        <div class="summary-card">
+          <strong>⚖️ Juge-arbitre</strong>
+          <span>Le juge-arbitre assure le bon déroulement sportif, valide les résultats et peut adapter les formats.</span>
+        </div>
+        <div class="summary-card">
+          <strong>🤝 Discipline</strong>
+          <span>Fair-play obligatoire. Tout comportement antisportif peut entraîner avertissement, pénalité ou disqualification.</span>
+        </div>
+      </div>
+
+      <div id="summaryPt" class="summary-grid hidden">
+        <div class="summary-card">
+          <strong>🎾 Competição</strong>
+          <span>Open Beach Tennis TSCK, realizado no domingo, 28 de junho de 2026, no Tennis Squash Club de Kourou.</span>
+        </div>
+        <div class="summary-card">
+          <strong>📌 Provas</strong>
+          <span>Adulto Duplas Masculinas e Adulto Duplas Femininas.</span>
+        </div>
+        <div class="summary-card">
+          <strong>✅ Participação</strong>
+          <span>Licença FFT Beach Tennis ou Multi-Raquetes 2026 obrigatória. Jogadores regularizados antes da competição.</span>
+        </div>
+        <div class="summary-card">
+          <strong>💳 Inscrições</strong>
+          <span>10 € por jogador, ou 20 € por dupla. Inscrição em dupla completa.</span>
+        </div>
+        <div class="summary-card">
+          <strong>🏆 Formatos</strong>
+          <span>Possíveis formatos: grupos, chaves, multi-chances ou fórmula mista. Semifinais e finais no formato 4; demais jogos no formato 3, salvo exceções.</span>
+        </div>
+        <div class="summary-card">
+          <strong>⏱️ Convocação</strong>
+          <span>Encontro às 12h00. Os horários publicados são indicativos e podem ser alterados pela organização.</span>
+        </div>
+        <div class="summary-card">
+          <strong>📊 Grupos</strong>
+          <span>Vitória: 2 pontos, derrota: 1 ponto, WO ou desclassificação: 0 ponto.</span>
+        </div>
+        <div class="summary-card">
+          <strong>⚖️ Árbitro-geral</strong>
+          <span>O árbitro-geral garante o bom andamento esportivo, valida os resultados e pode adaptar os formatos.</span>
+        </div>
+        <div class="summary-card">
+          <strong>🤝 Disciplina</strong>
+          <span>Fair-play obrigatório. Condutas antidesportivas podem gerar advertência, penalidade ou desclassificação.</span>
+        </div>
+      </div>
+
+      <div id="fullFr" class="content">
+
+        <div class="rule-card">
+          <h2>1. Organisation</h2>
+          <p>
+            L’Open Beach Tennis TSCK est organisé par le Tennis Squash Club de Kourou.
+            Il se déroule le dimanche 28 juin 2026 au Tennis Squash Club de Kourou.
+          </p>
+        </div>
+
+        <div class="rule-card">
+          <h2>2. Épreuves</h2>
+          <ul>
+            <li>Seniors Double Messieurs (DM)</li>
+            <li>Seniors Double Dames (DD)</li>
+            <li>Les épreuves sont organisées sous réserve d’un nombre suffisant d’inscriptions</li>
+          </ul>
+        </div>
+
+        <div class="rule-card">
+          <h2>3. Conditions de participation</h2>
+          <ul>
+            <li>Licence FFT Beach Tennis ou Multi-Raquettes 2026 obligatoire</li>
+            <li>Certificat médical conforme aux règles FFT si nécessaire</li>
+            <li>Les joueurs doivent être à jour administrativement avant le début de la compétition</li>
+          </ul>
+        </div>
+
+        <div class="rule-card">
+          <h2>4. Inscriptions</h2>
+          <ul>
+            <li>Inscription par équipe complète</li>
+            <li>Montant : 10 € par joueur, soit 20 € par équipe</li>
+            <li>Les inscriptions sont validées après paiement</li>
+            <li>Le juge-arbitre peut refuser une inscription incomplète ou hors délai</li>
+          </ul>
+        </div>
+
+        <div class="rule-card">
+          <h2>5. Formats sportifs</h2>
+          <p>
+            Les formats peuvent être adaptés selon le nombre d’équipes engagées et les contraintes d’organisation.
+          </p>
+          <ul>
+            <li>Poules</li>
+            <li>Tableaux à élimination directe</li>
+            <li>Tableaux multi-chances</li>
+            <li>Formules mixtes</li>
+          </ul>
+          <p>Sauf indication contraire :</p>
+          <ul>
+            <li>Les demi-finales et finales se jouent au format 4</li>
+            <li>Les autres rencontres se jouent au format 3</li>
+          </ul>
+        </div>
+
+        <div class="rule-card">
+          <h2>6. Convocation et programmation</h2>
+          <ul>
+            <li>Rendez-vous des joueurs à 12h00</li>
+            <li>Début prévisionnel des rencontres après pointage et organisation des tableaux</li>
+            <li>Les joueurs doivent être présents avant leur premier match</li>
+            <li>Les horaires publiés sont indicatifs et peuvent être modifiés</li>
+            <li>Les joueurs doivent consulter régulièrement la programmation officielle</li>
+          </ul>
+        </div>
+
+        <div class="rule-card">
+          <h2>7. Classements en poules</h2>
+          <p>Le classement est établi selon les critères suivants :</p>
+          <ul>
+            <li>Victoire : 2 points</li>
+            <li>Défaite : 1 point</li>
+            <li>Forfait ou disqualification : 0 point</li>
+          </ul>
+          <p>En cas d’égalité :</p>
+          <ul>
+            <li>Résultat entre les équipes concernées</li>
+            <li>Différence de sets</li>
+            <li>Différence de jeux</li>
+            <li>Nombre total de jeux gagnés</li>
+            <li>Tirage au sort si nécessaire</li>
+          </ul>
+        </div>
+
+        <div class="rule-card">
+          <h2>8. Arbitrage et juge-arbitrage</h2>
+          <p>
+            Le juge-arbitre est responsable du bon déroulement sportif de la compétition.
+          </p>
+          <ul>
+            <li>Validation des tableaux et programmations</li>
+            <li>Application du règlement sportif FFT</li>
+            <li>Gestion des litiges et incidents</li>
+            <li>Adaptation éventuelle des formats ou horaires</li>
+          </ul>
+        </div>
+
+        <div class="rule-card">
+          <h2>9. Discipline et comportement</h2>
+          <ul>
+            <li>Respect des adversaires, arbitres et organisateurs obligatoire</li>
+            <li>Fair-play et comportement sportif exigés</li>
+            <li>Tout comportement antisportif peut entraîner pénalité ou disqualification</li>
+            <li>Les décisions du juge-arbitre sont sans appel</li>
+          </ul>
+        </div>
+
+        <div class="rule-card">
+          <h2>10. Responsabilité</h2>
+          <p>
+            Les organisateurs déclinent toute responsabilité en cas de perte, vol, accident ou incident survenu durant la compétition.
+          </p>
+        </div>
+
+        <div class="rule-card">
+          <h2>11. Droit à l’image</h2>
+          <p>
+            Les participants autorisent l’utilisation de leur image dans le cadre de la communication liée à l’Open Beach Tennis TSCK 2026.
+          </p>
+        </div>
+
+      </div>
+
+      <div id="fullPt" class="content hidden">
+
+        <div class="rule-card">
+          <h2>1. Organização</h2>
+          <p>
+            O Open Beach Tennis TSCK é organizado pelo Tennis Squash Club de Kourou.
+            A competição será realizada no domingo, 28 de junho de 2026, no Tennis Squash Club de Kourou.
+          </p>
+        </div>
+
+        <div class="rule-card">
+          <h2>2. Provas</h2>
+          <ul>
+            <li>Adulto Duplas Masculinas (DM)</li>
+            <li>Adulto Duplas Femininas (DD)</li>
+            <li>As provas serão realizadas conforme o número suficiente de inscrições</li>
+          </ul>
+        </div>
+
+        <div class="rule-card">
+          <h2>3. Condições de participação</h2>
+          <ul>
+            <li>Licença FFT Beach Tennis ou Multi-Raquetes 2026 obrigatória</li>
+            <li>Atestado médico conforme as regras da FFT, se necessário</li>
+            <li>Todos os jogadores devem estar regularizados antes do início da competição</li>
+          </ul>
+        </div>
+
+        <div class="rule-card">
+          <h2>4. Inscrições</h2>
+          <ul>
+            <li>Inscrição obrigatoriamente em dupla completa</li>
+            <li>Valor: 10 € por jogador, ou 20 € por dupla</li>
+            <li>As inscrições só serão validadas após o pagamento</li>
+            <li>O árbitro-geral pode recusar inscrições incompletas ou fora do prazo</li>
+          </ul>
+        </div>
+
+        <div class="rule-card">
+          <h2>5. Formatos esportivos</h2>
+          <p>
+            Os formatos podem ser adaptados conforme o número de equipes inscritas e as necessidades de organização.
+          </p>
+          <ul>
+            <li>Fase de grupos</li>
+            <li>Chaves eliminatórias</li>
+            <li>Quadros multi-chances</li>
+            <li>Fórmulas mistas</li>
+          </ul>
+          <p>Salvo indicação contrária:</p>
+          <ul>
+            <li>Semifinais e finais serão disputadas no formato 4</li>
+            <li>Os demais jogos serão disputados no formato 3</li>
+          </ul>
+        </div>
+
+        <div class="rule-card">
+          <h2>6. Convocação e programação</h2>
+          <ul>
+            <li>Encontro dos jogadores às 12h00</li>
+            <li>Início previsto dos jogos após confirmação das presenças e organização das chaves</li>
+            <li>Os jogadores devem estar presentes antes do primeiro jogo</li>
+            <li>Os horários publicados são apenas indicativos e podem ser alterados</li>
+            <li>Os jogadores devem consultar regularmente a programação oficial</li>
+          </ul>
+        </div>
+
+        <div class="rule-card">
+          <h2>7. Classificação nos grupos</h2>
+          <p>A classificação será definida pelos seguintes critérios:</p>
+          <ul>
+            <li>Vitória: 2 pontos</li>
+            <li>Derrota: 1 ponto</li>
+            <li>WO ou desclassificação: 0 ponto</li>
+          </ul>
+          <p>Em caso de empate:</p>
+          <ul>
+            <li>Confronto direto entre as equipes envolvidas</li>
+            <li>Saldo de sets</li>
+            <li>Saldo de games</li>
+            <li>Total de games vencidos</li>
+            <li>Sorteio, se necessário</li>
+          </ul>
+        </div>
+
+        <div class="rule-card">
+          <h2>8. Arbitragem e árbitro-geral</h2>
+          <p>
+            O árbitro-geral é responsável pelo bom andamento esportivo da competição.
+          </p>
+          <ul>
+            <li>Validação das chaves e programações</li>
+            <li>Aplicação do regulamento esportivo FFT</li>
+            <li>Gestão de conflitos e incidentes</li>
+            <li>Possível adaptação de formatos e horários</li>
+          </ul>
+        </div>
+
+        <div class="rule-card">
+          <h2>9. Disciplina e comportamento</h2>
+          <ul>
+            <li>Respeito aos adversários, árbitros e organizadores é obrigatório</li>
+            <li>Fair-play e espírito esportivo são exigidos</li>
+            <li>Comportamentos antidesportivos podem resultar em penalidades ou desclassificação</li>
+            <li>As decisões do árbitro-geral são definitivas</li>
+          </ul>
+        </div>
+
+        <div class="rule-card">
+          <h2>10. Responsabilidade</h2>
+          <p>
+            Os organizadores não se responsabilizam por perdas, furtos, acidentes ou incidentes ocorridos durante a competição.
+          </p>
+        </div>
+
+        <div class="rule-card">
+          <h2>11. Direito de imagem</h2>
+          <p>
+            Os participantes autorizam o uso de sua imagem para comunicação relacionada ao Open Beach Tennis TSCK 2026.
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
 </main>
 
-<script src="../assets/js/public-header.js"></script>
+<script type="module" src="../assets/js/public-header.js"></script>
+
+<script>
+  const btnFr = document.getElementById("btnFr");
+  const btnPt = document.getElementById("btnPt");
+
+  const btnFull = document.getElementById("btnFull");
+  const btnSummary = document.getElementById("btnSummary");
+
+  const fullFr = document.getElementById("fullFr");
+  const fullPt = document.getElementById("fullPt");
+
+  const summaryFr = document.getElementById("summaryFr");
+  const summaryPt = document.getElementById("summaryPt");
+
+  const introBox = document.getElementById("introBox");
+
+  let lang = "fr";
+  let mode = "full";
+
+  function refresh(){
+    btnFr.setAttribute("aria-selected", lang === "fr");
+    btnPt.setAttribute("aria-selected", lang === "pt");
+
+    btnFull.setAttribute("aria-selected", mode === "full");
+    btnSummary.setAttribute("aria-selected", mode === "summary");
+
+    fullFr.classList.add("hidden");
+    fullPt.classList.add("hidden");
+    summaryFr.classList.add("hidden");
+    summaryPt.classList.add("hidden");
+
+    if(lang === "fr" && mode === "full"){
+      fullFr.classList.remove("hidden");
+      introBox.innerHTML = `
+        <strong>📘 Version officielle française</strong><br>
+        Ce règlement précise les conditions de participation, les formats sportifs et les règles applicables durant l’Open Beach Tennis TSCK 2026.
+      `;
+    }
+
+    if(lang === "fr" && mode === "summary"){
+      summaryFr.classList.remove("hidden");
+      introBox.innerHTML = `
+        <strong>⚡ Résumé rapide</strong><br>
+        Retrouvez ici les principales informations utiles concernant les inscriptions, les formats et les règles sportives.
+      `;
+    }
+
+    if(lang === "pt" && mode === "full"){
+      fullPt.classList.remove("hidden");
+      introBox.innerHTML = `
+        <strong>📘 Versão oficial em português</strong><br>
+        Este regulamento define as condições de participação, formatos esportivos e regras aplicáveis ao Open Beach Tennis TSCK 2026.
+      `;
+    }
+
+    if(lang === "pt" && mode === "summary"){
+      summaryPt.classList.remove("hidden");
+      introBox.innerHTML = `
+        <strong>⚡ Resumo rápido</strong><br>
+        Aqui você encontra as principais informações sobre inscrições, formatos e regras esportivas.
+      `;
+    }
+  }
+
+  btnFr.onclick = () => {
+    lang = "fr";
+    refresh();
+  };
+
+  btnPt.onclick = () => {
+    lang = "pt";
+    refresh();
+  };
+
+  btnFull.onclick = () => {
+    mode = "full";
+    refresh();
+  };
+
+  btnSummary.onclick = () => {
+    mode = "summary";
+    refresh();
+  };
+
+  refresh();
+</script>
 
 </body>
 </html>
