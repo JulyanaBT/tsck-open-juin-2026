@@ -1,0 +1,725 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin — Équipes — Open Beach Tennis TSCK</title>
+
+  <style>
+    :root{
+      --clay:#c65a1e;
+      --clay-dark:#8e3a13;
+      --clay-light:#ee8a3a;
+      --sky:#27bced;
+      --aqua:#00a9c8;
+      --blue:#075b9a;
+      --blue-dark:#063b72;
+      --text:#17212b;
+      --muted:#667085;
+      --card:rgba(255,255,255,.94);
+      --shadow:0 16px 40px rgba(16,24,40,.12);
+      --container:1180px;
+    }
+
+    *{box-sizing:border-box;}
+
+    body{
+      margin:0;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at 20% 0%, rgba(39,188,237,.22), transparent 28%),
+        radial-gradient(circle at 85% 10%, rgba(0,169,200,.16), transparent 26%),
+        linear-gradient(180deg,#f4fcff 0%,#e9f8ff 48%,#fff 100%);
+    }
+
+    a{color:inherit;text-decoration:none;}
+
+    .container{
+      width:min(var(--container), calc(100% - 28px));
+      margin:0 auto;
+    }
+
+    main{
+      padding-top:calc(var(--admin-total-top, 230px) + 42px);
+      padding-bottom:42px;
+    }
+
+    .section{margin-top:22px;}
+
+    .panel{
+      background:var(--card);
+      border:1px solid rgba(255,255,255,.6);
+      border-radius:28px;
+      box-shadow:var(--shadow);
+      padding:20px;
+    }
+
+    .panel-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:12px;
+      margin-bottom:16px;
+    }
+
+    .panel-title{
+      margin:0;
+      font-size:28px;
+      line-height:1.05;
+      letter-spacing:-.03em;
+    }
+
+    .panel-text{
+      margin:8px 0 0;
+      color:var(--muted);
+      font-size:15px;
+      line-height:1.55;
+    }
+
+    .panel-tag{
+      flex-shrink:0;
+      padding:8px 13px;
+      border-radius:999px;
+      background:#e4f7ff;
+      color:var(--blue-dark);
+      font-size:12px;
+      font-weight:1000;
+      text-transform:uppercase;
+      letter-spacing:.06em;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:10px;
+    }
+
+    .btn{
+      appearance:none;
+      border:1px solid rgba(16,24,40,.10);
+      background:#fff;
+      border-radius:18px;
+      min-height:54px;
+      padding:13px 15px;
+      font-size:15px;
+      font-weight:1000;
+      cursor:pointer;
+      color:#1c2430;
+      text-align:center;
+      box-shadow:0 8px 16px rgba(16,24,40,.04);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-family:inherit;
+    }
+
+    .btn.primary{
+      background:linear-gradient(180deg,var(--blue),var(--blue-dark));
+      color:#fff;
+      border-color:var(--blue);
+    }
+
+    .status-box{
+      margin-top:14px;
+      padding:14px 16px;
+      border-radius:18px;
+      background:linear-gradient(135deg,rgba(39,188,237,.12),rgba(198,90,30,.08));
+      border:1px solid rgba(39,188,237,.22);
+      color:#475467;
+      font-size:14px;
+      line-height:1.5;
+    }
+
+    .muted{
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.45;
+    }
+
+    .team-card{
+      border:1px solid rgba(16,24,40,.08);
+      border-radius:20px;
+      background:#fff;
+      box-shadow:0 8px 18px rgba(16,24,40,.06);
+      padding:14px;
+      display:grid;
+      gap:12px;
+    }
+
+    .team-head{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:10px;
+    }
+
+    .team-name{
+      font-weight:1000;
+      font-size:18px;
+      line-height:1.15;
+      word-break:break-word;
+    }
+
+    .badges{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:4px 10px;
+      border-radius:999px;
+      font-size:12px;
+      border:1px solid #eee;
+      background:#fafafa;
+      color:#333;
+      white-space:nowrap;
+      font-weight:1000;
+    }
+
+    .pill.epreuve{
+      border-color:#d9e6ff;
+      background:#f3f7ff;
+      color:var(--blue-dark);
+    }
+
+    .pill.rank{
+      border-color:#d9e6ff;
+      background:#f3f7ff;
+      color:var(--blue-dark);
+    }
+
+    .player{
+      display:grid;
+      gap:3px;
+      padding:2px 0;
+      background:transparent;
+      border:none;
+    }
+
+    .player-title{
+      font-weight:1000;
+      color:var(--blue-dark);
+      margin-bottom:4px;
+    }
+
+    .player-line{
+      font-size:14px;
+      line-height:1.35;
+      color:#1f2937;
+    }
+
+    .player-line strong{
+      color:#667085;
+      font-weight:900;
+      display:inline-block;
+      min-width:76px;
+    }
+
+    .actions{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+
+    .btnx{
+      padding:9px 12px;
+      border-radius:999px;
+      border:1px solid #ddd;
+      background:#fff;
+      cursor:pointer;
+      font-weight:1000;
+      color:#111;
+      font-family:inherit;
+    }
+
+    .btnx:hover{background:#f5f5f5;}
+    .btnx.danger{border-color:#f1b2b2;}
+    .btnx.danger:hover{background:#ffecec;}
+
+    details{
+      border-top:1px solid rgba(16,24,40,.08);
+      padding-top:8px;
+    }
+
+    details summary{
+      cursor:pointer;
+      list-style:none;
+      font-weight:1000;
+      color:var(--blue-dark);
+    }
+
+    details summary::-webkit-details-marker{display:none;}
+
+    @media (min-width:760px){
+      .panel{padding:24px;}
+      .grid.three{grid-template-columns:1fr 1fr 1fr;}
+    }
+
+    @media (max-width:759px){
+      main{
+        padding-top:calc(var(--admin-total-top, 222px) + 34px);
+      }
+
+      .panel-title{font-size:24px;}
+    }
+  </style>
+</head>
+
+<body data-zone-selector="select">
+
+<div id="adminHeader"></div>
+
+<main class="container">
+
+  <section class="section panel" id="accessDenied" style="display:none;">
+    <h2 class="panel-title">⛔ Accès refusé</h2>
+    <p class="panel-text">Cette page est réservée aux administrateurs.</p>
+  </section>
+
+  <section class="section panel" id="panelSummary" style="display:none;">
+    <div class="panel-head">
+      <div>
+        <h2 class="panel-title">📌 Résumé</h2>
+        <p class="panel-text" id="counts">Chargement…</p>
+      </div>
+      <div class="panel-tag">Équipes</div>
+    </div>
+
+    <div class="status-box" id="hint">Chargement…</div>
+    <p class="muted" id="status" style="margin-top:10px;">Connexion…</p>
+  </section>
+
+  <section class="section panel" id="panelList" style="display:none;">
+    <div class="panel-head">
+      <div>
+        <h2 class="panel-title">👥 Équipes</h2>
+        <p class="panel-text">Gestion des équipes inscrites et de leur affichage public.</p>
+      </div>
+      <div class="panel-tag">Liste</div>
+    </div>
+
+    <div class="grid three" style="margin-bottom:12px;">
+      <button class="btn" id="btnRefresh">🔄 Rafraîchir</button>
+      <button class="btn" id="btnExpand">🧩 Tout développer</button>
+      <button class="btn" id="btnCollapse">🧊 Tout réduire</button>
+    </div>
+
+    <div id="list" style="display:grid;gap:12px;"></div>
+  </section>
+
+</main>
+
+<script type="module" src="../assets/js/admin-header.js"></script>
+
+<script type="module">
+  import { auth, db } from "../assets/js/firebase.js";
+  import { getRoleByUid } from "../assets/js/session.js";
+  import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+
+  import {
+    collection,
+    getDocs,
+    query,
+    orderBy,
+    doc,
+    setDoc,
+    deleteDoc,
+    serverTimestamp
+  } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
+  const EVENT_ID = "tsck-open-juin-2026";
+
+  const EPREUVE_LABELS = {
+    DM: "Double Messieurs",
+    DD: "Double Dames"
+  };
+
+  const accessDenied = document.getElementById("accessDenied");
+  const panelSummary = document.getElementById("panelSummary");
+  const panelList = document.getElementById("panelList");
+
+  const hintEl = document.getElementById("hint");
+  const countsEl = document.getElementById("counts");
+  const statusEl = document.getElementById("status");
+  const listEl = document.getElementById("list");
+
+  const btnRefresh = document.getElementById("btnRefresh");
+  const btnExpand = document.getElementById("btnExpand");
+  const btnCollapse = document.getElementById("btnCollapse");
+
+  let currentCategorie = "Seniors";
+  let currentEpreuve = "DM";
+  let liveRows = [];
+  let isAdminReady = false;
+
+  function esc(s){
+    return (s ?? "").toString()
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+  }
+
+  function fmt(v){
+    const t = (v ?? "").toString().trim();
+    return t === "" ? "—" : t;
+  }
+
+  function clean(v){
+    return (v ?? "").toString().trim();
+  }
+
+  function toNum(v){
+    if(v === null || v === undefined || v === "") return null;
+    const n = typeof v === "number" ? v : Number(String(v).replace(",", ".").trim());
+    return Number.isFinite(n) ? n : null;
+  }
+
+  function fmtRank(v){
+    const n = toNum(v);
+    return n === null ? "—" : String(n);
+  }
+
+  function teamRank(p1, p2){
+    const a = toNum(p1);
+    const b = toNum(p2);
+    if(a === null || b === null) return null;
+    return a + b;
+  }
+
+  function zoneText(){
+    return EPREUVE_LABELS[currentEpreuve] || currentEpreuve;
+  }
+
+  function zoneShort(){
+    return currentEpreuve === "DD" ? "DD" : "DM";
+  }
+
+  function zoneEmoji(){
+    return currentEpreuve === "DD" ? "👩" : "👨";
+  }
+
+  function updateZoneDisplay(){
+    hintEl.textContent = `${zoneEmoji()} Zone sélectionnée : Seniors — ${zoneText()}.`;
+  }
+
+  function computeCounts(rows){
+    const total = rows.length;
+    const main = rows.filter(r => r.list !== "wait" && !r.stby).length;
+    const wait = rows.filter(r => r.list === "wait" && !r.stby).length;
+    const stby = rows.filter(r => r.stby).length;
+    return { total, main, wait, stby };
+  }
+
+  function playerLineHtml(label, p){
+    return `
+      <div class="player">
+        <div class="player-title">${label}</div>
+        <div class="player-line"><strong>Nom</strong> ${esc(fmt(p.lastName))}</div>
+        <div class="player-line"><strong>Prénom</strong> ${esc(fmt(p.firstName))}</div>
+        <div class="player-line"><strong>Licence</strong> ${esc(fmt(p.licence))}</div>
+        <div class="player-line"><strong>Tél</strong> ${esc(fmt(p.phone))}</div>
+        <div class="player-line"><strong>Classement</strong> ${esc(fmtRank(p.rank))}</div>
+      </div>
+    `;
+  }
+
+  function render(rows){
+    liveRows = rows.slice();
+
+    const c = computeCounts(rows);
+    countsEl.innerHTML =
+      `${zoneEmoji()} <b>Seniors — ${zoneText()}</b> — Total : <b>${c.total}</b> — Liste principale : <b>${c.main}</b> — Attente : <b>${c.wait}</b> — STBY : <b>${c.stby}</b>`;
+
+    listEl.innerHTML = rows.length ? rows.map((r, i) => {
+      const tr = teamRank(r.p1Rank, r.p2Rank);
+
+      return `
+        <div class="team-card" data-id="${esc(r.id)}">
+          <div class="team-head">
+            <div>
+              <div class="team-name">${esc(fmt(r.teamName))}</div>
+              <div class="muted" style="margin-top:6px;">
+                #${i + 1} • ID : <span style="font-variant-numeric:tabular-nums;">${esc(r.id)}</span>
+                ${tr === null ? "" : ` • Rang équipe : <b>${esc(String(tr))}</b>`}
+              </div>
+            </div>
+
+            <div class="badges">
+              <span class="pill epreuve">${esc(zoneShort())}</span>
+            </div>
+          </div>
+
+          ${playerLineHtml("Joueur / Joueuse 1", {
+            firstName: r.joueur1FirstName,
+            lastName: r.joueur1LastName,
+            licence: r.joueur1Licence,
+            phone: r.joueur1Phone,
+            rank: r.p1Rank
+          })}
+
+          ${playerLineHtml("Joueur / Joueuse 2", {
+            firstName: r.joueur2FirstName,
+            lastName: r.joueur2LastName,
+            licence: r.joueur2Licence,
+            phone: r.joueur2Phone,
+            rank: r.p2Rank
+          })}
+
+          <details>
+            <summary>⚙️ Actions / Modifier</summary>
+
+            <div style="margin-top:10px;display:grid;gap:10px;">
+              <div class="actions">
+                <button class="btnx" data-act="edit" data-id="${esc(r.id)}">✏️ Modifier équipe</button>
+                <button class="btnx" data-act="ranks" data-id="${esc(r.id)}">🏷️ Classements</button>
+              </div>
+
+              <div class="actions">
+                <button class="btnx" data-act="main" data-id="${esc(r.id)}">⬆️ Liste principale</button>
+                <button class="btnx" data-act="wait" data-id="${esc(r.id)}">⬇️ Liste d’attente</button>
+                <button class="btnx" data-act="stby" data-id="${esc(r.id)}">${r.stby ? "✅ Réactiver" : "⏸️ STBY"}</button>
+              </div>
+
+              <div class="actions">
+                <button class="btnx danger" data-act="del" data-id="${esc(r.id)}">🗑️ Supprimer</button>
+              </div>
+            </div>
+          </details>
+        </div>
+      `;
+    }).join("") : `<p class="muted" style="margin:0;">Aucune équipe pour Seniors — ${esc(zoneText())}.</p>`;
+  }
+
+  async function fetchRows(){
+    statusEl.textContent = "Chargement…";
+
+    const snap = await getDocs(
+      query(
+        collection(db, "events", EVENT_ID, "equipes"),
+        orderBy("createdAt", "asc")
+      )
+    );
+
+    const rows = [];
+
+    snap.forEach(docSnap => {
+      const d = docSnap.data() || {};
+
+      const categorie = d.categorie || "Seniors";
+      const epreuve = d.epreuve || "";
+
+      if(categorie !== currentCategorie || epreuve !== currentEpreuve) return;
+
+      rows.push({
+        id: docSnap.id,
+        createdAtMs: d.createdAt?.toMillis ? d.createdAt.toMillis() : 0,
+
+        teamName: d.teamName || "",
+
+        joueur1FirstName: d.joueur1FirstName || "",
+        joueur1LastName: d.joueur1LastName || "",
+        joueur1Licence: d.joueur1Licence || "",
+        joueur1Phone: d.joueur1Phone || "",
+
+        joueur2FirstName: d.joueur2FirstName || "",
+        joueur2LastName: d.joueur2LastName || "",
+        joueur2Licence: d.joueur2Licence || "",
+        joueur2Phone: d.joueur2Phone || "",
+
+        p1Rank: d.p1Rank ?? null,
+        p2Rank: d.p2Rank ?? null,
+
+        list: d.list || "main",
+        stby: d.stby === true
+      });
+    });
+
+    rows.sort((a,b)=> (a.createdAtMs || 0) - (b.createdAtMs || 0));
+    return rows;
+  }
+
+  async function refresh(){
+    try{
+      updateZoneDisplay();
+
+      const rows = await fetchRows();
+      render(rows);
+
+      statusEl.textContent = `✅ OK — Seniors — ${zoneText()}`;
+    }catch(err){
+      console.error(err);
+      statusEl.textContent = `❌ Erreur — Seniors — ${zoneText()} — voir console`;
+    }
+  }
+
+  async function patchTeam(id, patch){
+    await setDoc(doc(db, "events", EVENT_ID, "equipes", id), {
+      ...patch,
+      updatedAt: serverTimestamp(),
+      updatedBy: auth.currentUser?.uid || null
+    }, { merge:true });
+  }
+
+  async function editTeam(row){
+    const teamName = prompt("Nom d’équipe :", row.teamName || "");
+    if(teamName === null) return;
+
+    const p1LastName = prompt("J1 — Nom :", row.joueur1LastName || "");
+    if(p1LastName === null) return;
+
+    const p1FirstName = prompt("J1 — Prénom :", row.joueur1FirstName || "");
+    if(p1FirstName === null) return;
+
+    const p1Licence = prompt("J1 — Licence :", row.joueur1Licence || "");
+    if(p1Licence === null) return;
+
+    const p1Phone = prompt("J1 — Téléphone :", row.joueur1Phone || "");
+    if(p1Phone === null) return;
+
+    const p2LastName = prompt("J2 — Nom :", row.joueur2LastName || "");
+    if(p2LastName === null) return;
+
+    const p2FirstName = prompt("J2 — Prénom :", row.joueur2FirstName || "");
+    if(p2FirstName === null) return;
+
+    const p2Licence = prompt("J2 — Licence :", row.joueur2Licence || "");
+    if(p2Licence === null) return;
+
+    const p2Phone = prompt("J2 — Téléphone :", row.joueur2Phone || "");
+    if(p2Phone === null) return;
+
+    await patchTeam(row.id, {
+      teamName: clean(teamName),
+
+      joueur1LastName: clean(p1LastName),
+      joueur1FirstName: clean(p1FirstName),
+      joueur1Licence: clean(p1Licence),
+      joueur1Phone: clean(p1Phone),
+
+      joueur2LastName: clean(p2LastName),
+      joueur2FirstName: clean(p2FirstName),
+      joueur2Licence: clean(p2Licence),
+      joueur2Phone: clean(p2Phone)
+    });
+  }
+
+  async function editRanks(row){
+    const n1 = prompt("Classement BT Joueur / Joueuse 1 :", String(row.p1Rank ?? ""));
+    if(n1 === null) return;
+
+    const n2 = prompt("Classement BT Joueur / Joueuse 2 :", String(row.p2Rank ?? ""));
+    if(n2 === null) return;
+
+    const p1t = String(n1).trim();
+    const p2t = String(n2).trim();
+
+    const p1 = p1t === "" ? null : toNum(p1t);
+    const p2 = p2t === "" ? null : toNum(p2t);
+
+    if(p1t !== "" && p1 === null) return alert("Classement J1 invalide.");
+    if(p2t !== "" && p2 === null) return alert("Classement J2 invalide.");
+
+    await patchTeam(row.id, {
+      p1Rank: p1,
+      p2Rank: p2
+    });
+  }
+
+  async function deleteTeam(id){
+    const ok = confirm("Supprimer cette équipe ?\n\n⚠️ Action irréversible.");
+    if(!ok) return;
+
+    await deleteDoc(doc(db, "events", EVENT_ID, "equipes", id));
+  }
+
+  listEl.addEventListener("click", async (e) => {
+    const btn = e.target.closest("button[data-act]");
+    if(!btn) return;
+
+    const act = btn.dataset.act;
+    const id = btn.dataset.id;
+    const row = liveRows.find(r => r.id === id);
+
+    if(!row) return alert("Équipe introuvable. Rafraîchis la page.");
+
+    try{
+      if(act === "main") await patchTeam(id, { list:"main", stby:false });
+      if(act === "wait") await patchTeam(id, { list:"wait", stby:false });
+      if(act === "stby") await patchTeam(id, { stby:!row.stby });
+
+      if(act === "ranks") await editRanks(row);
+      if(act === "edit") await editTeam(row);
+      if(act === "del") await deleteTeam(id);
+
+      await refresh();
+    }catch(err){
+      console.error(err);
+      alert("Erreur ❌ — voir console.");
+    }
+  });
+
+  btnExpand.onclick = () => document.querySelectorAll("details").forEach(d => d.open = true);
+  btnCollapse.onclick = () => document.querySelectorAll("details").forEach(d => d.open = false);
+  btnRefresh.onclick = refresh;
+
+  document.addEventListener("adminZoneChange", async (event) => {
+    const detail = event.detail || {};
+
+    if(!detail.epreuve) return;
+    if(!["DM","DD"].includes(detail.epreuve)) return;
+
+    currentCategorie = "Seniors";
+    currentEpreuve = detail.epreuve;
+
+    if(isAdminReady){
+      await refresh();
+    }
+  });
+
+  function showDenied(){
+    accessDenied.style.display = "block";
+    panelSummary.style.display = "none";
+    panelList.style.display = "none";
+  }
+
+  function showAdmin(){
+    accessDenied.style.display = "none";
+    panelSummary.style.display = "block";
+    panelList.style.display = "block";
+  }
+
+  onAuthStateChanged(auth, async (user) => {
+    if(!user){
+      showDenied();
+      return;
+    }
+
+    try{
+      const role = await getRoleByUid(user.uid);
+
+      if(role !== "admin"){
+        showDenied();
+        return;
+      }
+
+      isAdminReady = true;
+      showAdmin();
+      await refresh();
+
+    }catch(err){
+      console.error(err);
+      showDenied();
+    }
+  });
+</script>
+
+</body>
+</html>
