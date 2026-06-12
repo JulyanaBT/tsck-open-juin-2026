@@ -2,7 +2,8 @@ import { logout } from "./session.js";
 
 const EPREUVE_LABELS = {
   DM: "Double Messieurs",
-  DD: "Double Dames"
+  DD: "Double Dames",
+  ALL: "Toutes les épreuves"
 };
 
 const EPREUVES = ["DM", "DD"];
@@ -38,7 +39,7 @@ function emitZoneChange(epreuve){
     detail: {
       categorie: "Seniors",
       epreuve,
-      label: EPREUVE_LABELS[epreuve]
+      label: EPREUVE_LABELS[epreuve] || "Toutes les épreuves"
     }
   }));
 }
@@ -51,7 +52,6 @@ function centerActiveNav(){
 
   const navRect = nav.getBoundingClientRect();
   const activeRect = active.getBoundingClientRect();
-
   const activeCenter = active.offsetLeft + (activeRect.width / 2);
   const target = activeCenter - (navRect.width / 2);
 
@@ -76,17 +76,14 @@ function injectStyles(){
   style.id = "adminHeaderStyles";
   style.textContent = `
     :root{
-      --clay:#c65a1e;
-      --clay-dark:#8e3a13;
-      --clay-light:#ee8a3a;
-      --sky:#27bced;
-      --aqua:#00a9c8;
-      --blue:#075b9a;
-      --blue-dark:#063b72;
-      --text:#17212b;
-      --muted:#667085;
-      --card:rgba(255,255,255,.94);
-      --shadow:0 16px 40px rgba(16,24,40,.12);
+      --palm:#0b7a3b;
+      --palm-dark:#064d28;
+      --palm-light:#15a658;
+      --navy:#06284a;
+      --navy-dark:#03172b;
+      --sun:#ffd21f;
+      --sun-dark:#f3b800;
+      --sand:#f4d9a4;
       --container:1180px;
 
       --admin-header-h:158px;
@@ -106,8 +103,12 @@ function injectStyles(){
       left:0;
       right:0;
       z-index:1000;
-      background:linear-gradient(135deg,var(--clay-dark),var(--clay),var(--clay-light));
-      box-shadow:0 10px 26px rgba(142,58,19,.28);
+      background:
+        radial-gradient(circle at 8% 0%, rgba(255,210,31,.30), transparent 28%),
+        radial-gradient(circle at 92% 0%, rgba(244,217,164,.22), transparent 28%),
+        linear-gradient(135deg,var(--palm-dark),var(--palm),var(--palm-light));
+      box-shadow:0 10px 26px rgba(6,77,40,.34);
+      border-bottom:4px solid var(--sun);
     }
 
     .admin-header-inner{
@@ -126,18 +127,23 @@ function injectStyles(){
       display:flex;
       align-items:center;
       justify-content:center;
+      background:transparent;
+      border:none;
+      box-shadow:none;
+      border-radius:0;
     }
 
     .admin-header-logo img{
       max-width:100%;
       max-height:100%;
       object-fit:contain;
-      filter:drop-shadow(0 6px 10px rgba(0,0,0,.18));
+      filter:drop-shadow(0 6px 10px rgba(0,0,0,.22));
     }
 
     .admin-header-title{
       text-align:center;
       color:#fff;
+      text-shadow:0 6px 18px rgba(0,0,0,.26);
     }
 
     .admin-header-title strong{
@@ -151,10 +157,10 @@ function injectStyles(){
 
     .admin-header-title span{
       display:block;
-      margin-top:5px;
+      margin-top:6px;
+      color:var(--sun);
       font-size:13px;
-      font-weight:900;
-      color:rgba(255,255,255,.88);
+      font-weight:1000;
       text-transform:uppercase;
       letter-spacing:.08em;
     }
@@ -166,25 +172,28 @@ function injectStyles(){
       padding:0 34px;
     }
 
-    .admin-nav-wrap::before,
+    .admin-nav-wrap::before{
+      content:"";
+      position:absolute;
+      top:0;
+      bottom:0;
+      left:0;
+      width:40px;
+      z-index:2;
+      pointer-events:none;
+      background:linear-gradient(90deg, rgba(6,77,40,.98), rgba(6,77,40,0));
+    }
+
     .admin-nav-wrap::after{
       content:"";
       position:absolute;
       top:0;
       bottom:0;
+      right:0;
       width:40px;
       z-index:2;
       pointer-events:none;
-    }
-
-    .admin-nav-wrap::before{
-      left:0;
-      background:linear-gradient(90deg, rgba(142,58,19,.98), rgba(142,58,19,0));
-    }
-
-    .admin-nav-wrap::after{
-      right:0;
-      background:linear-gradient(270deg, rgba(198,90,30,.98), rgba(198,90,30,0));
+      background:linear-gradient(270deg, rgba(11,122,59,.98), rgba(11,122,59,0));
     }
 
     .admin-nav-arrow{
@@ -198,11 +207,11 @@ function injectStyles(){
       display:flex;
       align-items:center;
       justify-content:center;
-      background:rgba(255,255,255,.88);
-      color:var(--clay-dark);
+      background:rgba(255,210,31,.96);
+      color:var(--navy-dark);
       font-size:20px;
       font-weight:1000;
-      box-shadow:0 6px 14px rgba(0,0,0,.18);
+      box-shadow:0 6px 14px rgba(0,0,0,.20);
       pointer-events:none;
     }
 
@@ -227,7 +236,7 @@ function injectStyles(){
       padding:10px 17px;
       border-radius:999px;
       background:rgba(255,255,255,.92);
-      color:#344054;
+      color:var(--navy);
       font-size:14px;
       font-weight:900;
       white-space:nowrap;
@@ -236,8 +245,9 @@ function injectStyles(){
     }
 
     .admin-nav-link.primary{
-      background:linear-gradient(180deg,var(--blue),var(--blue-dark));
-      color:#fff;
+      background:linear-gradient(180deg,var(--sun),var(--sun-dark));
+      color:var(--navy-dark);
+      box-shadow:0 10px 20px rgba(255,210,31,.22);
     }
 
     .admin-zonebar{
@@ -247,11 +257,11 @@ function injectStyles(){
       right:0;
       z-index:998;
       background:
-        radial-gradient(circle at 18% 10%, rgba(255,255,255,.42), transparent 24%),
-        radial-gradient(circle at 80% 24%, rgba(255,255,255,.26), transparent 24%),
-        linear-gradient(135deg,#23b7ea 0%,#7fdfff 48%,#f5fdff 100%);
-      box-shadow:0 8px 18px rgba(16,24,40,.08);
-      border-bottom:1px solid rgba(7,91,154,.10);
+        radial-gradient(circle at 8% 0%, rgba(255,210,31,.28), transparent 28%),
+        radial-gradient(circle at 92% 0%, rgba(244,217,164,.20), transparent 28%),
+        linear-gradient(135deg,var(--navy-dark),var(--navy),var(--palm));
+      box-shadow:0 8px 18px rgba(16,24,40,.12);
+      border-bottom:2px solid var(--sun);
       padding:12px 0 14px;
     }
 
@@ -278,13 +288,13 @@ function injectStyles(){
       min-height:34px;
       padding:7px 18px;
       border-radius:999px;
-      border:1px solid rgba(255,255,255,.36);
-      background:rgba(255,255,255,.82);
-      color:#1c2430;
+      border:1px solid rgba(255,255,255,.32);
+      background:rgba(255,255,255,.88);
+      color:var(--navy-dark);
       font-size:13px;
       font-weight:1000;
       cursor:pointer;
-      box-shadow:0 5px 12px rgba(16,24,40,.08);
+      box-shadow:0 5px 12px rgba(16,24,40,.10);
       touch-action:manipulation;
       text-align:center;
       white-space:nowrap;
@@ -293,10 +303,10 @@ function injectStyles(){
     .admin-zone-btn[aria-selected="true"],
     .admin-zone-btn.all-active,
     .admin-zone-btn.all-active[aria-selected="true"]{
-      background:linear-gradient(180deg,var(--blue),var(--blue-dark));
-      color:#fff;
-      border-color:var(--blue);
-      box-shadow:0 8px 18px rgba(7,91,154,.24);
+      background:linear-gradient(180deg,var(--sun),var(--sun-dark));
+      color:var(--navy-dark);
+      border-color:var(--sun);
+      box-shadow:0 8px 18px rgba(255,210,31,.22);
     }
 
     @media (min-width:760px){
@@ -339,7 +349,7 @@ function renderHeader(){
         </div>
 
         <div class="admin-header-title">
-          <strong>Admin<br>TSCK</strong>
+          <strong>Admin TSCK</strong>
           <span>Open Beach Tennis — 28 juin 2026</span>
         </div>
 
@@ -356,7 +366,6 @@ function renderHeader(){
             <a class="${navClass("equipes.html")}" href="equipes.html">👥 Équipes</a>
             <a class="${navClass("tirage.html")}" href="tirage.html">🎲 Tirage</a>
             <a class="${navClass("programmation.html")}" href="programmation.html">📅 Programmation</a>
-            <a class="${navClass("resultats.html")}" href="resultats.html">🏆 Résultats</a>
             <a class="${navClass("roles.html")}" href="roles.html">🔐 Rôles</a>
             <a class="admin-nav-link" href="#" id="adminBtnLogout">🚪 Déconnexion</a>
           </nav>
