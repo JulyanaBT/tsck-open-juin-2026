@@ -1,3 +1,11 @@
+const EPREUVE_LABELS = {
+  DM: "Double Messieurs",
+  DD: "Double Dames",
+  ALL: "Toutes les épreuves"
+};
+
+const EPREUVES = ["DM", "DD"];
+
 const headerMount = document.getElementById("publicHeader");
 
 const currentPage = location.pathname.split("/").pop() || "index.html";
@@ -6,8 +14,37 @@ const isPublicPage = location.pathname.includes("/public/");
 const rootPath = isPublicPage ? "../" : "";
 const publicPath = isPublicPage ? "" : "public/";
 
+const needsZoneSelector = document.body.dataset.zoneSelector !== "none";
+
 function navClass(page){
   return currentPage === page ? "public-nav-link primary" : "public-nav-link";
+}
+
+function getSavedZone(){
+  let epreuve = "DM";
+
+  try{
+    const savedEpreuve = localStorage.getItem("tsck_public_epreuve");
+    if(EPREUVES.includes(savedEpreuve)) epreuve = savedEpreuve;
+  }catch(error){}
+
+  return { categorie: "Seniors", epreuve };
+}
+
+function saveZone(epreuve){
+  try{
+    localStorage.setItem("tsck_public_epreuve", epreuve);
+  }catch(error){}
+}
+
+function emitZoneChange(epreuve){
+  document.dispatchEvent(new CustomEvent("publicZoneChange", {
+    detail: {
+      categorie: "Seniors",
+      epreuve,
+      label: EPREUVE_LABELS[epreuve] || "Toutes les épreuves"
+    }
+  }));
 }
 
 function injectStyles(){
@@ -23,10 +60,14 @@ function injectStyles(){
       --navy:#06284a;
       --navy-dark:#03172b;
       --sun:#ffd21f;
+      --sun-dark:#f3b800;
       --sand:#f4d9a4;
       --container:1180px;
+
       --public-header-h:158px;
-      --public-total-top:158px;
+      --public-zone-gap:14px;
+      --public-zone-h:58px;
+      --public-total-top:230px;
     }
 
     .public-container{
@@ -182,9 +223,74 @@ function injectStyles(){
     }
 
     .public-nav-link.primary{
-      background:linear-gradient(180deg,var(--sun),#f3b800);
+      background:linear-gradient(180deg,var(--sun),var(--sun-dark));
       color:var(--navy-dark);
       box-shadow:0 10px 20px rgba(255,210,31,.22);
+    }
+
+    .public-zonebar{
+      position:fixed;
+      top:calc(var(--public-header-h) + var(--public-zone-gap));
+      left:0;
+      right:0;
+      z-index:998;
+      background:
+        radial-gradient(circle at 8% 0%, rgba(255,210,31,.28), transparent 28%),
+        radial-gradient(circle at 92% 0%, rgba(244,217,164,.20), transparent 28%),
+        linear-gradient(135deg,var(--navy-dark),var(--navy),var(--palm));
+      box-shadow:0 8px 18px rgba(16,24,40,.12);
+      border-bottom:2px solid var(--sun);
+      padding:12px 0 14px;
+    }
+
+    .public-zone-inner{
+      display:grid;
+      gap:8px;
+    }
+
+    .public-zone-line{
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      gap:10px;
+      overflow-x:auto;
+      scrollbar-width:none;
+      -webkit-overflow-scrolling:touch;
+      padding:3px 2px;
+    }
+
+    .public-zone-line::-webkit-scrollbar{display:none;}
+
+    .public-zone-btn{
+      flex:0 0 auto;
+      min-height:34px;
+      padding:7px 18px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.32);
+      background:rgba(255,255,255,.88);
+      color:var(--navy-dark);
+      font-size:13px;
+      font-weight:1000;
+      cursor:pointer;
+      box-shadow:0 5px 12px rgba(16,24,40,.10);
+      touch-action:manipulation;
+      text-align:center;
+      white-space:nowrap;
+      font-family:inherit;
+    }
+
+    .public-zone-btn[aria-selected="true"],
+    .public-zone-btn.all-active,
+    .public-zone-btn.all-active[aria-selected="true"]{
+      background:linear-gradient(180deg,var(--sun),var(--sun-dark));
+      color:var(--navy-dark);
+      border-color:var(--sun);
+      box-shadow:0 8px 18px rgba(255,210,31,.22);
+    }
+
+    .public-zone-btn:disabled{
+      cursor:default;
+      opacity:1;
     }
 
     @media (min-width:760px){
@@ -201,7 +307,13 @@ function injectStyles(){
     @media (max-width:759px){
       :root{
         --public-header-h:150px;
-        --public-total-top:150px;
+        --public-zone-gap:14px;
+        --public-zone-h:58px;
+        --public-total-top:222px;
+      }
+
+      .public-zone-line{
+        justify-content:flex-start;
       }
     }
   `;
@@ -236,6 +348,8 @@ function centerActiveNavAfterLoad(){
 function renderHeader(){
   if(!headerMount) return;
 
+  const zone = getSavedZone();
+
   headerMount.innerHTML = `
     <header class="public-site-header">
       <div class="public-container public-header-inner">
@@ -256,6 +370,7 @@ function renderHeader(){
           <span class="public-nav-arrow left">‹</span>
           <nav class="public-nav" aria-label="Navigation publique">
             <a class="${currentPage === "index.html" ? "public-nav-link primary" : "public-nav-link"}" href="${rootPath}index.html">🏠 Accueil</a>
+            <a class="${navClass("inscriptions.html")}" href="${publicPath}inscriptions.html">📝 Inscription</a>
             <a class="${navClass("equipes.html")}" href="${publicPath}equipes.html">👥 Équipes</a>
             <a class="${navClass("programmation.html")}" href="${publicPath}programmation.html">📅 Programmation</a>
             <a class="${navClass("matchs-direct.html")}" href="${publicPath}matchs-direct.html">🔴 Match en direct</a>
@@ -268,13 +383,65 @@ function renderHeader(){
         </div>
       </div>
     </header>
+
+    <section class="public-zonebar">
+      <div class="public-container public-zone-inner">
+        <div class="public-zone-line" aria-label="Sélection épreuve">
+          <button
+            class="public-zone-btn ${needsZoneSelector ? "" : "all-active"}"
+            type="button"
+            data-public-epreuve="DM"
+            aria-selected="${needsZoneSelector ? String(zone.epreuve === "DM") : "true"}"
+            ${needsZoneSelector ? "" : "disabled"}
+          >👨 Double Messieurs</button>
+
+          <button
+            class="public-zone-btn ${needsZoneSelector ? "" : "all-active"}"
+            type="button"
+            data-public-epreuve="DD"
+            aria-selected="${needsZoneSelector ? String(zone.epreuve === "DD") : "true"}"
+            ${needsZoneSelector ? "" : "disabled"}
+          >👩 Double Dames</button>
+        </div>
+      </div>
+    </section>
   `;
+
+  if(needsZoneSelector){
+    bindZoneButtons(zone.epreuve);
+  }else{
+    emitZoneChange("ALL");
+  }
 
   centerActiveNavAfterLoad();
 
   window.addEventListener("resize", () => {
     centerActiveNavAfterLoad();
   });
+}
+
+function bindZoneButtons(initialEpreuve){
+  let epreuve = initialEpreuve;
+
+  const epreuveBtns = [...document.querySelectorAll("[data-public-epreuve]")];
+
+  function refresh(){
+    epreuveBtns.forEach(btn => {
+      btn.setAttribute("aria-selected", btn.dataset.publicEpreuve === epreuve ? "true" : "false");
+    });
+
+    saveZone(epreuve);
+    emitZoneChange(epreuve);
+  }
+
+  epreuveBtns.forEach(btn => {
+    btn.onclick = () => {
+      epreuve = btn.dataset.publicEpreuve;
+      refresh();
+    };
+  });
+
+  refresh();
 }
 
 injectStyles();
