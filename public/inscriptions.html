@@ -123,6 +123,10 @@
       gap:14px;
     }
 
+    .form.is-closed{
+      opacity:.72;
+    }
+
     .field{
       display:grid;
       gap:8px;
@@ -150,6 +154,12 @@
     input:focus{
       border-color:rgba(11,122,59,.50);
       box-shadow:0 0 0 4px rgba(11,122,59,.10);
+    }
+
+    input:disabled{
+      background:#f2f4f7;
+      color:#98a2b3;
+      cursor:not-allowed;
     }
 
     .choice-grid{
@@ -183,6 +193,12 @@
       text-align:center;
       cursor:pointer;
       box-shadow:0 8px 16px rgba(16,24,40,.05);
+    }
+
+    .choice-card input:disabled + label{
+      background:#f2f4f7;
+      color:#98a2b3;
+      cursor:not-allowed;
     }
 
     .choice-card.dm input:checked + label{
@@ -240,6 +256,15 @@
       color:var(--muted);
       font-size:14px;
       line-height:1.45;
+      font-weight:800;
+    }
+
+    .status.closed{
+      padding:14px 16px;
+      border-radius:18px;
+      background:#fff7ed;
+      border:1px solid #fed7aa;
+      color:#9a3412;
     }
 
     .success-box{
@@ -379,7 +404,7 @@
           ✅ Valider l’inscription
         </button>
 
-        <p id="status" class="status" role="status" aria-live="polite"></p>
+        <p id="status" class="status" role="status" aria-live="polite">Chargement du statut des inscriptions…</p>
         <div id="successBox" class="success-box">
           ✅ Inscription enregistrée. Votre équipe apparaît désormais dans la page Équipes.
         </div>
@@ -398,6 +423,8 @@
   import {
     collection,
     addDoc,
+    doc,
+    onSnapshot,
     serverTimestamp
   } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
@@ -408,8 +435,58 @@
   const successBox = document.getElementById("successBox");
   const submitBtn = document.getElementById("submitBtn");
 
-  function setStatus(message){
+  const cfgRef = doc(db, "config", EVENT_ID);
+  const equipesRef = collection(db, "events", EVENT_ID, "equipes");
+
+  let inscriptionsState = "not_open";
+  let isSubmitting = false;
+
+  function normState(value){
+    if(value === "suspended") return "paused";
+    return value || "not_open";
+  }
+
+  function stateMessage(state){
+    switch(normState(state)){
+      case "not_open":
+        return "Les inscriptions ne sont pas encore ouvertes.";
+      case "open":
+        return "";
+      case "paused":
+        return "Les inscriptions sont temporairement suspendues.";
+      case "closed":
+        return "Les inscriptions sont clôturées.";
+      default:
+        return "Les inscriptions ne sont pas disponibles.";
+    }
+  }
+
+  function setStatus(message, type = ""){
     statusEl.textContent = message;
+    statusEl.classList.toggle("closed", type === "closed");
+  }
+
+  function setFormEnabled(enabled){
+    [...form.querySelectorAll("input")].forEach(input => {
+      input.disabled = !enabled;
+    });
+
+    submitBtn.disabled = !enabled || isSubmitting;
+    form.classList.toggle("is-closed", !enabled);
+  }
+
+  function updateFormState(){
+    const isOpen = inscriptionsState === "open";
+
+    if(isSubmitting) return;
+
+    if(isOpen){
+      setFormEnabled(true);
+      setStatus("");
+    }else{
+      setFormEnabled(false);
+      setStatus("ℹ️ " + stateMessage(inscriptionsState), "closed");
+    }
   }
 
   function clean(value){
@@ -437,6 +514,10 @@
   }
 
   function validate(data){
+    if(inscriptionsState !== "open"){
+      throw new Error(stateMessage(inscriptionsState));
+    }
+
     if(!data.teamName) throw new Error("Merci d’indiquer le nom de l’équipe.");
     if(!["DM","DD"].includes(data.epreuve)) throw new Error("Merci de sélectionner une épreuve.");
 
@@ -449,9 +530,20 @@
     }
   }
 
+  onSnapshot(cfgRef, (snap) => {
+    const data = snap.exists() ? (snap.data() || {}) : {};
+    inscriptionsState = normState(data.inscriptionsState);
+    updateFormState();
+  }, (error) => {
+    console.error(error);
+    inscriptionsState = "not_open";
+    updateFormState();
+  });
+
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
 
+    isSubmitting = true;
     submitBtn.disabled = true;
     successBox.style.display = "none";
     setStatus("Envoi de l’inscription en cours…");
@@ -461,7 +553,7 @@
       validate(data);
 
       await addDoc(
-        collection(db, "events", EVENT_ID, "equipes"),
+        equipesRef,
         {
           ...data,
           list: "main",
@@ -480,9 +572,10 @@
 
     }catch(error){
       console.error(error);
-      setStatus("❌ " + (error?.message || "Impossible d’enregistrer l’inscription."));
+      setStatus("❌ " + (error?.message || "Impossible d’enregistrer l’inscription."), "closed");
     }finally{
-      submitBtn.disabled = false;
+      isSubmitting = false;
+      updateFormState();
     }
   });
 </script>
