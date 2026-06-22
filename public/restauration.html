@@ -166,37 +166,87 @@
       padding:9px 10px;
       border-radius:999px;
       border:1px solid rgba(16,24,40,.10);
-      background:#fff;
-      color:#344054;
+      background:linear-gradient(180deg,var(--sun),var(--sun-dark));
+      color:var(--navy-dark);
       font-weight:1000;
       cursor:pointer;
       font-size:14px;
       min-width:0;
+      opacity:.82;
     }
 
     .subtab-btn[aria-selected="true"]{
-      background:linear-gradient(180deg,var(--sun),var(--sun-dark));
-      color:var(--navy-dark);
-      border-color:var(--sun);
+      opacity:1;
+      box-shadow:0 10px 20px rgba(255,210,31,.20);
     }
 
     .subtab-panel{display:none;}
     .subtab-panel.active{display:block;}
 
-    .closed-box{
-      display:none;
+    .closed-box,
+    .edit-box,
+    .token-box{
       margin-bottom:14px;
       padding:14px 16px;
       border-radius:18px;
-      background:#fff7e6;
-      border:1px solid #ffd37a;
-      color:#9a5b00;
       font-size:15px;
-      font-weight:1000;
+      font-weight:900;
       line-height:1.45;
     }
 
+    .closed-box{
+      display:none;
+      background:#fff7e6;
+      border:1px solid #ffd37a;
+      color:#9a5b00;
+    }
+
     .closed-box.show{display:block;}
+
+    .edit-box{
+      display:none;
+      background:#e6f7ee;
+      border:1px solid rgba(11,122,59,.22);
+      color:var(--palm-dark);
+    }
+
+    .edit-box.show{display:block;}
+
+    .token-box{
+      display:none;
+      background:#f8fafc;
+      border:1px solid rgba(16,24,40,.10);
+      color:#344054;
+      word-break:break-word;
+    }
+
+    .token-box.show{display:block;}
+
+    .token-link{
+      display:block;
+      margin-top:8px;
+      padding:10px 12px;
+      border-radius:14px;
+      background:#fff;
+      border:1px solid rgba(16,24,40,.08);
+      color:var(--navy-dark);
+      font-size:13px;
+      font-weight:900;
+      word-break:break-all;
+    }
+
+    .copy-btn{
+      margin-top:10px;
+      min-height:44px;
+      border:none;
+      border-radius:14px;
+      background:linear-gradient(180deg,var(--sun),var(--sun-dark));
+      color:var(--navy-dark);
+      font-weight:1000;
+      padding:10px 12px;
+      cursor:pointer;
+      width:100%;
+    }
 
     .form{
       display:grid;
@@ -409,13 +459,8 @@
       flex-shrink:0;
     }
 
-    .payment-dot.paid{
-      background:#087a35;
-    }
-
-    .payment-dot.unpaid{
-      background:#b42318;
-    }
+    .payment-dot.paid{background:#087a35;}
+    .payment-dot.unpaid{background:#b42318;}
 
     .muted{
       color:var(--muted);
@@ -487,6 +532,18 @@
         <div id="subtab-commande" class="subtab-panel active">
           <div id="closedBox" class="closed-box">
             🔒 Les commandes sont terminées. Le formulaire est désormais fermé.
+          </div>
+
+          <div id="editBox" class="edit-box">
+            ✏️ Mode modification : vous modifiez une commande existante.
+          </div>
+
+          <div id="tokenBox" class="token-box">
+            ✅ Commande enregistrée.
+            <br><br>
+            ⚠️ Conservez impérativement ce lien. Sans ce lien, vous ne pourrez plus modifier votre commande vous-même.
+            <a id="editLink" class="token-link" href="#"></a>
+            <button id="copyLinkBtn" class="copy-btn" type="button">📋 Copier le lien de modification</button>
           </div>
 
           <form id="orderForm" class="form" autocomplete="on">
@@ -567,16 +624,20 @@
 <script type="module" src="../assets/js/public-header.js"></script>
 
 <script type="module">
-  import { db } from "../assets/js/firebase.js?v=tsck-restauration3";
+  import { db } from "../assets/js/firebase.js?v=tsck-restauration-edit1";
 
   import {
     collection,
     addDoc,
+    updateDoc,
+    doc,
     serverTimestamp,
     query,
     orderBy,
-    onSnapshot,
-    doc
+    where,
+    limit,
+    getDocs,
+    onSnapshot
   } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
   const EVENT_ID = "tsck-open-juin-2026";
@@ -584,7 +645,6 @@
 
   const tabButtons = Array.from(document.querySelectorAll(".tab-btn"));
   const tabPanels = Array.from(document.querySelectorAll(".tab-panel"));
-
   const subtabButtons = Array.from(document.querySelectorAll(".subtab-btn"));
   const subtabPanels = Array.from(document.querySelectorAll(".subtab-panel"));
 
@@ -592,7 +652,12 @@
   const submitBtn = document.getElementById("submitBtn");
   const statusEl = document.getElementById("status");
   const liveTotal = document.getElementById("liveTotal");
+
   const closedBox = document.getElementById("closedBox");
+  const editBox = document.getElementById("editBox");
+  const tokenBox = document.getElementById("tokenBox");
+  const editLink = document.getElementById("editLink");
+  const copyLinkBtn = document.getElementById("copyLinkBtn");
 
   const qtyPoke = document.getElementById("qtyPoke");
   const qtyBobun = document.getElementById("qtyBobun");
@@ -605,7 +670,12 @@
   const configRef = doc(db, "config", EVENT_ID);
   const ordersRef = collection(db, "events", EVENT_ID, "restaurationCommandes");
 
+  const params = new URLSearchParams(window.location.search);
+  const editTokenFromUrl = params.get("edit");
+
   let restaurationState = "not_open";
+  let editingOrderId = null;
+  let editingToken = editTokenFromUrl || null;
 
   function esc(value){
     return (value || "")
@@ -615,6 +685,19 @@
       .replaceAll(">","&gt;")
       .replaceAll('"',"&quot;")
       .replaceAll("'","&#039;");
+  }
+
+  function makeToken(){
+    if(window.crypto?.randomUUID){
+      return window.crypto.randomUUID();
+    }
+
+    return "tok_" + Date.now() + "_" + Math.random().toString(36).slice(2);
+  }
+
+  function editUrl(token){
+    const base = location.href.split("?")[0];
+    return `${base}?edit=${encodeURIComponent(token)}`;
   }
 
   function getQty(input){
@@ -653,7 +736,6 @@
 
   function applyRestaurationState(state){
     restaurationState = state || "not_open";
-
     const closed = restaurationState !== "open";
 
     closedBox.classList.toggle("show", closed);
@@ -710,7 +792,17 @@
     });
   });
 
-  updateLiveTotal();
+  copyLinkBtn.onclick = async () => {
+    const href = editLink.href;
+
+    try{
+      await navigator.clipboard.writeText(href);
+      copyLinkBtn.textContent = "✅ Lien copié";
+      setTimeout(() => copyLinkBtn.textContent = "📋 Copier le lien de modification", 1200);
+    }catch(error){
+      alert(href);
+    }
+  };
 
   onSnapshot(configRef, (snap) => {
     const data = snap.exists() ? snap.data() : {};
@@ -720,11 +812,60 @@
     applyRestaurationState("closed");
   });
 
+  async function loadEditOrder(){
+    if(!editTokenFromUrl) return;
+
+    selectTab("commandez");
+    selectSubtab("commande");
+    setStatus("Chargement de la commande à modifier…");
+
+    try{
+      const q = query(
+        ordersRef,
+        where("editToken", "==", editTokenFromUrl),
+        limit(1)
+      );
+
+      const snap = await getDocs(q);
+
+      if(snap.empty){
+        setStatus("❌ Lien de modification introuvable ou invalide.");
+        return;
+      }
+
+      const docSnap = snap.docs[0];
+      const data = docSnap.data() || {};
+
+      editingOrderId = docSnap.id;
+      editingToken = editTokenFromUrl;
+
+      form.lastName.value = data.lastName || "";
+      form.firstName.value = data.firstName || "";
+
+      const poke = Number(data.items?.pokeBowl || data.items?.pokemonBowl || 0);
+      const bobun = Number(data.items?.bobun || 0);
+
+      setQty("poke", poke);
+      setQty("bobun", bobun);
+
+      editBox.classList.add("show");
+      submitBtn.textContent = "💾 Enregistrer les modifications";
+      setStatus("Commande chargée. Vous pouvez la modifier tant que les commandes sont ouvertes.");
+
+    }catch(error){
+      console.error(error);
+      setStatus("❌ Impossible de charger la commande à modifier.");
+    }
+  }
+
+  updateLiveTotal();
+  loadEditOrder();
+
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
 
     if(restaurationState !== "open"){
-      setStatus("🔒 Les commandes sont terminées.");
+      setStatus("🔒 Les commandes sont terminées. Modification impossible.");
       return;
     }
 
@@ -750,7 +891,8 @@
     if(bobunCount > 0) lines.push(`${bobunCount} Bobun`);
 
     const ok = confirm(
-      "Confirmer la commande ?\n\n" +
+      (editingOrderId ? "Confirmer la modification ?" : "Confirmer la commande ?") +
+      "\n\n" +
       `${firstName} ${lastName}\n` +
       lines.join("\n") +
       `\n\nTotal : ${total} €`
@@ -759,27 +901,54 @@
     if(!ok) return;
 
     submitBtn.disabled = true;
-    setStatus("Enregistrement de la commande…");
+    setStatus(editingOrderId ? "Modification en cours…" : "Enregistrement de la commande…");
 
     try{
-      await addDoc(ordersRef, {
-        firstName,
-        lastName,
-        items: {
-          pokeBowl: pokeCount,
-          bobun: bobunCount
-        },
-        total,
-        paid: false,
-        createdAt: serverTimestamp()
-      });
+      if(editingOrderId){
+        await updateDoc(doc(db, "events", EVENT_ID, "restaurationCommandes", editingOrderId), {
+          firstName,
+          lastName,
+          items: {
+            pokeBowl: pokeCount,
+            bobun: bobunCount
+          },
+          total,
+          updatedAt: serverTimestamp(),
+          updatedBy: "public-edit-token",
+          editToken: editingToken
+        });
 
-      form.reset();
-      setQty("poke", 0);
-      setQty("bobun", 0);
+        setStatus("✅ Commande modifiée.");
+        alert("✅ Commande modifiée !");
+      }else{
+        const newToken = makeToken();
 
-      setStatus("✅ Commande enregistrée.");
-      alert("✅ Commande enregistrée !");
+        await addDoc(ordersRef, {
+          firstName,
+          lastName,
+          items: {
+            pokeBowl: pokeCount,
+            bobun: bobunCount
+          },
+          total,
+          paid: false,
+          editToken: newToken,
+          createdAt: serverTimestamp(),
+          updatedAt: serverTimestamp()
+        });
+
+        const link = editUrl(newToken);
+        editLink.href = link;
+        editLink.textContent = link;
+        tokenBox.classList.add("show");
+
+        form.reset();
+        setQty("poke", 0);
+        setQty("bobun", 0);
+
+        setStatus("✅ Commande enregistrée. Conservez le lien de modification.");
+        alert("✅ Commande enregistrée !\n\nAttention : conservez le lien de modification affiché sur la page.");
+      }
 
       selectSubtab("recap");
 
