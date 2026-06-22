@@ -135,14 +135,15 @@
     .btn{
       appearance:none;
       border:none;
-      min-height:52px;
-      border-radius:18px;
-      padding:13px 16px;
-      font-size:15px;
+      min-height:48px;
+      border-radius:16px;
+      padding:12px 14px;
+      font-size:14px;
       font-weight:1000;
       cursor:pointer;
       font-family:inherit;
       width:100%;
+      text-align:center;
     }
 
     .btn-primary{
@@ -183,7 +184,7 @@
       padding:14px;
       box-shadow:0 8px 18px rgba(16,24,40,.05);
       display:grid;
-      gap:10px;
+      gap:12px;
     }
 
     .order-top{
@@ -207,6 +208,18 @@
       font-weight:800;
     }
 
+    .order-token{
+      color:#667085;
+      font-size:12px;
+      line-height:1.35;
+      font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+      word-break:break-all;
+      padding:8px 10px;
+      border-radius:12px;
+      background:#f8fafc;
+      border:1px solid rgba(16,24,40,.06);
+    }
+
     .order-total{
       color:var(--palm-dark);
       font-size:18px;
@@ -228,14 +241,48 @@
       border:none;
     }
 
-    .paid-pill.paid{
-      background:#dcfae6;
-      color:#087a35;
+    .paid-pill.paid{background:#dcfae6;color:#087a35;}
+    .paid-pill.unpaid{background:#fee4e2;color:#b42318;}
+
+    .order-actions{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:8px;
     }
 
-    .paid-pill.unpaid{
-      background:#fee4e2;
-      color:#b42318;
+    .edit-form{
+      display:none;
+      gap:10px;
+      padding:12px;
+      border-radius:18px;
+      background:#f8fafc;
+      border:1px solid rgba(16,24,40,.08);
+    }
+
+    .edit-form.show{display:grid;}
+
+    .field{
+      display:grid;
+      gap:6px;
+    }
+
+    .field label{
+      font-size:13px;
+      font-weight:1000;
+      color:#344054;
+    }
+
+    input{
+      width:100%;
+      min-height:46px;
+      border-radius:14px;
+      border:1px solid rgba(16,24,40,.12);
+      background:#fff;
+      padding:0 12px;
+      font-size:15px;
+      color:#17212b;
+      outline:none;
+      font-family:inherit;
     }
 
     .muted{
@@ -248,10 +295,12 @@
     @media (min-width:760px){
       .panel{padding:24px;}
       .grid.two{grid-template-columns:1fr 1fr;}
+      .grid.three{grid-template-columns:1fr 1fr 1fr;}
       .order-card{
         grid-template-columns:1fr auto;
-        align-items:center;
+        align-items:start;
       }
+      .order-actions{grid-template-columns:1fr 1fr 1fr;}
     }
 
     @media (max-width:759px){
@@ -280,7 +329,7 @@
     <div class="panel-head">
       <div>
         <h1 class="panel-title">🍽️ Admin restauration</h1>
-        <p class="panel-text">Ouverture des commandes, suivi des paiements et export PDF.</p>
+        <p class="panel-text">Ouverture des commandes, suivi des paiements, modification admin, tokens et export PDF.</p>
       </div>
       <div class="panel-tag">Admin</div>
     </div>
@@ -304,7 +353,7 @@
       </div>
 
       <p class="muted" style="margin-top:12px;">
-        Quand les commandes sont fermées, le formulaire public sera bloqué et affichera un message indiquant que les commandes sont terminées.
+        Quand les commandes sont fermées, le public ne peut plus créer ni modifier de commande. L’admin peut toujours modifier.
       </p>
     </div>
 
@@ -330,8 +379,8 @@
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 
 <script type="module">
-  import { auth, db } from "../assets/js/firebase.js?v=tsck-admin-restauration1";
-  import { getRoleByUid } from "../assets/js/session.js?v=tsck-admin-restauration1";
+  import { auth, db } from "../assets/js/firebase.js?v=tsck-admin-restauration2";
+  import { getRoleByUid } from "../assets/js/session.js?v=tsck-admin-restauration2";
 
   import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 
@@ -347,6 +396,7 @@
   } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
   const EVENT_ID = "tsck-open-juin-2026";
+  const PRICE = 10;
 
   const accessDenied = document.getElementById("accessDenied");
   const pageContent = document.getElementById("pageContent");
@@ -383,6 +433,11 @@
       .replaceAll("'","&#039;");
   }
 
+  function editUrl(token){
+    const base = location.href.split("/admin/")[0] + "/public/restauration.html";
+    return `${base}?edit=${encodeURIComponent(token || "")}`;
+  }
+
   function selectTab(name){
     tabButtons.forEach(btn => {
       btn.setAttribute("aria-selected", btn.dataset.tab === name ? "true" : "false");
@@ -404,7 +459,7 @@
   }
 
   function publicStateMessage(state){
-    if(state === "open") return "Le public peut passer commande.";
+    if(state === "open") return "Le public peut créer et modifier une commande.";
     if(state === "closed") return "Le public verra : “Les commandes sont terminées.”";
     return "Le public verra que les commandes ne sont pas encore ouvertes.";
   }
@@ -438,10 +493,10 @@
 
   function orderText(row){
     const parts = [];
-    const pokemon = Number(row.items?.pokemonBowl || 0);
+    const poke = Number(row.items?.pokeBowl || row.items?.pokemonBowl || 0);
     const bobun = Number(row.items?.bobun || 0);
 
-    if(pokemon > 0) parts.push(`${pokemon} Pokémon Bowl`);
+    if(poke > 0) parts.push(`${poke} Poké Bowl`);
     if(bobun > 0) parts.push(`${bobun} Bobun`);
 
     return parts.join(" • ");
@@ -474,6 +529,9 @@
 
     ordersList.innerHTML = rows.map(row => {
       const paid = row.paid === true;
+      const poke = Number(row.items?.pokeBowl || row.items?.pokemonBowl || 0);
+      const bobun = Number(row.items?.bobun || 0);
+      const token = row.editToken || "";
 
       return `
         <div class="order-card" data-id="${esc(row.id)}">
@@ -485,23 +543,68 @@
               </div>
               <div class="order-total">${esc(row.total || 0)} €</div>
             </div>
+
+            <div class="order-token">
+              Token : ${esc(token || "Aucun token")}
+              <br>
+              Lien : ${esc(token ? editUrl(token) : "Aucun lien disponible")}
+            </div>
+
+            <div class="edit-form" id="edit-${esc(row.id)}">
+              <div class="grid two">
+                <div class="field">
+                  <label>Nom</label>
+                  <input class="edit-lastName" type="text" value="${esc(row.lastName || "")}">
+                </div>
+                <div class="field">
+                  <label>Prénom</label>
+                  <input class="edit-firstName" type="text" value="${esc(row.firstName || "")}">
+                </div>
+              </div>
+
+              <div class="grid two">
+                <div class="field">
+                  <label>Poké Bowl</label>
+                  <input class="edit-poke" type="number" min="0" max="20" step="1" value="${esc(poke)}">
+                </div>
+                <div class="field">
+                  <label>Bobun</label>
+                  <input class="edit-bobun" type="number" min="0" max="20" step="1" value="${esc(bobun)}">
+                </div>
+              </div>
+
+              <button class="btn btn-green btn-save-edit" type="button">💾 Enregistrer modification admin</button>
+            </div>
           </div>
 
-          <button class="paid-pill ${paid ? "paid" : "unpaid"}" type="button">
-            ${paid ? "Payé" : "Non payé"}
-          </button>
+          <div>
+            <button class="paid-pill ${paid ? "paid" : "unpaid"}" type="button">
+              ${paid ? "Payé" : "Non payé"}
+            </button>
+
+            <div class="order-actions" style="margin-top:10px;">
+              <button class="btn btn-white btn-copy-token" type="button">🔗 Copier lien</button>
+              <button class="btn btn-white btn-toggle-edit" type="button">✏️ Modifier</button>
+              <button class="btn btn-primary btn-whatsapp" type="button">💬 Renvoyer</button>
+            </div>
+          </div>
         </div>
       `;
     }).join("");
 
     ordersList.querySelectorAll(".order-card").forEach(card => {
       const id = card.dataset.id;
-      const btn = card.querySelector(".paid-pill");
+      const row = ordersRows.find(r => r.id === id);
+      if(!row) return;
 
-      btn.onclick = async () => {
-        const row = ordersRows.find(r => r.id === id);
-        if(!row) return;
+      const paidBtn = card.querySelector(".paid-pill");
+      const copyBtn = card.querySelector(".btn-copy-token");
+      const editBtn = card.querySelector(".btn-toggle-edit");
+      const whatsappBtn = card.querySelector(".btn-whatsapp");
+      const editForm = card.querySelector(".edit-form");
+      const saveEditBtn = card.querySelector(".btn-save-edit");
 
+      paidBtn.onclick = async () => {
         try{
           await updateDoc(doc(db, "events", EVENT_ID, "restaurationCommandes", id), {
             paid: row.paid !== true,
@@ -511,6 +614,91 @@
         }catch(error){
           console.error(error);
           alert("Erreur : impossible de modifier le paiement.");
+        }
+      };
+
+      copyBtn.onclick = async () => {
+        const token = row.editToken || "";
+        if(!token){
+          alert("Aucun token enregistré pour cette commande.");
+          return;
+        }
+
+        const link = editUrl(token);
+
+        try{
+          await navigator.clipboard.writeText(link);
+          copyBtn.textContent = "✅ Copié";
+          setTimeout(() => copyBtn.textContent = "🔗 Copier lien", 1000);
+        }catch(error){
+          alert(link);
+        }
+      };
+
+      whatsappBtn.onclick = () => {
+        const token = row.editToken || "";
+        if(!token){
+          alert("Aucun token enregistré pour cette commande.");
+          return;
+        }
+
+        const link = editUrl(token);
+        const txt = [
+          "Bonjour 👋",
+          "",
+          "Voici ton lien de modification pour ta commande restauration TSCK :",
+          "",
+          link,
+          "",
+          "⚠️ Conserve bien ce lien : sans lui, tu ne pourras pas modifier ta commande toi-même.",
+          "",
+          "Attention : la modification est possible uniquement tant que les commandes sont ouvertes."
+        ].join("\n");
+
+        window.open(`https://wa.me/?text=${encodeURIComponent(txt)}`, "_blank", "noopener");
+      };
+
+      editBtn.onclick = () => {
+        editForm.classList.toggle("show");
+      };
+
+      saveEditBtn.onclick = async () => {
+        const lastName = card.querySelector(".edit-lastName").value.trim();
+        const firstName = card.querySelector(".edit-firstName").value.trim();
+        const poke = Math.max(0, Math.min(20, Math.floor(Number(card.querySelector(".edit-poke").value || 0))));
+        const bobun = Math.max(0, Math.min(20, Math.floor(Number(card.querySelector(".edit-bobun").value || 0))));
+        const total = (poke + bobun) * PRICE;
+
+        if(!lastName || !firstName){
+          alert("Nom et prénom obligatoires.");
+          return;
+        }
+
+        if(poke === 0 && bobun === 0){
+          alert("La commande doit contenir au moins un plat.");
+          return;
+        }
+
+        if(!confirm("Enregistrer cette modification admin ?")) return;
+
+        try{
+          await updateDoc(doc(db, "events", EVENT_ID, "restaurationCommandes", id), {
+            lastName,
+            firstName,
+            items: {
+              pokeBowl: poke,
+              bobun
+            },
+            total,
+            updatedAt: serverTimestamp(),
+            updatedBy: auth.currentUser?.uid || null,
+            updatedByAdmin: true
+          });
+
+          alert("Modification enregistrée ✅");
+        }catch(error){
+          console.error(error);
+          alert("Erreur : impossible de modifier la commande.");
         }
       };
     });
