@@ -1,0 +1,661 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin — Restauration — Open Beach Tennis TSCK</title>
+
+  <style>
+    :root{
+      --palm:#0b7a3b; --palm-dark:#064d28; --palm-light:#15a658;
+      --navy:#06284a; --navy-dark:#03172b;
+      --sun:#ffd21f; --sun-dark:#f3b800;
+      --text:#17212b; --muted:#667085; --card:rgba(255,255,255,.95);
+      --shadow:0 16px 40px rgba(16,24,40,.12);
+      --container:1180px;
+    }
+
+    *{box-sizing:border-box;}
+    html,body{max-width:100%;overflow-x:hidden;}
+
+    body{
+      margin:0;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at 10% 0%, rgba(255,210,31,.20), transparent 26%),
+        radial-gradient(circle at 90% 8%, rgba(11,122,59,.16), transparent 26%),
+        linear-gradient(180deg,#eaf9ff 0%,#fff4d4 52%,#fff 100%);
+    }
+
+    a{color:inherit;text-decoration:none;}
+
+    .container{
+      width:min(var(--container), calc(100% - 28px));
+      margin:0 auto;
+    }
+
+    main{
+      padding-top:calc(var(--admin-total-top, 230px) + 42px);
+      padding-bottom:42px;
+    }
+
+    .section{margin-top:18px;}
+
+    .panel{
+      background:var(--card);
+      border:1px solid rgba(255,255,255,.7);
+      border-radius:24px;
+      box-shadow:var(--shadow);
+      padding:18px;
+    }
+
+    .panel-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:12px;
+      margin-bottom:14px;
+    }
+
+    .panel-title{
+      margin:0;
+      font-size:26px;
+      line-height:1.05;
+      letter-spacing:-.03em;
+      color:var(--navy-dark);
+    }
+
+    .panel-text{
+      margin:7px 0 0;
+      color:var(--muted);
+      font-size:15px;
+      line-height:1.45;
+    }
+
+    .panel-tag{
+      flex-shrink:0;
+      padding:8px 13px;
+      border-radius:999px;
+      background:#e6f7ee;
+      color:var(--palm-dark);
+      font-size:12px;
+      font-weight:1000;
+      text-transform:uppercase;
+      letter-spacing:.06em;
+    }
+
+    .tabs{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:8px;
+      margin-top:14px;
+    }
+
+    .tab-btn{
+      min-height:44px;
+      padding:10px 12px;
+      border-radius:999px;
+      border:1px solid rgba(16,24,40,.10);
+      background:#fff;
+      color:var(--navy);
+      font-size:14px;
+      font-weight:1000;
+      cursor:pointer;
+      box-shadow:0 8px 16px rgba(16,24,40,.05);
+    }
+
+    .tab-btn[aria-selected="true"]{
+      background:linear-gradient(180deg,var(--sun),var(--sun-dark));
+      color:var(--navy-dark);
+      border-color:var(--sun-dark);
+    }
+
+    .tab-panel{display:none;margin-top:16px;}
+    .tab-panel.active{display:block;}
+
+    .status-box{
+      padding:14px 16px;
+      border-radius:18px;
+      background:linear-gradient(135deg,rgba(11,122,59,.10),rgba(255,210,31,.16));
+      border:1px solid rgba(11,122,59,.18);
+      color:#475467;
+      font-size:15px;
+      line-height:1.5;
+    }
+
+    .status-box strong{color:var(--navy-dark);}
+
+    .grid{
+      display:grid;
+      gap:10px;
+      margin-top:12px;
+    }
+
+    .btn{
+      appearance:none;
+      border:none;
+      min-height:52px;
+      border-radius:18px;
+      padding:13px 16px;
+      font-size:15px;
+      font-weight:1000;
+      cursor:pointer;
+      font-family:inherit;
+      width:100%;
+    }
+
+    .btn-primary{
+      background:linear-gradient(180deg,var(--sun),var(--sun-dark));
+      color:var(--navy-dark);
+      box-shadow:0 12px 22px rgba(255,210,31,.22);
+    }
+
+    .btn-green{
+      background:linear-gradient(135deg,var(--palm),var(--palm-light));
+      color:#fff;
+    }
+
+    .btn-red{
+      background:linear-gradient(135deg,#b42318,#f04438);
+      color:#fff;
+    }
+
+    .btn-white{
+      background:#fff;
+      color:var(--navy-dark);
+      border:1px solid rgba(16,24,40,.10);
+      box-shadow:0 8px 16px rgba(16,24,40,.05);
+    }
+
+    .btn:disabled{opacity:.55;cursor:not-allowed;}
+
+    .orders-list{
+      display:grid;
+      gap:10px;
+      margin-top:12px;
+    }
+
+    .order-card{
+      background:#fff;
+      border:1px solid rgba(16,24,40,.08);
+      border-radius:20px;
+      padding:14px;
+      box-shadow:0 8px 18px rgba(16,24,40,.05);
+      display:grid;
+      gap:10px;
+    }
+
+    .order-top{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      align-items:flex-start;
+    }
+
+    .order-name{
+      font-size:18px;
+      font-weight:1000;
+      color:var(--navy-dark);
+      word-break:break-word;
+    }
+
+    .order-detail{
+      color:#344054;
+      font-size:14px;
+      line-height:1.35;
+      font-weight:800;
+    }
+
+    .order-total{
+      color:var(--palm-dark);
+      font-size:18px;
+      font-weight:1000;
+      white-space:nowrap;
+    }
+
+    .paid-pill{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-width:86px;
+      padding:7px 11px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:1000;
+      text-transform:uppercase;
+      cursor:pointer;
+      border:none;
+    }
+
+    .paid-pill.paid{
+      background:#dcfae6;
+      color:#087a35;
+    }
+
+    .paid-pill.unpaid{
+      background:#fee4e2;
+      color:#b42318;
+    }
+
+    .muted{
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.45;
+      font-weight:800;
+    }
+
+    @media (min-width:760px){
+      .panel{padding:24px;}
+      .grid.two{grid-template-columns:1fr 1fr;}
+      .order-card{
+        grid-template-columns:1fr auto;
+        align-items:center;
+      }
+    }
+
+    @media (max-width:759px){
+      main{
+        padding-top:calc(var(--admin-total-top, 222px) + 34px);
+      }
+
+      .panel-title{font-size:24px;}
+      .order-top{display:grid;}
+    }
+  </style>
+</head>
+
+<body data-zone-selector="none">
+
+<div id="adminHeader"></div>
+
+<main class="container">
+
+  <section class="section panel" id="accessDenied" style="display:none;">
+    <h2 class="panel-title">⛔ Accès refusé</h2>
+    <p class="panel-text">Cette page est réservée aux administrateurs.</p>
+  </section>
+
+  <section class="section panel" id="pageContent" style="display:none;">
+    <div class="panel-head">
+      <div>
+        <h1 class="panel-title">🍽️ Admin restauration</h1>
+        <p class="panel-text">Ouverture des commandes, suivi des paiements et export PDF.</p>
+      </div>
+      <div class="panel-tag">Admin</div>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab-btn" type="button" data-tab="parametres" aria-selected="true">⚙️ Paramètres</button>
+      <button class="tab-btn" type="button" data-tab="commandes" aria-selected="false">📋 Commandes</button>
+    </div>
+
+    <div id="tab-parametres" class="tab-panel active">
+      <div class="status-box">
+        Statut actuel :
+        <strong id="currentState">Chargement…</strong>
+        <br>
+        <span id="publicMessage">Lecture du statut restauration…</span>
+      </div>
+
+      <div class="grid two">
+        <button class="btn btn-green" id="btnOpen">✅ Ouvrir les commandes</button>
+        <button class="btn btn-red" id="btnClose">🔒 Fermer les commandes</button>
+      </div>
+
+      <p class="muted" style="margin-top:12px;">
+        Quand les commandes sont fermées, le formulaire public sera bloqué et affichera un message indiquant que les commandes sont terminées.
+      </p>
+    </div>
+
+    <div id="tab-commandes" class="tab-panel">
+      <div class="status-box">
+        <strong id="ordersCount">Chargement…</strong>
+        <br>
+        <span id="ordersTotal">Total encaissable : —</span>
+      </div>
+
+      <div class="grid two">
+        <button class="btn btn-primary" id="btnExportPdf">📄 Exporter en PDF</button>
+        <button class="btn btn-white" id="btnRefresh">🔄 Actualiser</button>
+      </div>
+
+      <div id="ordersList" class="orders-list"></div>
+    </div>
+  </section>
+
+</main>
+
+<script type="module" src="../assets/js/admin-header.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+
+<script type="module">
+  import { auth, db } from "../assets/js/firebase.js?v=tsck-admin-restauration1";
+  import { getRoleByUid } from "../assets/js/session.js?v=tsck-admin-restauration1";
+
+  import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+
+  import {
+    collection,
+    doc,
+    setDoc,
+    updateDoc,
+    serverTimestamp,
+    query,
+    orderBy,
+    onSnapshot
+  } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
+  const EVENT_ID = "tsck-open-juin-2026";
+
+  const accessDenied = document.getElementById("accessDenied");
+  const pageContent = document.getElementById("pageContent");
+
+  const tabButtons = Array.from(document.querySelectorAll(".tab-btn"));
+  const tabPanels = Array.from(document.querySelectorAll(".tab-panel"));
+
+  const currentState = document.getElementById("currentState");
+  const publicMessage = document.getElementById("publicMessage");
+
+  const btnOpen = document.getElementById("btnOpen");
+  const btnClose = document.getElementById("btnClose");
+
+  const ordersCount = document.getElementById("ordersCount");
+  const ordersTotal = document.getElementById("ordersTotal");
+  const ordersList = document.getElementById("ordersList");
+  const btnExportPdf = document.getElementById("btnExportPdf");
+  const btnRefresh = document.getElementById("btnRefresh");
+
+  const configRef = doc(db, "config", EVENT_ID);
+  const ordersRef = collection(db, "events", EVENT_ID, "restaurationCommandes");
+
+  let ordersRows = [];
+  let unsubscribeConfig = null;
+  let unsubscribeOrders = null;
+
+  function esc(value){
+    return (value || "")
+      .toString()
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+  }
+
+  function selectTab(name){
+    tabButtons.forEach(btn => {
+      btn.setAttribute("aria-selected", btn.dataset.tab === name ? "true" : "false");
+    });
+
+    tabPanels.forEach(panel => {
+      panel.classList.toggle("active", panel.id === `tab-${name}`);
+    });
+  }
+
+  tabButtons.forEach(btn => {
+    btn.onclick = () => selectTab(btn.dataset.tab);
+  });
+
+  function labelState(state){
+    if(state === "open") return "✅ Commandes ouvertes";
+    if(state === "closed") return "🔒 Commandes fermées";
+    return "💤 Commandes non ouvertes";
+  }
+
+  function publicStateMessage(state){
+    if(state === "open") return "Le public peut passer commande.";
+    if(state === "closed") return "Le public verra : “Les commandes sont terminées.”";
+    return "Le public verra que les commandes ne sont pas encore ouvertes.";
+  }
+
+  async function setRestaurationState(nextState){
+    const confirmText = nextState === "open"
+      ? "Ouvrir les commandes restauration ?"
+      : "Fermer les commandes restauration ?";
+
+    if(!confirm(confirmText)) return;
+
+    btnOpen.disabled = true;
+    btnClose.disabled = true;
+
+    try{
+      await setDoc(configRef, {
+        restaurationState: nextState,
+        updatedAt: serverTimestamp()
+      }, { merge:true });
+    }catch(error){
+      console.error(error);
+      alert("Erreur : impossible de modifier le statut.");
+    }finally{
+      btnOpen.disabled = false;
+      btnClose.disabled = false;
+    }
+  }
+
+  btnOpen.onclick = () => setRestaurationState("open");
+  btnClose.onclick = () => setRestaurationState("closed");
+
+  function orderText(row){
+    const parts = [];
+    const pokemon = Number(row.items?.pokemonBowl || 0);
+    const bobun = Number(row.items?.bobun || 0);
+
+    if(pokemon > 0) parts.push(`${pokemon} Pokémon Bowl`);
+    if(bobun > 0) parts.push(`${bobun} Bobun`);
+
+    return parts.join(" • ");
+  }
+
+  function sortOrders(rows){
+    return [...rows].sort((a,b) => {
+      const af = (a.firstName || "").toLowerCase();
+      const bf = (b.firstName || "").toLowerCase();
+      if(af !== bf) return af.localeCompare(bf, "fr");
+
+      const al = (a.lastName || "").toLowerCase();
+      const bl = (b.lastName || "").toLowerCase();
+      return al.localeCompare(bl, "fr");
+    });
+  }
+
+  function renderOrders(){
+    const rows = sortOrders(ordersRows);
+    const total = rows.reduce((sum,row) => sum + Number(row.total || 0), 0);
+    const paidTotal = rows.filter(r => r.paid === true).reduce((sum,row) => sum + Number(row.total || 0), 0);
+
+    ordersCount.textContent = `📌 ${rows.length} commande${rows.length > 1 ? "s" : ""}`;
+    ordersTotal.textContent = `Total : ${total} € — Payé : ${paidTotal} € — Restant : ${total - paidTotal} €`;
+
+    if(rows.length === 0){
+      ordersList.innerHTML = `<p class="muted" style="margin:0;">Aucune commande pour le moment.</p>`;
+      return;
+    }
+
+    ordersList.innerHTML = rows.map(row => {
+      const paid = row.paid === true;
+
+      return `
+        <div class="order-card" data-id="${esc(row.id)}">
+          <div>
+            <div class="order-top">
+              <div>
+                <div class="order-name">${esc(row.firstName)} ${esc(row.lastName)}</div>
+                <div class="order-detail">${esc(orderText(row))}</div>
+              </div>
+              <div class="order-total">${esc(row.total || 0)} €</div>
+            </div>
+          </div>
+
+          <button class="paid-pill ${paid ? "paid" : "unpaid"}" type="button">
+            ${paid ? "Payé" : "Non payé"}
+          </button>
+        </div>
+      `;
+    }).join("");
+
+    ordersList.querySelectorAll(".order-card").forEach(card => {
+      const id = card.dataset.id;
+      const btn = card.querySelector(".paid-pill");
+
+      btn.onclick = async () => {
+        const row = ordersRows.find(r => r.id === id);
+        if(!row) return;
+
+        try{
+          await updateDoc(doc(db, "events", EVENT_ID, "restaurationCommandes", id), {
+            paid: row.paid !== true,
+            paidUpdatedAt: serverTimestamp(),
+            paidUpdatedBy: auth.currentUser?.uid || null
+          });
+        }catch(error){
+          console.error(error);
+          alert("Erreur : impossible de modifier le paiement.");
+        }
+      };
+    });
+  }
+
+  function exportPdf(){
+    const rows = sortOrders(ordersRows);
+
+    if(rows.length === 0){
+      alert("Aucune commande à exporter.");
+      return;
+    }
+
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF({ unit:"mm", format:"a4" });
+
+    const total = rows.reduce((sum,row) => sum + Number(row.total || 0), 0);
+    const paidTotal = rows.filter(r => r.paid === true).reduce((sum,row) => sum + Number(row.total || 0), 0);
+
+    let y = 18;
+
+    pdf.setFillColor(11,122,59);
+    pdf.rect(0,0,210,34,"F");
+
+    pdf.setTextColor(255,255,255);
+    pdf.setFont("helvetica","bold");
+    pdf.setFontSize(18);
+    pdf.text("Open Beach Tennis TSCK", 14, 14);
+    pdf.setFontSize(12);
+    pdf.text("Récapitulatif restauration — 28 juin 2026", 14, 24);
+
+    y = 44;
+
+    pdf.setTextColor(3,23,43);
+    pdf.setFontSize(13);
+    pdf.setFont("helvetica","bold");
+    pdf.text(`Nombre de commandes : ${rows.length}`, 14, y);
+    y += 7;
+    pdf.text(`Total : ${total} €   |   Payé : ${paidTotal} €   |   Restant : ${total - paidTotal} €`, 14, y);
+
+    y += 12;
+
+    pdf.setFontSize(10);
+    pdf.setFont("helvetica","bold");
+    pdf.text("Nom", 14, y);
+    pdf.text("Commande", 58, y);
+    pdf.text("Total", 150, y);
+    pdf.text("Statut", 172, y);
+
+    y += 3;
+    pdf.setDrawColor(220,220,220);
+    pdf.line(14, y, 196, y);
+    y += 7;
+
+    pdf.setFont("helvetica","normal");
+
+    rows.forEach(row => {
+      if(y > 280){
+        pdf.addPage();
+        y = 18;
+      }
+
+      const fullName = `${row.firstName || ""} ${row.lastName || ""}`.trim();
+      const cmd = orderText(row);
+      const paid = row.paid === true ? "Payé" : "Non payé";
+
+      pdf.text(fullName.slice(0,24), 14, y);
+      pdf.text(cmd.slice(0,48), 58, y);
+      pdf.text(`${row.total || 0} €`, 150, y);
+      pdf.text(paid, 172, y);
+
+      y += 8;
+    });
+
+    pdf.save("recap-restauration-tsck.pdf");
+  }
+
+  btnExportPdf.onclick = exportPdf;
+  btnRefresh.onclick = () => renderOrders();
+
+  function startConfig(){
+    if(unsubscribeConfig) unsubscribeConfig();
+
+    unsubscribeConfig = onSnapshot(configRef, (snap) => {
+      const data = snap.exists() ? snap.data() : {};
+      const state = data.restaurationState || "not_open";
+
+      currentState.textContent = labelState(state);
+      publicMessage.textContent = publicStateMessage(state);
+    }, (error) => {
+      console.error(error);
+      currentState.textContent = "Erreur de lecture";
+      publicMessage.textContent = "Impossible de lire le statut.";
+    });
+  }
+
+  function startOrders(){
+    if(unsubscribeOrders) unsubscribeOrders();
+
+    const q = query(ordersRef, orderBy("firstName", "asc"));
+
+    unsubscribeOrders = onSnapshot(q, (snap) => {
+      ordersRows = [];
+
+      snap.forEach(docSnap => {
+        ordersRows.push({
+          id: docSnap.id,
+          ...docSnap.data()
+        });
+      });
+
+      renderOrders();
+    }, (error) => {
+      console.error(error);
+      ordersCount.textContent = "❌ Impossible de charger les commandes.";
+    });
+  }
+
+  onAuthStateChanged(auth, async (user) => {
+    accessDenied.style.display = "none";
+    pageContent.style.display = "none";
+
+    if(!user){
+      accessDenied.style.display = "block";
+      return;
+    }
+
+    try{
+      const role = await getRoleByUid(user.uid);
+
+      if(role !== "admin"){
+        accessDenied.style.display = "block";
+        return;
+      }
+
+      pageContent.style.display = "block";
+      startConfig();
+      startOrders();
+
+    }catch(error){
+      console.error(error);
+      accessDenied.style.display = "block";
+    }
+  });
+</script>
+
+</body>
+</html>
