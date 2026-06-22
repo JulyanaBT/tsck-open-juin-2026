@@ -1,84 +1,699 @@
 <!doctype html>
 <html lang="fr">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Restauration - Open Beach Tennis TSCK</title>
 
-<title>Restauration - Open Beach Tennis TSCK</title>
+  <style>
+    :root{
+      --palm:#0b7a3b;
+      --palm-dark:#064d28;
+      --palm-light:#15a658;
+      --navy:#06284a;
+      --navy-dark:#03172b;
+      --sun:#ffd21f;
+      --sun-dark:#f3b800;
+      --sand:#fff4d4;
+      --pink:#d83d7f;
+      --text:#17212b;
+      --muted:#667085;
+      --card:rgba(255,255,255,.95);
+      --shadow:0 16px 40px rgba(16,24,40,.12);
+      --container:1180px;
+    }
 
-<style>
-:root{
-  --bg:#f4f8fb;
-  --card:#ffffff;
-  --text:#17212b;
-  --blue:#075b9a;
-  --clay:#c65a1e;
-  --shadow:0 16px 40px rgba(16,24,40,.12);
-}
+    *{box-sizing:border-box;}
 
-*{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at 10% 0%, rgba(255,210,31,.20), transparent 26%),
+        radial-gradient(circle at 90% 8%, rgba(11,122,59,.16), transparent 26%),
+        linear-gradient(180deg,#eaf9ff 0%,#fff4d4 52%,#ffffff 100%);
+    }
 
-body{
-  margin:0;
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
-  background:var(--bg);
-  color:var(--text);
-}
+    a{color:inherit;text-decoration:none;}
 
-main{
-  max-width:900px;
-  margin:auto;
-  padding:190px 20px 40px;
-}
+    .container{
+      width:min(var(--container), calc(100% - 28px));
+      margin:0 auto;
+    }
 
-.card{
-  background:var(--card);
-  border-radius:24px;
-  padding:40px 30px;
-  text-align:center;
-  box-shadow:var(--shadow);
-}
+    main{
+      padding-top:calc(var(--public-total-top, 158px) + 22px);
+      padding-bottom:42px;
+    }
 
-h1{
-  margin:0 0 15px;
-  color:var(--clay);
-}
+    .section{margin-top:16px;}
 
-p{
-  font-size:18px;
-  line-height:1.6;
-}
+    .panel{
+      background:var(--card);
+      border:1px solid rgba(255,255,255,.7);
+      border-radius:24px;
+      box-shadow:var(--shadow);
+      padding:18px;
+    }
 
-.small{
-  color:#667085;
-  font-size:14px;
-}
-</style>
+    .panel-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:12px;
+      margin-bottom:14px;
+    }
+
+    .panel-title{
+      margin:0;
+      font-size:26px;
+      line-height:1.05;
+      letter-spacing:-.03em;
+      color:var(--navy-dark);
+    }
+
+    .panel-text{
+      margin:7px 0 0;
+      color:var(--muted);
+      font-size:15px;
+      line-height:1.45;
+    }
+
+    .panel-tag{
+      flex-shrink:0;
+      padding:8px 13px;
+      border-radius:999px;
+      background:#e6f7ee;
+      color:var(--palm-dark);
+      font-size:12px;
+      font-weight:1000;
+      text-transform:uppercase;
+      letter-spacing:.06em;
+    }
+
+    .tabs{
+      display:flex;
+      gap:8px;
+      overflow-x:auto;
+      scrollbar-width:none;
+      -webkit-overflow-scrolling:touch;
+      margin-top:14px;
+      padding-bottom:2px;
+    }
+
+    .tabs::-webkit-scrollbar{display:none;}
+
+    .tab-btn{
+      flex:0 0 auto;
+      min-height:42px;
+      padding:10px 15px;
+      border-radius:999px;
+      border:1px solid rgba(16,24,40,.10);
+      background:#fff;
+      color:var(--navy);
+      font-size:14px;
+      font-weight:1000;
+      cursor:pointer;
+      box-shadow:0 8px 16px rgba(16,24,40,.05);
+    }
+
+    .tab-btn[aria-selected="true"]{
+      background:linear-gradient(180deg,var(--sun),var(--sun-dark));
+      color:var(--navy-dark);
+      border-color:var(--sun-dark);
+    }
+
+    .tab-panel{
+      display:none;
+      margin-top:16px;
+    }
+
+    .tab-panel.active{
+      display:block;
+    }
+
+    .affiche{
+      width:100%;
+      max-width:720px;
+      margin:0 auto;
+      border-radius:22px;
+      overflow:hidden;
+      background:#fff;
+      box-shadow:0 10px 24px rgba(16,24,40,.10);
+      border:1px solid rgba(16,24,40,.08);
+    }
+
+    .affiche img{
+      display:block;
+      width:100%;
+      height:auto;
+    }
+
+    .subtabs{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      margin-bottom:14px;
+    }
+
+    .subtab-btn{
+      min-height:40px;
+      padding:9px 14px;
+      border-radius:999px;
+      border:1px solid rgba(16,24,40,.10);
+      background:#fff;
+      color:#344054;
+      font-weight:1000;
+      cursor:pointer;
+    }
+
+    .subtab-btn[aria-selected="true"]{
+      background:linear-gradient(135deg,var(--palm),var(--palm-light));
+      color:#fff;
+      border-color:var(--palm);
+    }
+
+    .subtab-panel{
+      display:none;
+    }
+
+    .subtab-panel.active{
+      display:block;
+    }
+
+    .form{
+      display:grid;
+      gap:14px;
+    }
+
+    .field{
+      display:grid;
+      gap:8px;
+    }
+
+    .field label{
+      font-weight:1000;
+      color:#1c2430;
+    }
+
+    input{
+      width:100%;
+      min-height:52px;
+      border-radius:16px;
+      border:1px solid rgba(16,24,40,.12);
+      background:#fff;
+      padding:0 14px;
+      font-size:16px;
+      color:#17212b;
+      outline:none;
+      font-family:inherit;
+    }
+
+    input:focus{
+      border-color:rgba(11,122,59,.50);
+      box-shadow:0 0 0 4px rgba(11,122,59,.10);
+    }
+
+    .choice-card{
+      border-radius:20px;
+      background:#fff;
+      border:1px solid rgba(16,24,40,.08);
+      padding:14px;
+      display:grid;
+      gap:10px;
+      box-shadow:0 8px 18px rgba(16,24,40,.05);
+    }
+
+    .choice-top{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:12px;
+    }
+
+    .choice-name{
+      font-size:18px;
+      font-weight:1000;
+      color:var(--navy-dark);
+    }
+
+    .choice-price{
+      flex-shrink:0;
+      padding:6px 10px;
+      border-radius:999px;
+      background:var(--sand);
+      color:var(--palm-dark);
+      font-weight:1000;
+      font-size:13px;
+    }
+
+    .qty-row{
+      display:grid;
+      grid-template-columns:1fr 110px;
+      gap:10px;
+      align-items:center;
+    }
+
+    .qty-row span{
+      color:var(--muted);
+      font-size:14px;
+      font-weight:800;
+    }
+
+    .qty-row input{
+      text-align:center;
+      font-weight:1000;
+    }
+
+    .total-box{
+      padding:14px 16px;
+      border-radius:18px;
+      background:linear-gradient(135deg,rgba(11,122,59,.10),rgba(255,210,31,.16));
+      border:1px solid rgba(11,122,59,.18);
+      color:#475467;
+      font-size:15px;
+      line-height:1.45;
+    }
+
+    .total-box strong{
+      color:var(--navy-dark);
+      font-size:20px;
+    }
+
+    .btn{
+      appearance:none;
+      border:none;
+      min-height:56px;
+      border-radius:18px;
+      padding:14px 18px;
+      font-size:16px;
+      font-weight:1000;
+      cursor:pointer;
+      font-family:inherit;
+    }
+
+    .btn-primary{
+      background:linear-gradient(180deg,var(--sun),var(--sun-dark));
+      color:var(--navy-dark);
+      box-shadow:0 12px 22px rgba(255,210,31,.22);
+    }
+
+    .btn:disabled{
+      opacity:.55;
+      cursor:not-allowed;
+    }
+
+    .status{
+      margin:0;
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.45;
+      font-weight:800;
+    }
+
+    .orders-list{
+      display:grid;
+      gap:10px;
+    }
+
+    .order-card{
+      border-radius:18px;
+      background:#fff;
+      border:1px solid rgba(16,24,40,.08);
+      padding:13px;
+      box-shadow:0 6px 16px rgba(16,24,40,.04);
+      display:grid;
+      gap:5px;
+    }
+
+    .order-name{
+      font-size:18px;
+      font-weight:1000;
+      color:var(--navy-dark);
+    }
+
+    .order-detail{
+      color:#344054;
+      font-size:14px;
+      line-height:1.35;
+      font-weight:800;
+    }
+
+    .order-total{
+      margin-top:3px;
+      color:var(--palm-dark);
+      font-weight:1000;
+    }
+
+    .muted{
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.45;
+    }
+
+    @media (min-width:760px){
+      .panel{padding:24px;}
+      .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+    }
+
+    @media (max-width:759px){
+      main{
+        padding-top:calc(var(--public-total-top, 150px) + 18px);
+      }
+
+      .panel-title{font-size:24px;}
+    }
+  </style>
 </head>
 
 <body>
 
 <div id="publicHeader"></div>
 
-<main>
-  <div class="card">
-    <h1>🍽️ Restauration</h1>
+<main class="container">
 
-    <p>
-      Les informations relatives à la restauration seront bientôt disponibles.
-    </p>
+  <section class="section">
+    <div class="panel">
+      <div class="panel-head">
+        <div>
+          <h1 class="panel-title">🍽️ Restauration</h1>
+          <p class="panel-text">
+            Retrouvez les boissons, les repas proposés et les commandes pour le tournoi.
+          </p>
+        </div>
+        <div class="panel-tag">TSCK</div>
+      </div>
 
-    <p>
-      Vous retrouverez ici les menus proposés, les horaires de service ainsi que les modalités de réservation éventuelles.
-    </p>
+      <div class="tabs" role="tablist" aria-label="Restauration">
+        <button class="tab-btn" type="button" data-tab="boissons" aria-selected="true">🥤 Boissons</button>
+        <button class="tab-btn" type="button" data-tab="repas" aria-selected="false">🍜 Repas</button>
+        <button class="tab-btn" type="button" data-tab="commandez" aria-selected="false">📝 Commandez</button>
+      </div>
 
-    <p class="small">
-      Open Beach Tennis TSCK – 28 juin 2026
-    </p>
-  </div>
+      <div id="tab-boissons" class="tab-panel active">
+        <div class="affiche">
+          <img src="../assets/img/affiche-boissons.png" alt="Affiche boissons">
+        </div>
+      </div>
+
+      <div id="tab-repas" class="tab-panel">
+        <div class="affiche">
+          <img src="../assets/img/affiche-repas.png" alt="Affiche repas">
+        </div>
+      </div>
+
+      <div id="tab-commandez" class="tab-panel">
+
+        <div class="subtabs" role="tablist" aria-label="Commandes">
+          <button class="subtab-btn" type="button" data-subtab="commande" aria-selected="true">📝 Commander</button>
+          <button class="subtab-btn" type="button" data-subtab="recap" aria-selected="false">📋 Récapitulatif</button>
+        </div>
+
+        <div id="subtab-commande" class="subtab-panel active">
+          <form id="orderForm" class="form" autocomplete="on">
+
+            <div class="form-grid">
+              <div class="field">
+                <label for="lastName">Nom *</label>
+                <input id="lastName" name="lastName" type="text" required placeholder="Nom">
+              </div>
+
+              <div class="field">
+                <label for="firstName">Prénom *</label>
+                <input id="firstName" name="firstName" type="text" required placeholder="Prénom">
+              </div>
+            </div>
+
+            <div class="choice-card">
+              <div class="choice-top">
+                <div>
+                  <div class="choice-name">Pokémon Bowl</div>
+                  <div class="muted">Plat proposé pour le tournoi.</div>
+                </div>
+                <div class="choice-price">10 €</div>
+              </div>
+
+              <div class="qty-row">
+                <span>Quantité souhaitée</span>
+                <input id="qtyPokemon" name="qtyPokemon" type="number" min="0" max="20" step="1" value="0">
+              </div>
+            </div>
+
+            <div class="choice-card">
+              <div class="choice-top">
+                <div>
+                  <div class="choice-name">Bobun</div>
+                  <div class="muted">Plat proposé pour le tournoi.</div>
+                </div>
+                <div class="choice-price">10 €</div>
+              </div>
+
+              <div class="qty-row">
+                <span>Quantité souhaitée</span>
+                <input id="qtyBobun" name="qtyBobun" type="number" min="0" max="20" step="1" value="0">
+              </div>
+            </div>
+
+            <div class="total-box">
+              Total estimé :
+              <strong><span id="liveTotal">0</span> €</strong>
+            </div>
+
+            <button id="submitBtn" class="btn btn-primary" type="submit">
+              ✅ Valider la commande
+            </button>
+
+            <p id="status" class="status" role="status" aria-live="polite"></p>
+
+          </form>
+        </div>
+
+        <div id="subtab-recap" class="subtab-panel">
+          <p class="muted" id="recapStatus">Chargement des commandes…</p>
+          <div id="ordersList" class="orders-list"></div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
 </main>
 
-<script src="../assets/js/public-header.js"></script>
+<script type="module" src="../assets/js/public-header.js"></script>
+
+<script type="module">
+  import { db } from "../assets/js/firebase.js?v=tsck-restauration1";
+
+  import {
+    collection,
+    addDoc,
+    serverTimestamp,
+    query,
+    orderBy,
+    onSnapshot
+  } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
+  const EVENT_ID = "tsck-open-juin-2026";
+  const PRICE = 10;
+
+  const tabButtons = Array.from(document.querySelectorAll(".tab-btn"));
+  const tabPanels = Array.from(document.querySelectorAll(".tab-panel"));
+
+  const subtabButtons = Array.from(document.querySelectorAll(".subtab-btn"));
+  const subtabPanels = Array.from(document.querySelectorAll(".subtab-panel"));
+
+  const form = document.getElementById("orderForm");
+  const submitBtn = document.getElementById("submitBtn");
+  const statusEl = document.getElementById("status");
+  const liveTotal = document.getElementById("liveTotal");
+
+  const qtyPokemon = document.getElementById("qtyPokemon");
+  const qtyBobun = document.getElementById("qtyBobun");
+
+  const recapStatus = document.getElementById("recapStatus");
+  const ordersList = document.getElementById("ordersList");
+
+  const ordersRef = collection(db, "events", EVENT_ID, "restaurationCommandes");
+
+  function esc(value){
+    return (value || "")
+      .toString()
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+  }
+
+  function qty(input){
+    const n = Number(input.value || 0);
+    if(!Number.isFinite(n) || n < 0) return 0;
+    return Math.floor(n);
+  }
+
+  function computeTotal(){
+    return (qty(qtyPokemon) + qty(qtyBobun)) * PRICE;
+  }
+
+  function updateLiveTotal(){
+    liveTotal.textContent = computeTotal();
+  }
+
+  function setStatus(message){
+    statusEl.textContent = message;
+  }
+
+  function selectTab(name){
+    tabButtons.forEach(btn => {
+      btn.setAttribute("aria-selected", btn.dataset.tab === name ? "true" : "false");
+    });
+
+    tabPanels.forEach(panel => {
+      panel.classList.toggle("active", panel.id === `tab-${name}`);
+    });
+  }
+
+  function selectSubtab(name){
+    subtabButtons.forEach(btn => {
+      btn.setAttribute("aria-selected", btn.dataset.subtab === name ? "true" : "false");
+    });
+
+    subtabPanels.forEach(panel => {
+      panel.classList.toggle("active", panel.id === `subtab-${name}`);
+    });
+  }
+
+  tabButtons.forEach(btn => {
+    btn.onclick = () => selectTab(btn.dataset.tab);
+  });
+
+  subtabButtons.forEach(btn => {
+    btn.onclick = () => selectSubtab(btn.dataset.subtab);
+  });
+
+  [qtyPokemon, qtyBobun].forEach(input => {
+    input.addEventListener("input", updateLiveTotal);
+  });
+
+  updateLiveTotal();
+
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const lastName = form.lastName.value.trim();
+    const firstName = form.firstName.value.trim();
+
+    const pokemonCount = qty(qtyPokemon);
+    const bobunCount = qty(qtyBobun);
+    const total = computeTotal();
+
+    if(!lastName || !firstName){
+      setStatus("❌ Merci d’indiquer le nom et le prénom.");
+      return;
+    }
+
+    if(pokemonCount === 0 && bobunCount === 0){
+      setStatus("❌ Merci de sélectionner au moins un plat.");
+      return;
+    }
+
+    const lines = [];
+    if(pokemonCount > 0) lines.push(`${pokemonCount} Pokémon Bowl`);
+    if(bobunCount > 0) lines.push(`${bobunCount} Bobun`);
+
+    const ok = confirm(
+      "Confirmer la commande ?\n\n" +
+      `${firstName} ${lastName}\n` +
+      lines.join("\n") +
+      `\n\nTotal : ${total} €`
+    );
+
+    if(!ok) return;
+
+    submitBtn.disabled = true;
+    setStatus("Enregistrement de la commande…");
+
+    try{
+      await addDoc(ordersRef, {
+        firstName,
+        lastName,
+        items: {
+          pokemonBowl: pokemonCount,
+          bobun: bobunCount
+        },
+        total,
+        createdAt: serverTimestamp()
+      });
+
+      form.reset();
+      qtyPokemon.value = 0;
+      qtyBobun.value = 0;
+      updateLiveTotal();
+
+      setStatus("✅ Commande enregistrée.");
+      alert("✅ Commande enregistrée !");
+
+      selectSubtab("recap");
+
+    }catch(error){
+      console.error(error);
+      setStatus("❌ Erreur : impossible d’enregistrer la commande.");
+    }finally{
+      submitBtn.disabled = false;
+    }
+  });
+
+  function orderText(data){
+    const parts = [];
+
+    const pokemon = Number(data.items?.pokemonBowl || 0);
+    const bobun = Number(data.items?.bobun || 0);
+
+    if(pokemon > 0) parts.push(`${pokemon} Pokémon Bowl`);
+    if(bobun > 0) parts.push(`${bobun} Bobun`);
+
+    return parts.join(" • ");
+  }
+
+  const q = query(ordersRef, orderBy("firstName", "asc"));
+
+  onSnapshot(q, (snap) => {
+    const rows = [];
+
+    snap.forEach(docSnap => {
+      rows.push({
+        id: docSnap.id,
+        ...docSnap.data()
+      });
+    });
+
+    rows.sort((a,b) => {
+      const af = (a.firstName || "").toLowerCase();
+      const bf = (b.firstName || "").toLowerCase();
+      return af.localeCompare(bf, "fr");
+    });
+
+    recapStatus.textContent = `📌 ${rows.length} commande${rows.length > 1 ? "s" : ""}`;
+
+    if(rows.length === 0){
+      ordersList.innerHTML = `<p class="muted" style="margin:0;">Aucune commande pour le moment.</p>`;
+      return;
+    }
+
+    ordersList.innerHTML = rows.map(row => `
+      <div class="order-card">
+        <div class="order-name">${esc(row.firstName || "Sans prénom")}</div>
+        <div class="order-detail">${esc(orderText(row))}</div>
+        <div class="order-total">${esc(row.total || 0)} €</div>
+      </div>
+    `).join("");
+
+  }, (error) => {
+    console.error(error);
+    recapStatus.textContent = "❌ Impossible de charger les commandes.";
+  });
+</script>
 
 </body>
 </html>
