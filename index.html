@@ -165,7 +165,7 @@
 
     .hero-actions{
       display:grid;
-      grid-template-columns:1fr;
+      grid-template-columns:1fr 1fr;
       gap:10px;
     }
 
@@ -359,8 +359,8 @@
       .hero-infos{grid-template-columns:1fr 1fr 1fr;}
 
       .hero-actions{
-        grid-template-columns:1fr 1fr;
-        max-width:580px;
+        grid-template-columns:repeat(4,1fr);
+        max-width:980px;
         margin-left:auto;
         margin-right:auto;
       }
@@ -398,8 +398,10 @@
           <h1 class="hero-title">Tournoi Beach Tennis</h1>
           <div class="hero-date">28 juin 2026</div>
           <p class="hero-sub">
-            Au Tennis Squash Club de Kourou : sable, soleil et sport. Retrouvez ici les inscriptions, les équipes, la programmation, les matchs en direct et les infos pratiques.
-          </p>
+  Au Tennis Squash Club de Kourou : sable, soleil et sport.
+  Retrouvez ici les inscriptions, les équipes, la programmation,
+  les matchs en direct, les animations et la restauration.
+</p>
         </div>
 
         <div class="hero-infos">
@@ -420,9 +422,26 @@
         </div>
 
         <div class="hero-actions">
-          <a class="hero-btn hero-btn-primary" href="public/inscriptions.html">📝 S’inscrire au tournoi</a>
-          <a class="hero-btn hero-btn-secondary" href="public/equipes.html">👥 Voir les équipes</a>
-        </div>
+  <a class="hero-btn hero-btn-primary"
+     href="public/inscriptions.html">
+    📝 S’inscrire
+  </a>
+
+  <a class="hero-btn hero-btn-secondary"
+     href="public/equipes.html">
+    👥 Équipes
+  </a>
+
+  <a class="hero-btn hero-btn-secondary"
+     href="public/restauration.html">
+    🍽️ Restauration
+  </a>
+
+  <a class="hero-btn hero-btn-secondary"
+     href="public/animations.html">
+    🎉 Animations
+  </a>
+</div>
 
       </div>
     </div>
