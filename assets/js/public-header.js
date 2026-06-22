@@ -372,6 +372,7 @@ function renderHeader(){
             <a class="${currentPage === "index.html" ? "public-nav-link primary" : "public-nav-link"}" href="${rootPath}index.html">🏠 Accueil</a>
             <a class="${navClass("inscriptions.html")}" href="${publicPath}inscriptions.html">📝 Inscription</a>
             <a class="${navClass("equipes.html")}" href="${publicPath}equipes.html">👥 Équipes</a>
+            <a class="${navClass("animations.html")}" href="${publicPath}animations.html">🎉 Animations</a>
             <a class="${navClass("programmation.html")}" href="${publicPath}programmation.html">📅 Programmation</a>
             <a class="${navClass("matchs-direct.html")}" href="${publicPath}matchs-direct.html">🔴 Match en direct</a>
             <a class="${navClass("reglement.html")}" href="${publicPath}reglement.html">📘 Règlement</a>
