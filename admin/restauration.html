@@ -173,29 +173,35 @@
 
     .orders-list{
       display:grid;
-      gap:10px;
+      gap:12px;
       margin-top:12px;
     }
 
     .order-card{
       background:#fff;
       border:1px solid rgba(16,24,40,.08);
-      border-radius:20px;
+      border-radius:22px;
       padding:14px;
       box-shadow:0 8px 18px rgba(16,24,40,.05);
       display:grid;
       gap:12px;
     }
 
+    .order-main{
+      display:grid;
+      gap:6px;
+      min-width:0;
+    }
+
     .order-top{
       display:flex;
       justify-content:space-between;
-      gap:10px;
       align-items:flex-start;
+      gap:12px;
     }
 
     .order-name{
-      font-size:18px;
+      font-size:19px;
       font-weight:1000;
       color:var(--navy-dark);
       word-break:break-word;
@@ -203,50 +209,53 @@
 
     .order-detail{
       color:#344054;
-      font-size:14px;
+      font-size:15px;
       line-height:1.35;
-      font-weight:800;
-    }
-
-    .order-token{
-      color:#667085;
-      font-size:12px;
-      line-height:1.35;
-      font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
-      word-break:break-all;
-      padding:8px 10px;
-      border-radius:12px;
-      background:#f8fafc;
-      border:1px solid rgba(16,24,40,.06);
+      font-weight:850;
     }
 
     .order-total{
       color:var(--palm-dark);
-      font-size:18px;
+      font-size:20px;
       font-weight:1000;
       white-space:nowrap;
     }
 
-    .paid-pill{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      min-width:86px;
-      padding:7px 11px;
-      border-radius:999px;
-      font-size:12px;
-      font-weight:1000;
-      text-transform:uppercase;
-      cursor:pointer;
-      border:none;
+    .payment-row{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:8px;
     }
 
-    .paid-pill.paid{background:#dcfae6;color:#087a35;}
-    .paid-pill.unpaid{background:#fee4e2;color:#b42318;}
+    .pay-btn{
+      min-height:42px;
+      border-radius:999px;
+      border:1px solid rgba(16,24,40,.10);
+      background:#f2f4f7;
+      color:#667085;
+      font-weight:1000;
+      cursor:pointer;
+      font-size:13px;
+      opacity:.75;
+    }
+
+    .pay-btn.active-paid{
+      background:#dcfae6;
+      color:#087a35;
+      border-color:#a6f4c5;
+      opacity:1;
+    }
+
+    .pay-btn.active-unpaid{
+      background:#fee4e2;
+      color:#b42318;
+      border-color:#fecdca;
+      opacity:1;
+    }
 
     .order-actions{
       display:grid;
-      grid-template-columns:1fr 1fr;
+      grid-template-columns:1fr;
       gap:8px;
     }
 
@@ -297,10 +306,10 @@
       .grid.two{grid-template-columns:1fr 1fr;}
       .grid.three{grid-template-columns:1fr 1fr 1fr;}
       .order-card{
-        grid-template-columns:1fr auto;
+        grid-template-columns:1fr 270px;
         align-items:start;
       }
-      .order-actions{grid-template-columns:1fr 1fr 1fr;}
+      .order-actions{grid-template-columns:1fr;}
     }
 
     @media (max-width:759px){
@@ -329,7 +338,7 @@
     <div class="panel-head">
       <div>
         <h1 class="panel-title">🍽️ Admin restauration</h1>
-        <p class="panel-text">Ouverture des commandes, suivi des paiements, modification admin, tokens et export PDF.</p>
+        <p class="panel-text">Ouverture, paiements, modification, suppression et export PDF.</p>
       </div>
       <div class="panel-tag">Admin</div>
     </div>
@@ -379,8 +388,8 @@
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 
 <script type="module">
-  import { auth, db } from "../assets/js/firebase.js?v=tsck-admin-restauration2";
-  import { getRoleByUid } from "../assets/js/session.js?v=tsck-admin-restauration2";
+  import { auth, db } from "../assets/js/firebase.js?v=tsck-admin-restauration3";
+  import { getRoleByUid } from "../assets/js/session.js?v=tsck-admin-restauration3";
 
   import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 
@@ -389,6 +398,7 @@
     doc,
     setDoc,
     updateDoc,
+    deleteDoc,
     serverTimestamp,
     query,
     orderBy,
@@ -531,23 +541,16 @@
       const paid = row.paid === true;
       const poke = Number(row.items?.pokeBowl || row.items?.pokemonBowl || 0);
       const bobun = Number(row.items?.bobun || 0);
-      const token = row.editToken || "";
 
       return `
         <div class="order-card" data-id="${esc(row.id)}">
-          <div>
+          <div class="order-main">
             <div class="order-top">
               <div>
                 <div class="order-name">${esc(row.firstName)} ${esc(row.lastName)}</div>
                 <div class="order-detail">${esc(orderText(row))}</div>
               </div>
               <div class="order-total">${esc(row.total || 0)} €</div>
-            </div>
-
-            <div class="order-token">
-              Token : ${esc(token || "Aucun token")}
-              <br>
-              Lien : ${esc(token ? editUrl(token) : "Aucun lien disponible")}
             </div>
 
             <div class="edit-form" id="edit-${esc(row.id)}">
@@ -573,19 +576,20 @@
                 </div>
               </div>
 
-              <button class="btn btn-green btn-save-edit" type="button">💾 Enregistrer modification admin</button>
+              <button class="btn btn-green btn-save-edit" type="button">💾 Enregistrer la modification</button>
             </div>
           </div>
 
           <div>
-            <button class="paid-pill ${paid ? "paid" : "unpaid"}" type="button">
-              ${paid ? "Payé" : "Non payé"}
-            </button>
+            <div class="payment-row">
+              <button class="pay-btn ${paid ? "active-paid" : ""}" data-paid="true" type="button">Payé</button>
+              <button class="pay-btn ${!paid ? "active-unpaid" : ""}" data-paid="false" type="button">Non payé</button>
+            </div>
 
             <div class="order-actions" style="margin-top:10px;">
-              <button class="btn btn-white btn-copy-token" type="button">🔗 Copier lien</button>
               <button class="btn btn-white btn-toggle-edit" type="button">✏️ Modifier</button>
-              <button class="btn btn-primary btn-whatsapp" type="button">💬 Renvoyer</button>
+              <button class="btn btn-primary btn-whatsapp" type="button">💬 Renvoyer lien</button>
+              <button class="btn btn-red btn-delete" type="button">🗑️ Supprimer</button>
             </div>
           </div>
         </div>
@@ -597,48 +601,34 @@
       const row = ordersRows.find(r => r.id === id);
       if(!row) return;
 
-      const paidBtn = card.querySelector(".paid-pill");
-      const copyBtn = card.querySelector(".btn-copy-token");
+      const payBtns = card.querySelectorAll(".pay-btn");
       const editBtn = card.querySelector(".btn-toggle-edit");
       const whatsappBtn = card.querySelector(".btn-whatsapp");
+      const deleteBtn = card.querySelector(".btn-delete");
       const editForm = card.querySelector(".edit-form");
       const saveEditBtn = card.querySelector(".btn-save-edit");
 
-      paidBtn.onclick = async () => {
-        try{
-          await updateDoc(doc(db, "events", EVENT_ID, "restaurationCommandes", id), {
-            paid: row.paid !== true,
-            paidUpdatedAt: serverTimestamp(),
-            paidUpdatedBy: auth.currentUser?.uid || null
-          });
-        }catch(error){
-          console.error(error);
-          alert("Erreur : impossible de modifier le paiement.");
-        }
-      };
+      payBtns.forEach(btn => {
+        btn.onclick = async () => {
+          const nextPaid = btn.dataset.paid === "true";
 
-      copyBtn.onclick = async () => {
-        const token = row.editToken || "";
-        if(!token){
-          alert("Aucun token enregistré pour cette commande.");
-          return;
-        }
-
-        const link = editUrl(token);
-
-        try{
-          await navigator.clipboard.writeText(link);
-          copyBtn.textContent = "✅ Copié";
-          setTimeout(() => copyBtn.textContent = "🔗 Copier lien", 1000);
-        }catch(error){
-          alert(link);
-        }
-      };
+          try{
+            await updateDoc(doc(db, "events", EVENT_ID, "restaurationCommandes", id), {
+              paid: nextPaid,
+              paidUpdatedAt: serverTimestamp(),
+              paidUpdatedBy: auth.currentUser?.uid || null
+            });
+          }catch(error){
+            console.error(error);
+            alert("Erreur : impossible de modifier le paiement.");
+          }
+        };
+      });
 
       whatsappBtn.onclick = () => {
         const token = row.editToken || "";
         if(!token){
-          alert("Aucun token enregistré pour cette commande.");
+          alert("Aucun lien de modification disponible pour cette commande.");
           return;
         }
 
@@ -699,6 +689,25 @@
         }catch(error){
           console.error(error);
           alert("Erreur : impossible de modifier la commande.");
+        }
+      };
+
+      deleteBtn.onclick = async () => {
+        const ok = confirm(
+          "Supprimer cette commande ?\n\n" +
+          `${row.firstName || ""} ${row.lastName || ""}\n` +
+          `${orderText(row)}\n\n` +
+          "Cette action est irréversible."
+        );
+
+        if(!ok) return;
+
+        try{
+          await deleteDoc(doc(db, "events", EVENT_ID, "restaurationCommandes", id));
+          alert("Commande supprimée ✅");
+        }catch(error){
+          console.error(error);
+          alert("Erreur : impossible de supprimer la commande.");
         }
       };
     });
