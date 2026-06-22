@@ -25,6 +25,11 @@
 
     *{box-sizing:border-box;}
 
+    html,body{
+      max-width:100%;
+      overflow-x:hidden;
+    }
+
     body{
       margin:0;
       font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
@@ -54,14 +59,15 @@
       border:1px solid rgba(255,255,255,.7);
       border-radius:24px;
       box-shadow:var(--shadow);
-      padding:18px;
+      padding:16px;
+      min-width:0;
     }
 
     .panel-head{
       display:flex;
       justify-content:space-between;
       align-items:flex-start;
-      gap:12px;
+      gap:10px;
       margin-bottom:14px;
     }
 
@@ -82,7 +88,7 @@
 
     .panel-tag{
       flex-shrink:0;
-      padding:8px 13px;
+      padding:8px 12px;
       border-radius:999px;
       background:#e6f7ee;
       color:var(--palm-dark);
@@ -93,29 +99,30 @@
     }
 
     .tabs{
-      display:flex;
+      display:grid;
+      grid-template-columns:56px 56px 1fr;
       gap:8px;
-      overflow-x:auto;
-      scrollbar-width:none;
-      -webkit-overflow-scrolling:touch;
       margin-top:14px;
-      padding-bottom:2px;
+      width:100%;
     }
 
-    .tabs::-webkit-scrollbar{display:none;}
-
     .tab-btn{
-      flex:0 0 auto;
-      min-height:42px;
-      padding:10px 15px;
+      min-height:44px;
+      padding:10px 12px;
       border-radius:999px;
       border:1px solid rgba(16,24,40,.10);
       background:#fff;
       color:var(--navy);
-      font-size:14px;
+      font-size:16px;
       font-weight:1000;
       cursor:pointer;
       box-shadow:0 8px 16px rgba(16,24,40,.05);
+      min-width:0;
+      white-space:nowrap;
+    }
+
+    .tab-btn.commande{
+      font-size:14px;
     }
 
     .tab-btn[aria-selected="true"]{
@@ -127,11 +134,10 @@
     .tab-panel{
       display:none;
       margin-top:16px;
+      min-width:0;
     }
 
-    .tab-panel.active{
-      display:block;
-    }
+    .tab-panel.active{display:block;}
 
     .affiche{
       width:100%;
@@ -151,21 +157,23 @@
     }
 
     .subtabs{
-      display:flex;
+      display:grid;
+      grid-template-columns:1fr 1fr;
       gap:8px;
-      flex-wrap:wrap;
       margin-bottom:14px;
     }
 
     .subtab-btn{
-      min-height:40px;
-      padding:9px 14px;
+      min-height:42px;
+      padding:9px 10px;
       border-radius:999px;
       border:1px solid rgba(16,24,40,.10);
       background:#fff;
       color:#344054;
       font-weight:1000;
       cursor:pointer;
+      font-size:14px;
+      min-width:0;
     }
 
     .subtab-btn[aria-selected="true"]{
@@ -174,22 +182,19 @@
       border-color:var(--palm);
     }
 
-    .subtab-panel{
-      display:none;
-    }
-
-    .subtab-panel.active{
-      display:block;
-    }
+    .subtab-panel{display:none;}
+    .subtab-panel.active{display:block;}
 
     .form{
       display:grid;
       gap:14px;
+      min-width:0;
     }
 
     .field{
       display:grid;
       gap:8px;
+      min-width:0;
     }
 
     .field label{
@@ -199,6 +204,7 @@
 
     input{
       width:100%;
+      min-width:0;
       min-height:52px;
       border-radius:16px;
       border:1px solid rgba(16,24,40,.12);
@@ -221,21 +227,24 @@
       border:1px solid rgba(16,24,40,.08);
       padding:14px;
       display:grid;
-      gap:10px;
+      gap:12px;
       box-shadow:0 8px 18px rgba(16,24,40,.05);
+      min-width:0;
     }
 
     .choice-top{
       display:flex;
       justify-content:space-between;
       align-items:flex-start;
-      gap:12px;
+      gap:10px;
+      min-width:0;
     }
 
     .choice-name{
       font-size:18px;
       font-weight:1000;
       color:var(--navy-dark);
+      word-break:break-word;
     }
 
     .choice-price{
@@ -248,22 +257,37 @@
       font-size:13px;
     }
 
-    .qty-row{
+    .qty-control{
       display:grid;
-      grid-template-columns:1fr 110px;
-      gap:10px;
+      grid-template-columns:48px 1fr 48px;
+      gap:8px;
       align-items:center;
+      width:100%;
     }
 
-    .qty-row span{
-      color:var(--muted);
-      font-size:14px;
-      font-weight:800;
-    }
-
-    .qty-row input{
-      text-align:center;
+    .qty-btn{
+      height:48px;
+      border:none;
+      border-radius:16px;
+      background:linear-gradient(180deg,var(--sun),var(--sun-dark));
+      color:var(--navy-dark);
+      font-size:24px;
       font-weight:1000;
+      cursor:pointer;
+      box-shadow:0 8px 16px rgba(255,210,31,.18);
+    }
+
+    .qty-value{
+      height:48px;
+      border-radius:16px;
+      background:#f8fafc;
+      border:1px solid rgba(16,24,40,.08);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:22px;
+      font-weight:1000;
+      color:var(--navy-dark);
     }
 
     .total-box{
@@ -291,6 +315,7 @@
       font-weight:1000;
       cursor:pointer;
       font-family:inherit;
+      width:100%;
     }
 
     .btn-primary{
@@ -315,6 +340,7 @@
     .orders-list{
       display:grid;
       gap:10px;
+      min-width:0;
     }
 
     .order-card{
@@ -325,12 +351,14 @@
       box-shadow:0 6px 16px rgba(16,24,40,.04);
       display:grid;
       gap:5px;
+      min-width:0;
     }
 
     .order-name{
       font-size:18px;
       font-weight:1000;
       color:var(--navy-dark);
+      word-break:break-word;
     }
 
     .order-detail{
@@ -338,6 +366,7 @@
       font-size:14px;
       line-height:1.35;
       font-weight:800;
+      word-break:break-word;
     }
 
     .order-total{
@@ -354,7 +383,11 @@
 
     @media (min-width:760px){
       .panel{padding:24px;}
-      .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+      .form-grid{
+        display:grid;
+        grid-template-columns:1fr 1fr;
+        gap:12px;
+      }
     }
 
     @media (max-width:759px){
@@ -363,6 +396,10 @@
       }
 
       .panel-title{font-size:24px;}
+
+      .panel-head{
+        align-items:flex-start;
+      }
     }
   </style>
 </head>
@@ -379,16 +416,16 @@
         <div>
           <h1 class="panel-title">🍽️ Restauration</h1>
           <p class="panel-text">
-            Retrouvez les boissons, les repas proposés et les commandes pour le tournoi.
+            Boissons, repas et commandes pour le tournoi.
           </p>
         </div>
         <div class="panel-tag">TSCK</div>
       </div>
 
       <div class="tabs" role="tablist" aria-label="Restauration">
-        <button class="tab-btn" type="button" data-tab="boissons" aria-selected="true">🥤 Boissons</button>
-        <button class="tab-btn" type="button" data-tab="repas" aria-selected="false">🍜 Repas</button>
-        <button class="tab-btn" type="button" data-tab="commandez" aria-selected="false">📝 Commandez</button>
+        <button class="tab-btn" type="button" data-tab="boissons" aria-selected="true" aria-label="Boissons">🥤</button>
+        <button class="tab-btn" type="button" data-tab="repas" aria-selected="false" aria-label="Repas">🍜</button>
+        <button class="tab-btn commande" type="button" data-tab="commandez" aria-selected="false">📝 Commandez</button>
       </div>
 
       <div id="tab-boissons" class="tab-panel active">
@@ -407,7 +444,7 @@
 
         <div class="subtabs" role="tablist" aria-label="Commandes">
           <button class="subtab-btn" type="button" data-subtab="commande" aria-selected="true">📝 Commander</button>
-          <button class="subtab-btn" type="button" data-subtab="recap" aria-selected="false">📋 Récapitulatif</button>
+          <button class="subtab-btn" type="button" data-subtab="recap" aria-selected="false">📋 Récap</button>
         </div>
 
         <div id="subtab-commande" class="subtab-panel active">
@@ -434,10 +471,13 @@
                 <div class="choice-price">10 €</div>
               </div>
 
-              <div class="qty-row">
-                <span>Quantité souhaitée</span>
-                <input id="qtyPokemon" name="qtyPokemon" type="number" min="0" max="20" step="1" value="0">
+              <div class="qty-control" data-item="pokemon">
+                <button class="qty-btn" type="button" data-action="minus" aria-label="Retirer un Pokémon Bowl">−</button>
+                <div class="qty-value" id="qtyPokemonDisplay">0</div>
+                <button class="qty-btn" type="button" data-action="plus" aria-label="Ajouter un Pokémon Bowl">+</button>
               </div>
+
+              <input id="qtyPokemon" name="qtyPokemon" type="hidden" value="0">
             </div>
 
             <div class="choice-card">
@@ -449,10 +489,13 @@
                 <div class="choice-price">10 €</div>
               </div>
 
-              <div class="qty-row">
-                <span>Quantité souhaitée</span>
-                <input id="qtyBobun" name="qtyBobun" type="number" min="0" max="20" step="1" value="0">
+              <div class="qty-control" data-item="bobun">
+                <button class="qty-btn" type="button" data-action="minus" aria-label="Retirer un Bobun">−</button>
+                <div class="qty-value" id="qtyBobunDisplay">0</div>
+                <button class="qty-btn" type="button" data-action="plus" aria-label="Ajouter un Bobun">+</button>
               </div>
+
+              <input id="qtyBobun" name="qtyBobun" type="hidden" value="0">
             </div>
 
             <div class="total-box">
@@ -483,7 +526,7 @@
 <script type="module" src="../assets/js/public-header.js"></script>
 
 <script type="module">
-  import { db } from "../assets/js/firebase.js?v=tsck-restauration1";
+  import { db } from "../assets/js/firebase.js?v=tsck-restauration2";
 
   import {
     collection,
@@ -510,6 +553,8 @@
 
   const qtyPokemon = document.getElementById("qtyPokemon");
   const qtyBobun = document.getElementById("qtyBobun");
+  const qtyPokemonDisplay = document.getElementById("qtyPokemonDisplay");
+  const qtyBobunDisplay = document.getElementById("qtyBobunDisplay");
 
   const recapStatus = document.getElementById("recapStatus");
   const ordersList = document.getElementById("ordersList");
@@ -526,14 +571,30 @@
       .replaceAll("'","&#039;");
   }
 
-  function qty(input){
+  function getQty(input){
     const n = Number(input.value || 0);
     if(!Number.isFinite(n) || n < 0) return 0;
-    return Math.floor(n);
+    return Math.min(20, Math.floor(n));
+  }
+
+  function setQty(item, value){
+    const safeValue = Math.max(0, Math.min(20, Math.floor(Number(value) || 0)));
+
+    if(item === "pokemon"){
+      qtyPokemon.value = safeValue;
+      qtyPokemonDisplay.textContent = safeValue;
+    }
+
+    if(item === "bobun"){
+      qtyBobun.value = safeValue;
+      qtyBobunDisplay.textContent = safeValue;
+    }
+
+    updateLiveTotal();
   }
 
   function computeTotal(){
-    return (qty(qtyPokemon) + qty(qtyBobun)) * PRICE;
+    return (getQty(qtyPokemon) + getQty(qtyBobun)) * PRICE;
   }
 
   function updateLiveTotal(){
@@ -572,8 +633,16 @@
     btn.onclick = () => selectSubtab(btn.dataset.subtab);
   });
 
-  [qtyPokemon, qtyBobun].forEach(input => {
-    input.addEventListener("input", updateLiveTotal);
+  document.querySelectorAll(".qty-control").forEach(control => {
+    const item = control.dataset.item;
+
+    control.querySelectorAll(".qty-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const current = item === "pokemon" ? getQty(qtyPokemon) : getQty(qtyBobun);
+        const next = btn.dataset.action === "plus" ? current + 1 : current - 1;
+        setQty(item, next);
+      });
+    });
   });
 
   updateLiveTotal();
@@ -584,8 +653,8 @@
     const lastName = form.lastName.value.trim();
     const firstName = form.firstName.value.trim();
 
-    const pokemonCount = qty(qtyPokemon);
-    const bobunCount = qty(qtyBobun);
+    const pokemonCount = getQty(qtyPokemon);
+    const bobunCount = getQty(qtyBobun);
     const total = computeTotal();
 
     if(!lastName || !firstName){
@@ -627,9 +696,8 @@
       });
 
       form.reset();
-      qtyPokemon.value = 0;
-      qtyBobun.value = 0;
-      updateLiveTotal();
+      setQty("pokemon", 0);
+      setQty("bobun", 0);
 
       setStatus("✅ Commande enregistrée.");
       alert("✅ Commande enregistrée !");
