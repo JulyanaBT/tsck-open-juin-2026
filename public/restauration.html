@@ -121,9 +121,7 @@
       white-space:nowrap;
     }
 
-    .tab-btn.commande{
-      font-size:14px;
-    }
+    .tab-btn.commande{font-size:14px;}
 
     .tab-btn[aria-selected="true"]{
       background:linear-gradient(180deg,var(--sun),var(--sun-dark));
@@ -177,18 +175,38 @@
     }
 
     .subtab-btn[aria-selected="true"]{
-      background:linear-gradient(135deg,var(--palm),var(--palm-light));
-      color:#fff;
-      border-color:var(--palm);
+      background:linear-gradient(180deg,var(--sun),var(--sun-dark));
+      color:var(--navy-dark);
+      border-color:var(--sun);
     }
 
     .subtab-panel{display:none;}
     .subtab-panel.active{display:block;}
 
+    .closed-box{
+      display:none;
+      margin-bottom:14px;
+      padding:14px 16px;
+      border-radius:18px;
+      background:#fff7e6;
+      border:1px solid #ffd37a;
+      color:#9a5b00;
+      font-size:15px;
+      font-weight:1000;
+      line-height:1.45;
+    }
+
+    .closed-box.show{display:block;}
+
     .form{
       display:grid;
       gap:14px;
       min-width:0;
+    }
+
+    .form.disabled{
+      opacity:.55;
+      pointer-events:none;
     }
 
     .field{
@@ -350,7 +368,9 @@
       padding:13px;
       box-shadow:0 6px 16px rgba(16,24,40,.04);
       display:grid;
-      gap:5px;
+      grid-template-columns:1fr auto;
+      gap:10px;
+      align-items:center;
       min-width:0;
     }
 
@@ -375,6 +395,28 @@
       font-weight:1000;
     }
 
+    .payment-dot{
+      width:38px;
+      height:38px;
+      border-radius:999px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:20px;
+      font-weight:1000;
+      color:#fff;
+      box-shadow:0 8px 16px rgba(16,24,40,.10);
+      flex-shrink:0;
+    }
+
+    .payment-dot.paid{
+      background:#087a35;
+    }
+
+    .payment-dot.unpaid{
+      background:#b42318;
+    }
+
     .muted{
       color:var(--muted);
       font-size:14px;
@@ -396,10 +438,7 @@
       }
 
       .panel-title{font-size:24px;}
-
-      .panel-head{
-        align-items:flex-start;
-      }
+      .panel-head{align-items:flex-start;}
     }
   </style>
 </head>
@@ -415,9 +454,7 @@
       <div class="panel-head">
         <div>
           <h1 class="panel-title">🍽️ Restauration</h1>
-          <p class="panel-text">
-            Boissons, repas et commandes pour le tournoi.
-          </p>
+          <p class="panel-text">Boissons, repas et commandes pour le tournoi.</p>
         </div>
         <div class="panel-tag">TSCK</div>
       </div>
@@ -448,6 +485,10 @@
         </div>
 
         <div id="subtab-commande" class="subtab-panel active">
+          <div id="closedBox" class="closed-box">
+            🔒 Les commandes sont terminées. Le formulaire est désormais fermé.
+          </div>
+
           <form id="orderForm" class="form" autocomplete="on">
 
             <div class="form-grid">
@@ -465,19 +506,19 @@
             <div class="choice-card">
               <div class="choice-top">
                 <div>
-                  <div class="choice-name">Pokémon Bowl</div>
+                  <div class="choice-name">Poké Bowl</div>
                   <div class="muted">Plat proposé pour le tournoi.</div>
                 </div>
                 <div class="choice-price">10 €</div>
               </div>
 
-              <div class="qty-control" data-item="pokemon">
-                <button class="qty-btn" type="button" data-action="minus" aria-label="Retirer un Pokémon Bowl">−</button>
-                <div class="qty-value" id="qtyPokemonDisplay">0</div>
-                <button class="qty-btn" type="button" data-action="plus" aria-label="Ajouter un Pokémon Bowl">+</button>
+              <div class="qty-control" data-item="poke">
+                <button class="qty-btn" type="button" data-action="minus" aria-label="Retirer un Poké Bowl">−</button>
+                <div class="qty-value" id="qtyPokeDisplay">0</div>
+                <button class="qty-btn" type="button" data-action="plus" aria-label="Ajouter un Poké Bowl">+</button>
               </div>
 
-              <input id="qtyPokemon" name="qtyPokemon" type="hidden" value="0">
+              <input id="qtyPoke" name="qtyPoke" type="hidden" value="0">
             </div>
 
             <div class="choice-card">
@@ -526,7 +567,7 @@
 <script type="module" src="../assets/js/public-header.js"></script>
 
 <script type="module">
-  import { db } from "../assets/js/firebase.js?v=tsck-restauration2";
+  import { db } from "../assets/js/firebase.js?v=tsck-restauration3";
 
   import {
     collection,
@@ -534,7 +575,8 @@
     serverTimestamp,
     query,
     orderBy,
-    onSnapshot
+    onSnapshot,
+    doc
   } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
   const EVENT_ID = "tsck-open-juin-2026";
@@ -550,16 +592,20 @@
   const submitBtn = document.getElementById("submitBtn");
   const statusEl = document.getElementById("status");
   const liveTotal = document.getElementById("liveTotal");
+  const closedBox = document.getElementById("closedBox");
 
-  const qtyPokemon = document.getElementById("qtyPokemon");
+  const qtyPoke = document.getElementById("qtyPoke");
   const qtyBobun = document.getElementById("qtyBobun");
-  const qtyPokemonDisplay = document.getElementById("qtyPokemonDisplay");
+  const qtyPokeDisplay = document.getElementById("qtyPokeDisplay");
   const qtyBobunDisplay = document.getElementById("qtyBobunDisplay");
 
   const recapStatus = document.getElementById("recapStatus");
   const ordersList = document.getElementById("ordersList");
 
+  const configRef = doc(db, "config", EVENT_ID);
   const ordersRef = collection(db, "events", EVENT_ID, "restaurationCommandes");
+
+  let restaurationState = "not_open";
 
   function esc(value){
     return (value || "")
@@ -580,9 +626,9 @@
   function setQty(item, value){
     const safeValue = Math.max(0, Math.min(20, Math.floor(Number(value) || 0)));
 
-    if(item === "pokemon"){
-      qtyPokemon.value = safeValue;
-      qtyPokemonDisplay.textContent = safeValue;
+    if(item === "poke"){
+      qtyPoke.value = safeValue;
+      qtyPokeDisplay.textContent = safeValue;
     }
 
     if(item === "bobun"){
@@ -594,7 +640,7 @@
   }
 
   function computeTotal(){
-    return (getQty(qtyPokemon) + getQty(qtyBobun)) * PRICE;
+    return (getQty(qtyPoke) + getQty(qtyBobun)) * PRICE;
   }
 
   function updateLiveTotal(){
@@ -603,6 +649,25 @@
 
   function setStatus(message){
     statusEl.textContent = message;
+  }
+
+  function applyRestaurationState(state){
+    restaurationState = state || "not_open";
+
+    const closed = restaurationState !== "open";
+
+    closedBox.classList.toggle("show", closed);
+    form.classList.toggle("disabled", closed);
+
+    form.querySelectorAll("input, button").forEach(el => {
+      el.disabled = closed;
+    });
+
+    if(closed){
+      setStatus("🔒 Les commandes sont terminées.");
+    }else{
+      setStatus("");
+    }
   }
 
   function selectTab(name){
@@ -638,7 +703,7 @@
 
     control.querySelectorAll(".qty-btn").forEach(btn => {
       btn.addEventListener("click", () => {
-        const current = item === "pokemon" ? getQty(qtyPokemon) : getQty(qtyBobun);
+        const current = item === "poke" ? getQty(qtyPoke) : getQty(qtyBobun);
         const next = btn.dataset.action === "plus" ? current + 1 : current - 1;
         setQty(item, next);
       });
@@ -647,13 +712,26 @@
 
   updateLiveTotal();
 
+  onSnapshot(configRef, (snap) => {
+    const data = snap.exists() ? snap.data() : {};
+    applyRestaurationState(data.restaurationState || "not_open");
+  }, (error) => {
+    console.error(error);
+    applyRestaurationState("closed");
+  });
+
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
+
+    if(restaurationState !== "open"){
+      setStatus("🔒 Les commandes sont terminées.");
+      return;
+    }
 
     const lastName = form.lastName.value.trim();
     const firstName = form.firstName.value.trim();
 
-    const pokemonCount = getQty(qtyPokemon);
+    const pokeCount = getQty(qtyPoke);
     const bobunCount = getQty(qtyBobun);
     const total = computeTotal();
 
@@ -662,13 +740,13 @@
       return;
     }
 
-    if(pokemonCount === 0 && bobunCount === 0){
+    if(pokeCount === 0 && bobunCount === 0){
       setStatus("❌ Merci de sélectionner au moins un plat.");
       return;
     }
 
     const lines = [];
-    if(pokemonCount > 0) lines.push(`${pokemonCount} Pokémon Bowl`);
+    if(pokeCount > 0) lines.push(`${pokeCount} Poké Bowl`);
     if(bobunCount > 0) lines.push(`${bobunCount} Bobun`);
 
     const ok = confirm(
@@ -688,15 +766,16 @@
         firstName,
         lastName,
         items: {
-          pokemonBowl: pokemonCount,
+          pokeBowl: pokeCount,
           bobun: bobunCount
         },
         total,
+        paid: false,
         createdAt: serverTimestamp()
       });
 
       form.reset();
-      setQty("pokemon", 0);
+      setQty("poke", 0);
       setQty("bobun", 0);
 
       setStatus("✅ Commande enregistrée.");
@@ -715,10 +794,10 @@
   function orderText(data){
     const parts = [];
 
-    const pokemon = Number(data.items?.pokemonBowl || 0);
+    const poke = Number(data.items?.pokeBowl || data.items?.pokemonBowl || 0);
     const bobun = Number(data.items?.bobun || 0);
 
-    if(pokemon > 0) parts.push(`${pokemon} Pokémon Bowl`);
+    if(poke > 0) parts.push(`${poke} Poké Bowl`);
     if(bobun > 0) parts.push(`${bobun} Bobun`);
 
     return parts.join(" • ");
@@ -749,13 +828,21 @@
       return;
     }
 
-    ordersList.innerHTML = rows.map(row => `
-      <div class="order-card">
-        <div class="order-name">${esc(row.firstName || "Sans prénom")}</div>
-        <div class="order-detail">${esc(orderText(row))}</div>
-        <div class="order-total">${esc(row.total || 0)} €</div>
-      </div>
-    `).join("");
+    ordersList.innerHTML = rows.map(row => {
+      const paid = row.paid === true;
+
+      return `
+        <div class="order-card">
+          <div>
+            <div class="order-name">${esc(row.firstName || "Sans prénom")}</div>
+            <div class="order-detail">${esc(orderText(row))}</div>
+            <div class="order-total">${esc(row.total || 0)} €</div>
+          </div>
+
+          <div class="payment-dot ${paid ? "paid" : "unpaid"}">€</div>
+        </div>
+      `;
+    }).join("");
 
   }, (error) => {
     console.error(error);
