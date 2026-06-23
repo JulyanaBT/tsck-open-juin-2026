@@ -14,29 +14,23 @@
       --navy-dark:#03172b;
       --sun:#ffd21f;
       --sun-dark:#f3b800;
-      --sand:#fff4d4;
       --text:#17212b;
       --muted:#667085;
-      --card:rgba(255,255,255,.95);
+      --card:rgba(255,255,255,.94);
       --shadow:0 16px 40px rgba(16,24,40,.12);
       --container:1180px;
     }
 
     *{box-sizing:border-box;}
 
-    html,body{
-      max-width:100%;
-      overflow-x:hidden;
-    }
-
     body{
       margin:0;
       font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
       color:var(--text);
       background:
-        radial-gradient(circle at 10% 0%, rgba(255,210,31,.22), transparent 26%),
-        radial-gradient(circle at 90% 8%, rgba(11,122,59,.18), transparent 26%),
-        linear-gradient(180deg,#eaf9ff 0%,#fff4d4 46%,#ffffff 100%);
+        radial-gradient(circle at 20% 0%, rgba(255,210,31,.18), transparent 28%),
+        radial-gradient(circle at 85% 10%, rgba(11,122,59,.12), transparent 26%),
+        linear-gradient(180deg,#f7fcff 0%,#eef9ff 48%,#fff 100%);
     }
 
     a{
@@ -60,7 +54,7 @@
 
     .panel{
       background:var(--card);
-      border:1px solid rgba(255,255,255,.7);
+      border:1px solid rgba(255,255,255,.6);
       border-radius:28px;
       box-shadow:var(--shadow);
       padding:20px;
@@ -105,8 +99,13 @@
       margin-top:14px;
       padding:14px 16px;
       border-radius:18px;
-      background:linear-gradient(135deg,rgba(11,122,59,.10),rgba(255,210,31,.16));
-      border:1px solid rgba(11,122,59,.18);
+      background:
+        linear-gradient(
+          135deg,
+          rgba(11,122,59,.10),
+          rgba(255,210,31,.16)
+        );
+      border:1px solid rgba(11,122,59,.20);
       color:#475467;
       font-size:14px;
       line-height:1.55;
@@ -116,25 +115,11 @@
       color:var(--navy-dark);
     }
 
-    .jat-list{
-      margin:14px 0 0;
-      padding-left:20px;
-      color:#475467;
-      line-height:1.6;
-      font-size:15px;
-      font-weight:700;
-    }
-
-    .jat-list strong{
-      color:var(--palm-dark);
-      font-weight:1000;
-    }
-
     .quick-grid{
       display:grid;
       grid-template-columns:1fr;
       gap:12px;
-      margin-top:16px;
+      margin-top:18px;
     }
 
     .quick-card{
@@ -144,14 +129,19 @@
       background:#fff;
       border:1px solid rgba(16,24,40,.08);
       box-shadow:0 8px 18px rgba(16,24,40,.06);
+      transition:.2s ease;
+    }
+
+    .quick-card:hover{
+      transform:translateY(-2px);
     }
 
     .quick-card strong{
       display:block;
       color:var(--navy-dark);
       margin-bottom:6px;
-      font-weight:1000;
       font-size:17px;
+      font-weight:1000;
     }
 
     .quick-card span{
@@ -162,7 +152,22 @@
       font-weight:700;
     }
 
+    .jat-list{
+      margin:18px 0 0;
+      padding-left:20px;
+      color:#475467;
+      line-height:1.65;
+      font-size:15px;
+      font-weight:700;
+    }
+
+    .jat-list strong{
+      color:var(--navy-dark);
+      font-weight:1000;
+    }
+
     @media (min-width:760px){
+
       .panel{
         padding:24px;
       }
@@ -173,8 +178,9 @@
     }
 
     @media (max-width:759px){
+
       main{
-        padding-top:calc(var(--jat-total-top, 222px) + 34px);
+        padding-top:calc(var(--jat-total-top, 222px) + 28px);
       }
 
       .panel-title{
@@ -192,18 +198,25 @@
 
   <section class="section panel" id="accessDenied" style="display:none;">
     <h2 class="panel-title">⛔ Accès refusé</h2>
-    <p class="panel-text">Cette page est réservée au JAT et aux administrateurs.</p>
+    <p class="panel-text">
+      Cette page est réservée au juge-arbitre et aux administrateurs.
+    </p>
   </section>
 
   <section class="section panel" id="pageContent" style="display:none;">
+
     <div class="panel-head">
       <div>
         <h2 class="panel-title">⚖️ Espace JAT</h2>
+
         <p class="panel-text">
-          Espace de supervision sportive de l’Open Beach Tennis TSCK.
-          Le bandeau permet d’accéder aux pages JAT et de sélectionner l’épreuve concernée.
+          Utilise le bandeau principal pour accéder aux outils du juge-arbitre.
+          Le sous-bandeau permet de sélectionner l’épreuve active
+          (Double Messieurs ou Double Dames) afin de préparer le tirage,
+          la programmation et le suivi du tournoi.
         </p>
       </div>
+
       <div class="panel-tag">JAT</div>
     </div>
 
@@ -213,38 +226,73 @@
     </div>
 
     <div class="quick-grid">
+
       <a class="quick-card" href="verification.html">
         <strong>✅ Vérification</strong>
-        <span>Contrôle des équipes, licences, épreuves et points à valider avant lancement.</span>
+        <span>
+          Contrôle des équipes, licences, inscriptions,
+          listes principales et points à valider avant lancement.
+        </span>
+      </a>
+
+      <a class="quick-card" href="tirage.html">
+        <strong>🎲 Tirage</strong>
+        <span>
+          Préparation et contrôle du tirage des tableaux
+          Double Messieurs et Double Dames.
+        </span>
       </a>
 
       <a class="quick-card" href="programmation.html">
         <strong>📅 Programmation</strong>
-        <span>Suivi de la programmation, horaires, terrains et cohérence sportive.</span>
+        <span>
+          Suivi des horaires, des terrains et de la cohérence sportive.
+        </span>
       </a>
 
       <a class="quick-card" href="resultats.html">
         <strong>🏆 Résultats</strong>
-        <span>Saisie, contrôle et validation des résultats sportifs.</span>
+        <span>
+          Saisie, contrôle et validation des résultats du tournoi.
+        </span>
       </a>
 
-      <a class="quick-card" href="classements.html">
-        <strong>📊 Classements</strong>
-        <span>Consultation des classements, qualifiés, classements finaux et podiums.</span>
-      </a>
     </div>
 
     <ul class="jat-list">
-      <li><strong>Vérification</strong> : contrôle préalable avant tirage ou programmation.</li>
-      <li><strong>Programmation</strong> : supervision des matchs et ajustements sportifs.</li>
-      <li><strong>Résultats</strong> : suivi des scores et des vainqueurs.</li>
-      <li><strong>Classements</strong> : vérification des classements finaux et podiums.</li>
+
+      <li>
+        <strong>Vérification</strong> :
+        contrôle préalable avant tirage ou programmation.
+      </li>
+
+      <li>
+        <strong>Tirage</strong> :
+        vérification et validation des tableaux.
+      </li>
+
+      <li>
+        <strong>Programmation</strong> :
+        supervision des matchs et ajustements sportifs.
+      </li>
+
+      <li>
+        <strong>Résultats</strong> :
+        suivi des scores et validation sportive.
+      </li>
+
     </ul>
 
     <div class="status-box">
-      ✅ Le bandeau JAT est commun. Toute nouvelle page JAT sera intégrée depuis :
-      <strong>assets/js/jat-header.js</strong>.
+      ✅ Le bandeau JAT est commun à toutes les pages.
+
+      <br><br>
+
+      Toute nouvelle page JAT doit utiliser :
+
+      <strong>assets/js/jat-header.js</strong>
     </div>
+
   </section>
 
 </main>
@@ -254,13 +302,17 @@
 <script type="module">
   import { auth } from "../assets/js/firebase.js";
   import { getRoleByUid } from "../assets/js/session.js";
-  import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+
+  import {
+    onAuthStateChanged
+  } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 
   const accessDenied = document.getElementById("accessDenied");
   const pageContent = document.getElementById("pageContent");
   const zoneLabel = document.getElementById("zoneLabel");
 
   document.addEventListener("jatZoneChange", (event) => {
+
     const detail = event.detail || {};
 
     if(detail.label){
@@ -269,6 +321,7 @@
   });
 
   onAuthStateChanged(auth, async (user) => {
+
     accessDenied.style.display = "none";
     pageContent.style.display = "none";
 
@@ -278,6 +331,7 @@
     }
 
     try{
+
       const role = await getRoleByUid(user.uid);
 
       if(role !== "admin" && role !== "jat"){
@@ -288,8 +342,10 @@
       pageContent.style.display = "block";
 
     }catch(error){
+
       console.error(error);
       accessDenied.style.display = "block";
+
     }
   });
 </script>
