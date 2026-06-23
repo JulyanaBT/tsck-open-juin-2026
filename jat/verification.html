@@ -1,0 +1,770 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>JAT — Vérification — Open Beach Tennis TSCK</title>
+
+  <style>
+    :root{
+      --palm:#0b7a3b; --palm-dark:#064d28; --palm-light:#15a658;
+      --navy:#06284a; --navy-dark:#03172b;
+      --sun:#ffd21f; --sun-dark:#f3b800;
+      --text:#17212b; --muted:#667085; --card:rgba(255,255,255,.95);
+      --shadow:0 16px 40px rgba(16,24,40,.12);
+      --container:1180px;
+    }
+
+    *{box-sizing:border-box;}
+    html,body{max-width:100%;overflow-x:hidden;}
+
+    body{
+      margin:0;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at 10% 0%, rgba(255,210,31,.20), transparent 26%),
+        radial-gradient(circle at 90% 8%, rgba(11,122,59,.16), transparent 26%),
+        linear-gradient(180deg,#eaf9ff 0%,#fff4d4 52%,#fff 100%);
+    }
+
+    a{color:inherit;text-decoration:none;}
+
+    .container{
+      width:min(var(--container), calc(100% - 28px));
+      margin:0 auto;
+    }
+
+    main{
+      padding-top:calc(var(--jat-total-top, 230px) + 34px);
+      padding-bottom:42px;
+    }
+
+    .section{margin-top:18px;}
+
+    .panel{
+      background:var(--card);
+      border:1px solid rgba(255,255,255,.7);
+      border-radius:24px;
+      box-shadow:var(--shadow);
+      padding:18px;
+    }
+
+    .panel-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:12px;
+      margin-bottom:14px;
+    }
+
+    .panel-title{
+      margin:0;
+      font-size:26px;
+      line-height:1.05;
+      letter-spacing:-.03em;
+      color:var(--navy-dark);
+    }
+
+    .panel-text{
+      margin:6px 0 0;
+      color:var(--muted);
+      font-size:15px;
+      line-height:1.45;
+    }
+
+    .panel-tag{
+      flex-shrink:0;
+      padding:8px 13px;
+      border-radius:999px;
+      background:#e6f7ee;
+      color:var(--palm-dark);
+      font-size:12px;
+      font-weight:1000;
+      text-transform:uppercase;
+      letter-spacing:.06em;
+    }
+
+    .status-box{
+      margin-top:12px;
+      padding:14px 16px;
+      border-radius:18px;
+      background:linear-gradient(135deg,rgba(11,122,59,.10),rgba(255,210,31,.16));
+      border:1px solid rgba(11,122,59,.18);
+      color:#475467;
+      font-size:14px;
+      line-height:1.5;
+    }
+
+    .status-box strong{color:var(--navy-dark);}
+
+    .muted{
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.45;
+    }
+
+    .team-list{
+      display:grid;
+      gap:14px;
+      margin-top:14px;
+    }
+
+    .team-card{
+      border-radius:20px;
+      border:1px solid rgba(16,24,40,.08);
+      padding:14px;
+      background:#fff;
+      box-shadow:0 8px 18px rgba(16,24,40,.06);
+    }
+
+    .team-head{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:10px;
+      min-width:0;
+      margin-bottom:12px;
+    }
+
+    .team-name{
+      font-size:18px;
+      font-weight:1000;
+      line-height:1.15;
+      min-width:0;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+      color:var(--navy-dark);
+    }
+
+    .team-meta{
+      margin-top:4px;
+      font-size:13px;
+      color:#667085;
+      font-weight:800;
+    }
+
+    .team-badge{
+      flex:0 0 auto;
+      padding:7px 11px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:1000;
+      background:#f3f4f6;
+      color:#344054;
+      border:1px solid rgba(16,24,40,.10);
+      white-space:nowrap;
+    }
+
+    .team-badge.ok{
+      background:#d1fae5;
+      color:#064e3b;
+      border-color:rgba(16,185,129,.35);
+    }
+
+    .team-badge.nok{
+      background:#fee2e2;
+      color:#7f1d1d;
+      border-color:rgba(239,68,68,.35);
+    }
+
+    .sep{
+      height:1px;
+      background:rgba(0,0,0,.08);
+      border:none;
+      margin:12px 0;
+    }
+
+    .two-col{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:12px;
+    }
+
+    .player-card{
+      border-radius:18px;
+      background:linear-gradient(180deg,#fff,#fbfdff);
+      border:1px solid rgba(16,24,40,.08);
+      padding:12px;
+    }
+
+    .player-name{
+      font-size:16px;
+      font-weight:1000;
+      margin:0 0 10px;
+      color:#17212b;
+    }
+
+    .checklist{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+
+    .checkitem{
+      border:1px solid rgba(0,0,0,.10);
+      border-radius:14px;
+      background:rgba(255,255,255,.78);
+      padding:10px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+
+    .ci-left{
+      min-width:0;
+      flex:1 1 auto;
+    }
+
+    .ci-label{
+      font-size:12px;
+      font-weight:1000;
+      opacity:.72;
+      margin:0;
+      text-transform:uppercase;
+      letter-spacing:.04em;
+    }
+
+    .ci-value{
+      font-size:15px;
+      font-weight:1000;
+      margin:4px 0 0;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .stbtn{
+      flex:0 0 auto;
+      border:1px solid rgba(0,0,0,.12);
+      border-radius:999px;
+      padding:8px 12px;
+      font-weight:1000;
+      background:#fff;
+      cursor:pointer;
+      min-width:104px;
+      text-align:center;
+    }
+
+    .stbtn:disabled{opacity:.6;cursor:not-allowed;}
+
+    .stbtn.nv{
+      background:#f3f4f6;
+      border-color:rgba(0,0,0,.10);
+      color:#111;
+    }
+
+    .stbtn.ok{
+      background:#d1fae5;
+      border-color:rgba(16,185,129,.35);
+      color:#064e3b;
+    }
+
+    .stbtn.nok{
+      background:#fee2e2;
+      border-color:rgba(239,68,68,.35);
+      color:#7f1d1d;
+    }
+
+    @media (min-width:760px){
+      .panel{padding:22px;}
+      .two-col{grid-template-columns:1fr 1fr;}
+    }
+
+    @media (max-width:759px){
+      main{
+        padding-top:calc(var(--jat-total-top, 222px) + 28px);
+      }
+
+      .panel-title{font-size:24px;}
+
+      .checkitem{
+        flex-direction:column;
+        align-items:stretch;
+      }
+    }
+  </style>
+</head>
+
+<body data-zone-selector="select">
+
+<div id="jatHeader"></div>
+
+<main class="container">
+
+  <section class="section panel" id="accessDenied" style="display:none;">
+    <h2 class="panel-title">⛔ Accès refusé</h2>
+    <p class="panel-text">Cette page est réservée au JAT et aux administrateurs.</p>
+  </section>
+
+  <section class="section panel" id="pageContent" style="display:none;">
+    <div class="panel-head">
+      <div>
+        <h1 class="panel-title">✅ Vérification</h1>
+        <p class="panel-text">
+          Contrôle des équipes, licences, classements et informations utiles avant tirage.
+        </p>
+      </div>
+      <div class="panel-tag">JAT</div>
+    </div>
+
+    <div class="status-box">
+      Épreuve active :
+      <strong id="zoneLabel">Double Messieurs</strong>
+      <br>
+      Les données sont lues depuis les équipes inscrites du tournoi TSCK.
+    </div>
+  </section>
+
+  <section class="section panel" id="panelVerify" style="display:none;">
+    <div class="panel-head">
+      <div>
+        <h2 class="panel-title">🔎 Équipes à vérifier</h2>
+        <p class="panel-text" id="statusText">Chargement…</p>
+      </div>
+      <div class="panel-tag">Contrôle</div>
+    </div>
+
+    <div id="cards" class="team-list"></div>
+  </section>
+
+</main>
+
+<script type="module" src="../assets/js/jat-header.js"></script>
+
+<script type="module">
+  import { auth, db } from "../assets/js/firebase.js";
+  import { getRoleByUid } from "../assets/js/session.js";
+
+  import {
+    onAuthStateChanged
+  } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+
+  import {
+    doc,
+    collection,
+    onSnapshot,
+    setDoc,
+    serverTimestamp,
+    query,
+    orderBy
+  } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
+  const EVENT_ID = "tsck-open-juin-2026";
+
+  const EPREUVES = ["DM", "DD"];
+
+  const EPREUVE_LABELS = {
+    DM:"Double Messieurs",
+    DD:"Double Dames"
+  };
+
+  const accessDenied = document.getElementById("accessDenied");
+  const pageContent = document.getElementById("pageContent");
+  const panelVerify = document.getElementById("panelVerify");
+
+  const zoneLabel = document.getElementById("zoneLabel");
+  const statusText = document.getElementById("statusText");
+  const cardsEl = document.getElementById("cards");
+
+  let currentEpreuve = "DM";
+
+  let equipesById = new Map();
+  let verifsById = new Map();
+
+  let unsubEquipes = null;
+  let unsubVerifs = null;
+
+  function esc(s){
+    return (s ?? "").toString()
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;");
+  }
+
+  function fmt(v){
+    const t = (v ?? "").toString().trim();
+    return t === "" ? "—" : t;
+  }
+
+  function zoneKey(epreuve = currentEpreuve){
+    return `Seniors_${epreuve}`;
+  }
+
+  function zoneText(){
+    return EPREUVE_LABELS[currentEpreuve] || currentEpreuve;
+  }
+
+  function equipesCol(){
+    return collection(db, "events", EVENT_ID, "equipes");
+  }
+
+  function verifCol(){
+    return collection(db, "events", EVENT_ID, "verifications", zoneKey(), "equipes");
+  }
+
+  function verifDoc(teamId){
+    return doc(db, "events", EVENT_ID, "verifications", zoneKey(), "equipes", teamId);
+  }
+
+  function normalizeEquipe(d){
+    const x = d.data() || {};
+
+    return {
+      id:d.id,
+      createdAtMs:x.createdAt?.toMillis ? x.createdAt.toMillis() : 0,
+
+      categorie:String(x.categorie || "Seniors").trim(),
+      epreuve:String(x.epreuve || "").trim(),
+
+      teamName:x.teamName || "",
+
+      joueur1FirstName:x.joueur1FirstName || x.p1FirstName || x.joueur1?.firstName || "",
+      joueur1LastName:x.joueur1LastName || x.p1LastName || x.joueur1?.lastName || "",
+      joueur1Licence:x.joueur1Licence || x.p1Licence || x.joueur1?.licence || "",
+      joueur1Rank:x.joueur1Rank ?? x.p1Rank ?? x.joueur1?.rank ?? "",
+
+      joueur2FirstName:x.joueur2FirstName || x.p2FirstName || x.joueur2?.firstName || "",
+      joueur2LastName:x.joueur2LastName || x.p2LastName || x.joueur2?.lastName || "",
+      joueur2Licence:x.joueur2Licence || x.p2Licence || x.joueur2?.licence || "",
+      joueur2Rank:x.joueur2Rank ?? x.p2Rank ?? x.joueur2?.rank ?? "",
+
+      list:x.list || "main",
+      stby:x.stby === true
+    };
+  }
+
+  function rows(){
+    return [...equipesById.values()]
+      .filter(eq => eq.epreuve === currentEpreuve)
+      .filter(eq => eq.stby !== true)
+      .filter(eq => eq.list !== "wait")
+      .sort((a,b) => {
+        const an = safeTeamName(a).toLowerCase();
+        const bn = safeTeamName(b).toLowerCase();
+        const n = an.localeCompare(bn, "fr");
+        if(n !== 0) return n;
+        return (a.createdAtMs || 0) - (b.createdAtMs || 0);
+      });
+  }
+
+  function safeTeamName(t){
+    return (t?.teamName || "Équipe").toString().trim() || "Équipe";
+  }
+
+  function player(team, which){
+    const prefix = which === "joueur1" ? "joueur1" : "joueur2";
+
+    return {
+      first:(team[`${prefix}FirstName`] || "").toString().trim(),
+      last:(team[`${prefix}LastName`] || "").toString().trim(),
+      licence:(team[`${prefix}Licence`] || "").toString().trim(),
+      rank:(team[`${prefix}Rank`] ?? "").toString().trim()
+    };
+  }
+
+  function displayName(p){
+    const full = `${(p.last || "").toUpperCase()} ${p.first || ""}`.trim();
+    return full || "Joueur";
+  }
+
+  function verifFor(teamId){
+    return verifsById.get(teamId) || {};
+  }
+
+  function getStatus(vdoc, path, fallback = "nv"){
+    const parts = path.split(".");
+    let cur = vdoc;
+
+    for(const p of parts){
+      if(!cur || typeof cur !== "object") return fallback;
+      cur = cur[p];
+    }
+
+    return (cur === "ok" || cur === "nok" || cur === "nv") ? cur : fallback;
+  }
+
+  function statusCycle(cur){
+    if(cur === "ok") return "nok";
+    if(cur === "nok") return "nv";
+    return "ok";
+  }
+
+  function statusLabel(s){
+    if(s === "ok") return "OK";
+    if(s === "nok") return "Non OK";
+    return "Non vérifié";
+  }
+
+  function playerPath(which){
+    return which === "joueur1" ? "joueur1" : "joueur2";
+  }
+
+  function renderPlayerBlock(team, which){
+    const path = playerPath(which);
+    const p = player(team, which);
+    const vdoc = verifFor(team.id);
+
+    const items = [
+      {
+        key:`${path}.licence`,
+        label:"N° licence",
+        value:fmt(p.licence)
+      },
+      {
+        key:`${path}.rank`,
+        label:"Classement",
+        value:fmt(p.rank)
+      }
+    ];
+
+    const htmlItems = items.map(item => {
+      const st = getStatus(vdoc, item.key, "nv");
+
+      return `
+        <div class="checkitem">
+          <div class="ci-left">
+            <p class="ci-label">${esc(item.label)}</p>
+            <p class="ci-value">${esc(item.value)}</p>
+          </div>
+
+          <button
+            class="stbtn ${esc(st)}"
+            data-act="toggle"
+            data-team="${esc(team.id)}"
+            data-key="${esc(item.key)}"
+            type="button"
+          >${esc(statusLabel(st))}</button>
+        </div>
+      `;
+    }).join("");
+
+    return `
+      <div class="player-card">
+        <div class="player-name">${esc(displayName(p))}</div>
+        <div class="checklist">
+          ${htmlItems}
+        </div>
+      </div>
+    `;
+  }
+
+  function teamStatus(team){
+    const v = verifFor(team.id);
+
+    const fields = [
+      getStatus(v, "joueur1.licence"),
+      getStatus(v, "joueur1.rank"),
+      getStatus(v, "joueur2.licence"),
+      getStatus(v, "joueur2.rank")
+    ];
+
+    if(fields.every(x => x === "ok")) return "ok";
+    if(fields.some(x => x === "nok")) return "nok";
+    return "nv";
+  }
+
+  function teamStatusLabel(status){
+    if(status === "ok") return "Vérifiée";
+    if(status === "nok") return "À corriger";
+    return "À vérifier";
+  }
+
+  function render(){
+    zoneLabel.textContent = zoneText();
+
+    const list = rows();
+
+    const total = list.length;
+    const okCount = list.filter(t => teamStatus(t) === "ok").length;
+    const nokCount = list.filter(t => teamStatus(t) === "nok").length;
+
+    statusText.textContent =
+      `${total} équipe${total > 1 ? "s" : ""} — ${okCount} vérifiée${okCount > 1 ? "s" : ""}, ${nokCount} à corriger.`;
+
+    if(!list.length){
+      cardsEl.innerHTML = `<p class="muted" style="margin:0;">Aucune équipe en liste principale pour cette épreuve.</p>`;
+      return;
+    }
+
+    cardsEl.innerHTML = list.map(team => {
+      const st = teamStatus(team);
+
+      return `
+        <div class="team-card">
+          <div class="team-head">
+            <div style="min-width:0;">
+              <div class="team-name">${esc(safeTeamName(team))}</div>
+              <div class="team-meta">${esc(zoneText())}</div>
+            </div>
+
+            <div class="team-badge ${esc(st)}">${esc(teamStatusLabel(st))}</div>
+          </div>
+
+          <hr class="sep" />
+
+          <div class="two-col">
+            ${renderPlayerBlock(team, "joueur1")}
+            ${renderPlayerBlock(team, "joueur2")}
+          </div>
+        </div>
+      `;
+    }).join("");
+  }
+
+  function stopListeners(){
+    if(unsubEquipes){
+      unsubEquipes();
+      unsubEquipes = null;
+    }
+
+    if(unsubVerifs){
+      unsubVerifs();
+      unsubVerifs = null;
+    }
+  }
+
+  function startListeners(){
+    stopListeners();
+
+    equipesById = new Map();
+    verifsById = new Map();
+
+    statusText.textContent = "Chargement…";
+    cardsEl.innerHTML = "";
+
+    unsubEquipes = onSnapshot(query(equipesCol(), orderBy("createdAt", "asc")), (snap) => {
+      equipesById = new Map();
+
+      snap.forEach(d => {
+        equipesById.set(d.id, normalizeEquipe(d));
+      });
+
+      render();
+    }, (error) => {
+      console.error(error);
+      statusText.textContent = "❌ Impossible de charger les équipes.";
+    });
+
+    unsubVerifs = onSnapshot(verifCol(), (snap) => {
+      verifsById = new Map();
+
+      snap.forEach(d => {
+        verifsById.set(d.id, d.data() || {});
+      });
+
+      render();
+    }, (error) => {
+      console.error(error);
+      statusText.textContent = "⚠️ Équipes chargées, mais vérifications indisponibles.";
+      render();
+    });
+  }
+
+  async function toggleStatus(teamId, key){
+    const curDoc = verifFor(teamId);
+    const cur = getStatus(curDoc, key, "nv");
+    const next = statusCycle(cur);
+
+    const [playerKey, fieldKey] = key.split(".");
+
+    await setDoc(verifDoc(teamId), {
+      [playerKey]: {
+        ...(curDoc[playerKey] || {}),
+        [fieldKey]: next
+      },
+      categorie:"Seniors",
+      epreuve:currentEpreuve,
+      key:zoneKey(),
+      updatedAt:serverTimestamp(),
+      updatedBy:auth.currentUser?.uid || null
+    }, { merge:true });
+  }
+
+  cardsEl.addEventListener("click", async (event) => {
+    const toggleBtn = event.target.closest("button[data-act='toggle']");
+    if(!toggleBtn) return;
+
+    const teamId = toggleBtn.dataset.team;
+    const key = toggleBtn.dataset.key;
+
+    if(!teamId || !key) return;
+
+    toggleBtn.disabled = true;
+
+    try{
+      await toggleStatus(teamId, key);
+    }catch(error){
+      console.error(error);
+      alert("Erreur Firestore ❌");
+    }finally{
+      toggleBtn.disabled = false;
+    }
+  });
+
+  document.addEventListener("jatZoneChange", (event) => {
+    const d = event.detail || {};
+
+    if(EPREUVES.includes(d.epreuve)){
+      currentEpreuve = d.epreuve;
+    }
+
+    try{
+      localStorage.setItem("tsck_jat_epreuve", currentEpreuve);
+    }catch(error){}
+
+    startListeners();
+  });
+
+  function showDenied(){
+    accessDenied.style.display = "block";
+    pageContent.style.display = "none";
+    panelVerify.style.display = "none";
+    stopListeners();
+  }
+
+  function showJat(){
+    accessDenied.style.display = "none";
+    pageContent.style.display = "block";
+    panelVerify.style.display = "block";
+
+    try{
+      const savedEpreuve = localStorage.getItem("tsck_jat_epreuve");
+      if(EPREUVES.includes(savedEpreuve)) currentEpreuve = savedEpreuve;
+    }catch(error){}
+
+    zoneLabel.textContent = zoneText();
+    startListeners();
+  }
+
+  onAuthStateChanged(auth, async (user) => {
+    accessDenied.style.display = "none";
+    pageContent.style.display = "none";
+    panelVerify.style.display = "none";
+
+    if(!user){
+      showDenied();
+      return;
+    }
+
+    try{
+      const role = await getRoleByUid(user.uid);
+
+      if(role !== "admin" && role !== "jat"){
+        showDenied();
+        return;
+      }
+
+      showJat();
+
+    }catch(error){
+      console.error(error);
+      showDenied();
+    }
+  });
+</script>
+
+</body>
+</html>
