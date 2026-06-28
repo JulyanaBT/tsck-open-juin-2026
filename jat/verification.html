@@ -304,7 +304,7 @@
       <div>
         <h1 class="panel-title">✅ Vérification</h1>
         <p class="panel-text">
-          Contrôle des équipes, licences, classements et informations utiles avant tirage.
+          Contrôle des équipes, licences, classements, paiements et informations utiles avant tirage.
         </p>
       </div>
       <div class="panel-tag">JAT</div>
@@ -517,6 +517,11 @@
         key:`${path}.rank`,
         label:"Classement",
         value:fmt(p.rank)
+      },
+      {
+        key:`${path}.payment`,
+        label:"Paiement",
+        value:"10 €"
       }
     ];
 
@@ -557,8 +562,10 @@
     const fields = [
       getStatus(v, "joueur1.licence"),
       getStatus(v, "joueur1.rank"),
+      getStatus(v, "joueur1.payment"),
       getStatus(v, "joueur2.licence"),
-      getStatus(v, "joueur2.rank")
+      getStatus(v, "joueur2.rank"),
+      getStatus(v, "joueur2.payment")
     ];
 
     if(fields.every(x => x === "ok")) return "ok";
