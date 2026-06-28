@@ -366,6 +366,7 @@ function renderHeader(){
             <a class="${navClass("equipes.html")}" href="equipes.html">👥 Équipes</a>
             <a class="${navClass("tirage.html")}" href="tirage.html">🎲 Tirage</a>
             <a class="${navClass("programmation.html")}" href="programmation.html">📅 Programmation</a>
+            <a class="${navClass("resultats.html")}" href="resultats.html">🏆 Résultats</a>
             <a class="${navClass("restauration.html")}" href="restauration.html">🍽️ Restauration</a>
             <a class="${navClass("roles.html")}" href="roles.html">🔐 Rôles</a>
             <a class="admin-nav-link" href="#" id="adminBtnLogout">🚪 Déconnexion</a>
