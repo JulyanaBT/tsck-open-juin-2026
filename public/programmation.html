@@ -93,8 +93,7 @@
       letter-spacing:.06em;
     }
 
-    .placeholder,
-    .status-box{
+    .placeholder{
       margin-top:12px;
       padding:14px 16px;
       border-radius:18px;
@@ -105,10 +104,7 @@
       line-height:1.5;
     }
 
-    .placeholder strong,
-    .status-box strong{
-      color:var(--navy-dark);
-    }
+    .placeholder strong{color:var(--navy-dark);}
 
     .work-badge{
       display:inline-flex;
@@ -153,11 +149,7 @@
       border-color:var(--sun-dark);
     }
 
-    .schedule-wrap{
-      margin-top:12px;
-      border-radius:20px;
-      overflow:visible;
-    }
+    .schedule-wrap{margin-top:12px;border-radius:20px;overflow:visible;}
 
     .schedule-grid{
       display:grid;
@@ -221,10 +213,7 @@
       color:#667085;
     }
 
-    .slot-cell{
-      min-height:96px;
-      min-width:0;
-    }
+    .slot-cell{min-height:96px;min-width:0;}
 
     .match-mini{
       height:100%;
@@ -241,20 +230,13 @@
       gap:3px;
     }
 
-    .match-mini.courtA{
-      background:#fff8dd;
-      border-color:rgba(255,196,0,.35);
-    }
-
-    .match-mini.courtB{
-      background:#ffeef2;
-      border-color:rgba(255,0,60,.20);
-    }
+    .match-mini.courtA{background:#fff8dd;border-color:rgba(255,196,0,.35);}
+    .match-mini.courtB{background:#ffeef2;border-color:rgba(255,0,60,.20);}
 
     .match-mini.animation{
       background:linear-gradient(135deg,#e6f7ee,#fff);
       border-color:rgba(11,122,59,.22);
-      grid-template-rows:auto 1fr;
+      grid-template-rows:auto auto 1fr;
     }
 
     .mini-time{
@@ -295,14 +277,8 @@
       color:#17212b;
     }
 
-    .mini-team.placeholder{
-      color:#667085;
-      font-style:italic;
-    }
-
-    .mini-team.winner{
-      color:#15803d;
-    }
+    .mini-team.placeholder{color:#667085;font-style:italic;}
+    .mini-team.winner{color:#15803d;}
 
     .empty-cell{
       height:100%;
@@ -326,20 +302,9 @@
       box-shadow:0 8px 18px rgba(16,24,40,.06);
     }
 
-    .match-card.courtA{
-      background:#fff8dd;
-      border-color:rgba(255,196,0,.35);
-    }
-
-    .match-card.courtB{
-      background:#ffeef2;
-      border-color:rgba(255,0,60,.20);
-    }
-
-    .match-card.animation{
-      background:linear-gradient(135deg,#e6f7ee,#fff);
-      border-color:rgba(11,122,59,.22);
-    }
+    .match-card.courtA{background:#fff8dd;border-color:rgba(255,196,0,.35);}
+    .match-card.courtB{background:#ffeef2;border-color:rgba(255,0,60,.20);}
+    .match-card.animation{background:linear-gradient(135deg,#e6f7ee,#fff);border-color:rgba(11,122,59,.22);}
 
     .match-head{
       display:flex;
@@ -349,16 +314,8 @@
       flex-wrap:wrap;
     }
 
-    .m-slot{
-      font-size:12px;
-      font-weight:1000;
-      color:#667085;
-    }
-
-    .m-time{
-      font-size:14px;
-      font-weight:1000;
-    }
+    .m-slot{font-size:12px;font-weight:1000;color:#667085;}
+    .m-time{font-size:14px;font-weight:1000;}
 
     .m-court{
       flex:1;
@@ -397,10 +354,7 @@
       text-overflow:ellipsis;
     }
 
-    .team-placeholder{
-      color:#667085;
-      font-style:italic;
-    }
+    .team-placeholder{color:#667085;font-style:italic;}
 
     .score-cell{
       text-align:right;
@@ -516,15 +470,8 @@
       }
 
       .panel-title{font-size:24px;}
-
-      .panel-head{
-        gap:10px;
-      }
-
-      .panel-tag{
-        padding:7px 10px;
-        font-size:11px;
-      }
+      .panel-head{gap:10px;}
+      .panel-tag{padding:7px 10px;font-size:11px;}
     }
   </style>
 </head>
@@ -620,293 +567,686 @@
     <div id="finalList" class="bracket-list"></div>
   </section>
 
-  <script type="module">
+</main>
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import {
-  getFirestore,
-  doc,
-  onSnapshot
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+<script type="module" src="../assets/js/public-header.js"></script>
 
-import {
-  firebaseConfig,
-  publicHeader,
-  publicFooter,
-  computePublicTopOffset
-} from "./common.js";
+<script type="module">
+  import { auth, db } from "../assets/js/firebase.js";
+  import { getRoleByUid } from "../assets/js/session.js";
 
-publicHeader();
-publicFooter();
+  import {
+    onAuthStateChanged
+  } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+  import {
+    doc,
+    collection,
+    onSnapshot
+  } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
-const eventId = "tsck-open-juin-2026";
+  const EVENT_ID = "tsck-open-juin-2026";
+  const params = new URLSearchParams(location.search);
+  const adminPreview = params.get("adminPreview") === "1";
 
-const state = {
-  event:null,
-  planning:[],
-  poules:{A:[],B:[]},
-  standings:{A:[],B:[]},
-  finales:[]
-};
+  const maintenanceBox = document.getElementById("maintenanceBox");
+  const workBox = document.getElementById("workBox");
+  const workBadge = document.getElementById("workBadge");
+  const pageIntro = document.getElementById("pageIntro");
+  const pageTag = document.getElementById("pageTag");
+  const statusText = document.getElementById("statusText");
 
-const maintenanceBox=document.getElementById("maintenanceBox");
-const workBox=document.getElementById("workBox");
-const workBadge=document.getElementById("workBadge");
+  const tabChrono = document.getElementById("tabChrono");
+  const tabResultats = document.getElementById("tabResultats");
+  const tabPoules = document.getElementById("tabPoules");
+  const tabFinal = document.getElementById("tabFinal");
 
-const chronoGrid=document.getElementById("chronoGrid");
-const resultatsList=document.getElementById("resultatsList");
-const poolAMatches=document.getElementById("poolAMatches");
-const poolBMatches=document.getElementById("poolBMatches");
-const poolAStandings=document.getElementById("poolAStandings");
-const poolBStandings=document.getElementById("poolBStandings");
-const finalList=document.getElementById("finalList");
+  const panelChrono = document.getElementById("panelChrono");
+  const panelResultats = document.getElementById("panelResultats");
+  const panelPoules = document.getElementById("panelPoules");
+  const panelFinal = document.getElementById("panelFinal");
 
-const panelChrono=document.getElementById("panelChrono");
-const panelResultats=document.getElementById("panelResultats");
-const panelPoules=document.getElementById("panelPoules");
-const panelFinal=document.getElementById("panelFinal");
+  const chronoGrid = document.getElementById("chronoGrid");
+  const resultatsList = document.getElementById("resultatsList");
+  const poolAMatches = document.getElementById("poolAMatches");
+  const poolBMatches = document.getElementById("poolBMatches");
+  const poolAStandings = document.getElementById("poolAStandings");
+  const poolBStandings = document.getElementById("poolBStandings");
+  const finalList = document.getElementById("finalList");
 
-function refreshOffset(){
-    computePublicTopOffset?.();
-}
+  let currentTab = "chrono";
+  let currentRole = null;
+  let publicVisible = false;
+  let visibilityLoaded = false;
+  let currentProg = null;
+  let resultsByMatch = new Map();
 
-window.addEventListener("resize",refreshOffset);
-window.addEventListener("load",refreshOffset);
+  function esc(s){
+    return (s ?? "").toString()
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+  }
 
-function show(tab){
+  function visibilityRef(){
+    return doc(db, "events", EVENT_ID, "config", "programmation");
+  }
 
-    panelChrono.style.display="none";
-    panelResultats.style.display="none";
-    panelPoules.style.display="none";
-    panelFinal.style.display="none";
+  function generalProgRef(){
+    return doc(db, "events", EVENT_ID, "programmations", "general");
+  }
 
-    document.querySelectorAll(".tab-btn").forEach(b=>{
-        b.setAttribute("aria-selected","false");
+  function resultsCol(){
+    return collection(db, "events", EVENT_ID, "resultats", "general", "matches");
+  }
+
+  function canSeeWork(){
+    return publicVisible === true || currentRole === "admin" || currentRole === "jat" || adminPreview === true;
+  }
+
+  function allMatches(){
+    return Array.isArray(currentProg?.matches) ? [...currentProg.matches] : [];
+  }
+
+  function normalMatches(){
+    return allMatches()
+      .filter(m => m.type !== "winner")
+      .sort((a,b) => {
+        if(Number(a.order) !== Number(b.order)) return Number(a.order) - Number(b.order);
+        return String(a.court || "").localeCompare(String(b.court || ""));
+      });
+  }
+
+  function matchById(id){
+    return allMatches().find(m => m.id === id) || null;
+  }
+
+  function getResult(id){
+    return resultsByMatch.get(id) || null;
+  }
+
+  function toNum(v){
+    if(v === null || v === undefined || v === "") return null;
+    const n = Number(String(v).replace(",", ".").trim());
+    return Number.isFinite(n) ? n : null;
+  }
+
+  function winnerSide(res){
+    if(!res) return null;
+
+    if(res.winnerSide === "A" || res.winnerSide === "B"){
+      return res.winnerSide;
+    }
+
+    let a = 0;
+    let b = 0;
+
+    [
+      ["s1A","s1B"],
+      ["s2A","s2B"],
+      ["s3A","s3B"]
+    ].forEach(([ka,kb]) => {
+      const na = toNum(res[ka]);
+      const nb = toNum(res[kb]);
+
+      if(na === null || nb === null || na === nb) return;
+
+      if(na > nb) a++;
+      else b++;
     });
 
-    if(tab==="chrono"){
-        panelChrono.style.display="";
-        tabChrono.setAttribute("aria-selected","true");
+    if(a > b) return "A";
+    if(b > a) return "B";
+    return null;
+  }
+
+  function computeWinnerSide(res){
+    return winnerSide(res);
+  }
+
+  function courtLabel(court){
+    if(court === "A") return "Terrain 1";
+    if(court === "B") return "Terrain 2";
+    if(court === "ANIM") return "Animation";
+    return "Terrain";
+  }
+
+  function isPlaceholderName(name){
+    const raw = String(name || "");
+    return raw.includes("Poule") || raw.includes("Vainqueur") || raw.includes("Perdant") || raw.includes("QF") || raw.includes("DF");
+  }
+
+  function poolKeyFromMatch(match){
+    const label = String(match?.label || "");
+
+    if(label === "Poule A") return "Seniors_DM_A";
+    if(label === "Poule B") return "Seniors_DM_B";
+
+    return null;
+  }
+
+  function getPoolMatches(poolKey){
+    return normalMatches().filter(m => poolKeyFromMatch(m) === poolKey);
+  }
+
+  function isPoolComplete(poolKey){
+    const list = getPoolMatches(poolKey);
+    if(!list.length) return false;
+    return list.every(m => winnerSide(getResult(m.id)) !== null);
+  }
+
+  function rawTeamName(match, side){
+    return side === "A" ? match.teamA : match.teamB;
+  }
+
+  function refFor(match, side){
+    return side === "A" ? match.A : match.B;
+  }
+
+  function resolveDynamicTeam(match, side, guard = new Set()){
+    if(!match) return null;
+
+    const ref = refFor(match, side);
+    const raw = rawTeamName(match, side);
+
+    if(ref?.type === "team"){
+      return ref.team || { teamName:raw || "Équipe" };
     }
 
-    if(tab==="resultats"){
-        panelResultats.style.display="";
-        tabResultats.setAttribute("aria-selected","true");
+    if(ref?.type === "poolRank"){
+      return resolvePoolRank(ref.pool, ref.rank) || { teamName:`${ref.rank}e Poule ${ref.pool}` };
     }
 
-    if(tab==="poules"){
-        panelPoules.style.display="";
-        tabPoules.setAttribute("aria-selected","true");
+    if(ref?.type === "winner" || ref?.type === "loser"){
+      const sourceId = ref.matchId;
+
+      if(!sourceId || guard.has(sourceId)){
+        return { teamName:raw || "Équipe" };
+      }
+
+      guard.add(sourceId);
+
+      const source = matchById(sourceId);
+      const sideWinner = winnerSide(getResult(sourceId));
+
+      if(!source || (sideWinner !== "A" && sideWinner !== "B")){
+        return { teamName:raw || "Équipe" };
+      }
+
+      const wantedSide = ref.type === "winner"
+        ? sideWinner
+        : (sideWinner === "A" ? "B" : "A");
+
+      return resolveDynamicTeam(source, wantedSide, guard);
     }
 
-    if(tab==="final"){
-        panelFinal.style.display="";
-        tabFinal.setAttribute("aria-selected","true");
+    return { teamName:raw || "Équipe" };
+  }
+
+  function teamName(match, side){
+    return resolveDynamicTeam(match, side)?.teamName || rawTeamName(match, side) || "Équipe";
+  }
+
+  function poolTeamNameFromMatch(match, side){
+    return teamName(match, side);
+  }
+
+  function buildPoolRanking(pool){
+    const poolKey = `Seniors_DM_${pool}`;
+    const list = getPoolMatches(poolKey);
+    const stats = new Map();
+
+    function ensure(name){
+      const key = String(name || "Équipe").trim();
+
+      if(!stats.has(key)){
+        stats.set(key, {
+          teamName:key,
+          points:0,
+          wins:0,
+          setsWon:0,
+          setsLost:0,
+          gamesWon:0,
+          gamesLost:0
+        });
+      }
+
+      return stats.get(key);
     }
 
-    window.scrollTo({
-        top:0,
-        behavior:"smooth"
+    for(const match of list){
+      const res = getResult(match.id);
+      const w = winnerSide(res);
+
+      const nameA = poolTeamNameFromMatch(match, "A");
+      const nameB = poolTeamNameFromMatch(match, "B");
+
+      const A = ensure(nameA);
+      const B = ensure(nameB);
+
+      if(w !== "A" && w !== "B") continue;
+
+      let setsA = 0;
+      let setsB = 0;
+
+      [
+        ["s1A","s1B"],
+        ["s2A","s2B"],
+        ["s3A","s3B"]
+      ].forEach(([ka,kb]) => {
+        const ga = toNum(res?.[ka]);
+        const gb = toNum(res?.[kb]);
+
+        if(ga === null || gb === null) return;
+
+        A.gamesWon += ga;
+        A.gamesLost += gb;
+        B.gamesWon += gb;
+        B.gamesLost += ga;
+
+        if(ga > gb) setsA++;
+        else if(gb > ga) setsB++;
+      });
+
+      A.setsWon += setsA;
+      A.setsLost += setsB;
+      B.setsWon += setsB;
+      B.setsLost += setsA;
+
+      if(w === "A"){
+        A.wins++;
+        A.points += 2;
+        B.points += 1;
+      }else{
+        B.wins++;
+        B.points += 2;
+        A.points += 1;
+      }
+    }
+
+    return Array.from(stats.values()).sort((a,b) => {
+      if(b.points !== a.points) return b.points - a.points;
+      if(b.wins !== a.wins) return b.wins - a.wins;
+
+      const sdA = a.setsWon - a.setsLost;
+      const sdB = b.setsWon - b.setsLost;
+      if(sdB !== sdA) return sdB - sdA;
+
+      const gdA = a.gamesWon - a.gamesLost;
+      const gdB = b.gamesWon - b.gamesLost;
+      if(gdB !== gdA) return gdB - gdA;
+
+      return a.teamName.localeCompare(b.teamName, "fr");
+    });
+  }
+
+  function resolvePoolRank(pool, rank){
+    const poolKey = `Seniors_DM_${pool}`;
+
+    if(!isPoolComplete(poolKey)) return null;
+
+    return buildPoolRanking(pool)[Number(rank) - 1] || null;
+  }
+
+  function matchWinnerTeamName(match){
+    const w = winnerSide(getResult(match.id));
+    if(w !== "A" && w !== "B") return null;
+    return teamName(match, w);
+  }
+
+  function fmtScore(v){
+    if(v === null || v === undefined || v === "") return "—";
+    return String(v);
+  }
+
+  function groupByOrder(){
+    const map = new Map();
+
+    normalMatches().forEach(match => {
+      const order = Number(match.order || 9999);
+
+      if(!map.has(order)){
+        map.set(order, { order, A:null, B:null, anim:null, fallback:[] });
+      }
+
+      const row = map.get(order);
+
+      if(match.type === "animation"){
+        row.anim = match;
+      }else if(match.court === "A" && !row.A){
+        row.A = match;
+      }else if(match.court === "B" && !row.B){
+        row.B = match;
+      }else{
+        row.fallback.push(match);
+      }
     });
 
-}
+    return Array.from(map.values()).sort((a,b) => a.order - b.order);
+  }
 
-tabChrono.onclick=()=>show("chrono");
-tabResultats.onclick=()=>show("resultats");
-tabPoules.onclick=()=>show("poules");
-tabFinal.onclick=()=>show("final");
+  function rowTime(row){
+    const m = row.anim || row.A || row.B || row.fallback[0] || null;
+    return m?.time || "—";
+  }
 
-onSnapshot(
-    doc(db,"events",eventId),
-    snap=>{
-
-        if(!snap.exists()) return;
-
-        const d=snap.data();
-
-        state.event=d;
-        state.planning=d.programmation || [];
-        state.poules=d.poules || {A:[],B:[]};
-        state.standings=d.standings || {A:[],B:[]};
-        state.finales=d.finales || [];
-
-        updateVisibility();
-        drawChrono();
-        drawResults();
-        drawPools();
-        drawFinal();
-
-    }
-);
-
-function updateVisibility(){
-
-    if(state.event.publication==="maintenance"){
-
-        maintenanceBox.style.display="";
-        workBox.style.display="none";
-
-        panelChrono.style.display="none";
-        panelResultats.style.display="none";
-        panelPoules.style.display="none";
-        panelFinal.style.display="none";
-
-        return;
-
+  function renderMini(match){
+    if(!match){
+      return `<div class="empty-cell"></div>`;
     }
 
-    maintenanceBox.style.display="none";
-    workBox.style.display="";
+    const cls =
+      match.type === "animation"
+        ? "animation"
+        : match.court === "A"
+          ? "courtA"
+          : match.court === "B"
+            ? "courtB"
+            : "";
 
-    workBadge.style.display=
-        state.event.mode==="work"
-            ? ""
-            : "none";
+    if(match.type === "animation"){
+      return `
+        <div class="match-mini ${esc(cls)}">
+          <div class="mini-time">${esc(match.time || "")}</div>
+          <div class="mini-label">${esc(match.label || "Animation")}</div>
+          <div class="mini-team">${esc(match.teamA || "")}</div>
+        </div>
+      `;
+    }
 
-    document.getElementById("statusText").innerHTML=
-        state.event.messagePublic || "";
+    const a = teamName(match, "A");
+    const b = teamName(match, "B");
+    const winner = matchWinnerTeamName(match);
 
-}
-
-function drawChrono(){
-
-    chronoGrid.innerHTML="";
-
-    state.planning.forEach(slot=>{
-
-        chronoGrid.appendChild(order(slot));
-        chronoGrid.appendChild(match(slot.terrain1,"courtA"));
-        chronoGrid.appendChild(match(slot.terrain2,"courtB"));
-
-    });
-
-}
-
-function order(slot){
-
-    const d=document.createElement("div");
-    d.className="order-cell";
-
-    d.innerHTML=`
-        <div class="order-num">${slot.ordre}</div>
-        <div class="order-time">${slot.heure}</div>
+    return `
+      <div class="match-mini ${esc(cls)}">
+        <div class="mini-time">${esc(match.time || "")}</div>
+        <div class="mini-label">${esc(match.label || "")}</div>
+        <div class="mini-team ${winner === a ? "winner" : ""} ${isPlaceholderName(a) ? "placeholder" : ""}">${esc(a)}</div>
+        <div class="mini-team ${winner === b ? "winner" : ""} ${isPlaceholderName(b) ? "placeholder" : ""}">${esc(b)}</div>
+      </div>
     `;
+  }
 
-    return d;
+  function renderChrono(){
+    const rows = groupByOrder();
 
-}
-
-function match(m,type){
-
-    if(!m){
-
-        const e=document.createElement("div");
-        e.className="empty-cell";
-        return e;
-
+    if(!rows.length){
+      chronoGrid.innerHTML = `<p class="muted" style="grid-column:1 / -1;margin:0;">Aucune programmation à afficher.</p>`;
+      return;
     }
 
-    const d=document.createElement("div");
+    chronoGrid.innerHTML = rows.map(row => {
+      if(row.anim && !row.A && !row.B){
+        return `
+          <div class="order-cell">
+            <div class="order-num">#${esc(row.order)}</div>
+            <div class="order-time">${esc(rowTime(row))}</div>
+          </div>
+          <div class="slot-cell" style="grid-column:2 / 4;">${renderMini(row.anim)}</div>
+        `;
+      }
 
-    d.className="slot-cell";
-
-    const winner1=
-        m.score1>m.score2;
-
-    const winner2=
-        m.score2>m.score1;
-
-    d.innerHTML=`
-    <div class="match-mini ${m.animation ? "animation" : type}">
-
-        <div class="mini-time">${m.heure || ""}</div>
-
-        <div class="mini-label">
-            ${m.phase || ""}
+      return `
+        <div class="order-cell">
+          <div class="order-num">#${esc(row.order)}</div>
+          <div class="order-time">${esc(rowTime(row))}</div>
         </div>
 
-        ${
-            m.animation
-            ?
-            `<div class="mini-team">${m.animation}</div>`
-            :
-            `
-            <div class="mini-team ${winner1?"winner":""}">
-                ${m.equipe1 || "-"}
-            </div>
+        <div class="slot-cell">${renderMini(row.A)}</div>
+        <div class="slot-cell">${renderMini(row.B)}</div>
 
-            <div class="mini-team ${winner2?"winner":""}">
-                ${m.equipe2 || "-"}
-            </div>
-            `
-        }
-
-    </div>
-    `;
-
-    return d;
-
-}
-
-    function drawResults(){
-  resultatsList.innerHTML = state.planning.flatMap(s => [s.terrain1, s.terrain2])
-    .filter(m => m && !m.animation)
-    .map(matchCard)
-    .join("");
-}
-
-function matchCard(m){
-  return `
-    <div class="match-card">
-      <div class="match-head">
-        <div class="m-time">${m.heure || ""}</div>
-        <div class="m-label">${m.phase || ""}</div>
-      </div>
-      <div class="team-row">${m.equipe1 || "-"} <strong>${m.score1 ?? ""}</strong></div>
-      <div class="team-row">${m.equipe2 || "-"} <strong>${m.score2 ?? ""}</strong></div>
-    </div>
-  `;
-}
-
-function drawPools(){
-  poolAMatches.innerHTML = (state.poules.A || []).map(matchCard).join("");
-  poolBMatches.innerHTML = (state.poules.B || []).map(matchCard).join("");
-
-  poolAStandings.innerHTML = renderStandings(state.standings.A || []);
-  poolBStandings.innerHTML = renderStandings(state.standings.B || []);
-}
-
-function renderStandings(rows){
-  if(!rows.length) return `<p class="muted">Classement à venir.</p>`;
-
-  return `
-    <table class="pool-table">
-      <thead><tr><th>#</th><th>Équipe</th><th>Pts</th><th>V</th></tr></thead>
-      <tbody>
-        ${rows.map((r,i)=>`
-          <tr>
-            <td>${i+1}</td>
-            <td>${r.nom || r.equipe || "-"}</td>
-            <td>${r.points ?? "-"}</td>
-            <td>${r.victoires ?? "-"}</td>
-          </tr>
+        ${row.fallback.map(m => `
+          <div class="order-cell">
+            <div class="order-num">#${esc(row.order)}</div>
+            <div class="order-time">${esc(m.time || rowTime(row))}</div>
+          </div>
+          <div class="slot-cell" style="grid-column:2 / 4;">${renderMini(m)}</div>
         `).join("")}
-      </tbody>
-    </table>
-  `;
-}
+      `;
+    }).join("");
+  }
 
-function drawFinal(){
-  finalList.innerHTML = state.finales.length
-    ? state.finales.map(matchCard).join("")
-    : `<p class="muted">Tableau final à venir.</p>`;
-}
+  function renderMatchCard(match){
+    const cls =
+      match.type === "animation"
+        ? "animation"
+        : match.court === "A"
+          ? "courtA"
+          : match.court === "B"
+            ? "courtB"
+            : "";
 
-show("chrono");
+    if(match.type === "animation"){
+      return `
+        <div class="match-card ${esc(cls)}">
+          <div class="match-head">
+            <div class="m-time">${esc(match.time || "")}</div>
+            <div class="m-court">${esc(courtLabel(match.court))}</div>
+            <div class="m-label">${esc(match.label || "Animation")}</div>
+          </div>
+          <div class="team-name">${esc(match.teamA || "")}</div>
+          <p class="muted" style="margin:6px 0 0;">${esc(match.teamB || "")}</p>
+        </div>
+      `;
+    }
 
+    const res = getResult(match.id);
+    const a = teamName(match, "A");
+    const b = teamName(match, "B");
+
+    return `
+      <div class="match-card ${esc(cls)}">
+        <div class="match-head">
+          <div class="m-slot">#${esc(match.order || "—")}</div>
+          <div class="m-time">${esc(match.time || "—")}</div>
+          <div class="m-court">${esc(courtLabel(match.court))}</div>
+          <div class="m-label">${esc(match.label || "")}</div>
+        </div>
+
+        <div class="team-row">
+          <div class="team-name ${isPlaceholderName(a) ? "team-placeholder" : ""}">${esc(a)}</div>
+          <div class="score-cell">${esc(fmtScore(res?.s1A))}</div>
+          <div class="score-cell">${esc(fmtScore(res?.s2A))}</div>
+          <div class="score-cell">${esc(fmtScore(res?.s3A))}</div>
+        </div>
+
+        <div class="vs-line">VS</div>
+
+        <div class="team-row">
+          <div class="team-name ${isPlaceholderName(b) ? "team-placeholder" : ""}">${esc(b)}</div>
+          <div class="score-cell">${esc(fmtScore(res?.s1B))}</div>
+          <div class="score-cell">${esc(fmtScore(res?.s2B))}</div>
+          <div class="score-cell">${esc(fmtScore(res?.s3B))}</div>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderResultats(){
+    const matches = normalMatches().filter(m => m.type !== "animation");
+
+    resultatsList.innerHTML = matches.length
+      ? `<div class="match-list">${matches.map(renderMatchCard).join("")}</div>`
+      : `<p class="muted">Aucun résultat à afficher.</p>`;
+  }
+
+  function renderPoolStandings(pool){
+    const rows = buildPoolRanking(pool);
+
+    if(!rows.length){
+      return `<p class="muted">Classement à venir.</p>`;
+    }
+
+    return `
+      <table class="pool-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Équipe</th>
+            <th>Pts</th>
+            <th>V</th>
+            <th>Sets</th>
+            <th>Jeux</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${rows.map((r,i) => `
+            <tr>
+              <td>${i + 1}</td>
+              <td>${esc(r.teamName)}</td>
+              <td>${r.points}</td>
+              <td>${r.wins}</td>
+              <td>${r.setsWon - r.setsLost}</td>
+              <td>${r.gamesWon - r.gamesLost}</td>
+            </tr>
+          `).join("")}
+        </tbody>
+      </table>
+    `;
+  }
+
+  function renderPoules(){
+    const aMatches = getPoolMatches("Seniors_DM_A");
+    const bMatches = getPoolMatches("Seniors_DM_B");
+
+    poolAStandings.innerHTML = renderPoolStandings("A");
+    poolBStandings.innerHTML = renderPoolStandings("B");
+
+    poolAMatches.innerHTML = aMatches.length
+      ? `<div class="match-list">${aMatches.map(renderMatchCard).join("")}</div>`
+      : `<p class="muted">Aucun match de poule A.</p>`;
+
+    poolBMatches.innerHTML = bMatches.length
+      ? `<div class="match-list">${bMatches.map(renderMatchCard).join("")}</div>`
+      : `<p class="muted">Aucun match de poule B.</p>`;
+  }
+
+  function renderFinal(){
+    const finals = normalMatches().filter(m =>
+      !["Poule A", "Poule B"].includes(String(m.label || "")) &&
+      m.type !== "animation"
+    );
+
+    finalList.innerHTML = finals.length
+      ? finals.map(m => `
+          <div class="bracket-step">
+            <h3 class="bracket-title">${esc(m.label || m.id)}</h3>
+            ${renderMatchCard(m)}
+          </div>
+        `).join("")
+      : `<p class="muted">Tableau final à venir.</p>`;
+  }
+
+  function setActiveTab(tab){
+    currentTab = tab;
+
+    tabChrono.setAttribute("aria-selected", tab === "chrono" ? "true" : "false");
+    tabResultats.setAttribute("aria-selected", tab === "resultats" ? "true" : "false");
+    tabPoules.setAttribute("aria-selected", tab === "poules" ? "true" : "false");
+    tabFinal.setAttribute("aria-selected", tab === "final" ? "true" : "false");
+
+    panelChrono.style.display = canSeeWork() && tab === "chrono" ? "block" : "none";
+    panelResultats.style.display = canSeeWork() && tab === "resultats" ? "block" : "none";
+    panelPoules.style.display = canSeeWork() && tab === "poules" ? "block" : "none";
+    panelFinal.style.display = canSeeWork() && tab === "final" ? "block" : "none";
+
+    if(tab === "chrono") renderChrono();
+    if(tab === "resultats") renderResultats();
+    if(tab === "poules") renderPoules();
+    if(tab === "final") renderFinal();
+  }
+
+  function render(){
+    if(!visibilityLoaded){
+      statusText.textContent = "Chargement…";
+      return;
+    }
+
+    if(!canSeeWork()){
+      pageIntro.textContent = "La programmation est en cours de préparation.";
+      pageTag.textContent = "Maintenance";
+
+      maintenanceBox.style.display = "block";
+      workBox.style.display = "none";
+
+      panelChrono.style.display = "none";
+      panelResultats.style.display = "none";
+      panelPoules.style.display = "none";
+      panelFinal.style.display = "none";
+      return;
+    }
+
+    pageIntro.textContent = publicVisible
+      ? "Planning Double Messieurs, animations, horaires, terrains et résultats."
+      : "Aperçu réservé aux admins et JAT.";
+
+    pageTag.textContent = publicVisible ? "Direct" : "Travail";
+    workBadge.style.display = publicVisible ? "none" : "inline-flex";
+    maintenanceBox.style.display = "none";
+    workBox.style.display = "block";
+
+    statusText.textContent = currentProg
+      ? `✅ ${normalMatches().length} élément(s) dans la programmation.`
+      : "Aucune programmation enregistrée.";
+
+    setActiveTab(currentTab);
+  }
+
+  tabChrono.onclick = () => setActiveTab("chrono");
+  tabResultats.onclick = () => setActiveTab("resultats");
+  tabPoules.onclick = () => setActiveTab("poules");
+  tabFinal.onclick = () => setActiveTab("final");
+
+  onSnapshot(visibilityRef(), (snap) => {
+    const data = snap.exists() ? snap.data() : {};
+    publicVisible = data.publicVisible === true;
+    visibilityLoaded = true;
+    render();
+  }, (error) => {
+    console.error(error);
+    publicVisible = false;
+    visibilityLoaded = true;
+    render();
+  });
+
+  onSnapshot(generalProgRef(), (snap) => {
+    currentProg = snap.exists() ? snap.data() : null;
+    render();
+  }, (error) => {
+    console.error(error);
+    statusText.textContent = "❌ Erreur de chargement de la programmation.";
+  });
+
+  onSnapshot(resultsCol(), (snap) => {
+    resultsByMatch = new Map();
+
+    snap.forEach(d => {
+      resultsByMatch.set(d.id, d.data() || {});
+    });
+
+    render();
+  }, (error) => {
+    console.error(error);
+  });
+
+  onAuthStateChanged(auth, async (user) => {
+    currentRole = null;
+
+    if(user){
+      try{
+        currentRole = await getRoleByUid(user.uid);
+      }catch(error){
+        currentRole = null;
+      }
+    }
+
+    render();
+  });
+
+  render();
 </script>
 
 </body>
