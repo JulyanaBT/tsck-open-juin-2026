@@ -415,25 +415,145 @@
       text-align:left;
     }
 
-    .bracket-list{
-      display:grid;
-      gap:12px;
-      margin-top:12px;
+    .bracket-nav{
+      display:flex;
+      gap:8px;
+      overflow-x:auto;
+      padding:4px 0 12px;
+      -webkit-overflow-scrolling:touch;
     }
 
-    .bracket-step{
+    .bracket-nav button{
+      flex:0 0 auto;
+      appearance:none;
+      border:1px solid rgba(16,24,40,.10);
+      background:#fff;
+      border-radius:999px;
+      min-height:38px;
+      padding:8px 13px;
+      font-size:13px;
+      font-weight:1000;
+      color:var(--navy-dark);
+      box-shadow:0 6px 14px rgba(16,24,40,.05);
+      font-family:inherit;
+      cursor:pointer;
+    }
+
+    .bracket-nav button.active{
+      background:linear-gradient(180deg,var(--sun),var(--sun-dark));
+      border-color:var(--sun-dark);
+    }
+
+    .bracket-scroll{
+      overflow-x:auto;
+      overflow-y:hidden;
+      -webkit-overflow-scrolling:touch;
+      padding-bottom:10px;
+    }
+
+    .bracket-board{
+      min-width:760px;
+      display:grid;
+      grid-template-columns:220px 220px 220px 220px;
+      gap:34px;
+      align-items:start;
+      padding:4px 2px 14px;
+    }
+
+    .bracket-round{
+      display:grid;
+      gap:18px;
+    }
+
+    .bracket-round-title{
+      text-align:center;
+      color:#667085;
+      font-size:13px;
+      font-weight:1000;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      margin-bottom:2px;
+    }
+
+    .bracket-match{
+      position:relative;
       border-radius:18px;
       background:#fff;
-      border:1px solid rgba(16,24,40,.08);
-      padding:13px;
-      box-shadow:0 8px 18px rgba(16,24,40,.06);
+      border:1px solid rgba(16,24,40,.10);
+      box-shadow:0 8px 18px rgba(16,24,40,.08);
+      padding:10px;
     }
 
-    .bracket-title{
-      margin:0 0 10px;
+    .bracket-match::after{
+      content:"";
+      position:absolute;
+      right:-22px;
+      top:50%;
+      width:22px;
+      height:1px;
+      background:rgba(16,24,40,.28);
+    }
+
+    .bracket-round:last-child .bracket-match::after{
+      display:none;
+    }
+
+    .bracket-status{
+      display:flex;
+      justify-content:space-between;
+      gap:8px;
+      align-items:center;
+      margin-bottom:8px;
       color:var(--palm-dark);
-      font-size:16px;
+      font-size:13px;
       font-weight:1000;
+    }
+
+    .bracket-detail{
+      border:1px solid rgba(16,24,40,.16);
+      border-radius:999px;
+      padding:4px 10px;
+      color:#667085;
+      background:#fff;
+      font-size:12px;
+      font-weight:900;
+    }
+
+    .bracket-team{
+      min-height:38px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:8px;
+      padding:8px 9px;
+      border:1px solid rgba(16,24,40,.12);
+      background:#fff;
+      color:#17212b;
+      font-size:13px;
+      font-weight:900;
+      line-height:1.15;
+    }
+
+    .bracket-team + .bracket-team{
+      margin-top:6px;
+    }
+
+    .bracket-team.winner{
+      background:var(--palm-dark);
+      color:#fff;
+      border-color:var(--palm-dark);
+    }
+
+    .bracket-team.placeholder{
+      color:#667085;
+      font-style:italic;
+      background:#f8fafc;
+    }
+
+    .bracket-score{
+      flex:0 0 auto;
+      font-weight:1000;
+      font-variant-numeric:tabular-nums;
     }
 
     .muted{
@@ -472,6 +592,12 @@
       .panel-title{font-size:24px;}
       .panel-head{gap:10px;}
       .panel-tag{padding:7px 10px;font-size:11px;}
+
+      .bracket-board{
+        min-width:720px;
+        grid-template-columns:210px 210px 210px 210px;
+        gap:28px;
+      }
     }
   </style>
 </head>
@@ -564,7 +690,7 @@
 
   <section class="section panel" id="panelFinal" style="display:none;">
     <h2 class="panel-title">🏆 Tableau final</h2>
-    <div id="finalList" class="bracket-list"></div>
+    <div id="finalList"></div>
   </section>
 
 </main>
@@ -702,10 +828,6 @@
     return null;
   }
 
-  function computeWinnerSide(res){
-    return winnerSide(res);
-  }
-
   function courtLabel(court){
     if(court === "A") return "Terrain 1";
     if(court === "B") return "Terrain 2";
@@ -720,10 +842,8 @@
 
   function poolKeyFromMatch(match){
     const label = String(match?.label || "");
-
     if(label === "Poule A") return "Seniors_DM_A";
     if(label === "Poule B") return "Seniors_DM_B";
-
     return null;
   }
 
@@ -789,10 +909,6 @@
     return resolveDynamicTeam(match, side)?.teamName || rawTeamName(match, side) || "Équipe";
   }
 
-  function poolTeamNameFromMatch(match, side){
-    return teamName(match, side);
-  }
-
   function buildPoolRanking(pool){
     const poolKey = `Seniors_DM_${pool}`;
     const list = getPoolMatches(poolKey);
@@ -820,8 +936,8 @@
       const res = getResult(match.id);
       const w = winnerSide(res);
 
-      const nameA = poolTeamNameFromMatch(match, "A");
-      const nameB = poolTeamNameFromMatch(match, "B");
+      const nameA = teamName(match, "A");
+      const nameB = teamName(match, "B");
 
       const A = ensure(nameA);
       const B = ensure(nameB);
@@ -890,8 +1006,12 @@
     return buildPoolRanking(pool)[Number(rank) - 1] || null;
   }
 
+  function matchWinnerSide(match){
+    return winnerSide(getResult(match.id));
+  }
+
   function matchWinnerTeamName(match){
-    const w = winnerSide(getResult(match.id));
+    const w = matchWinnerSide(match);
     if(w !== "A" && w !== "B") return null;
     return teamName(match, w);
   }
@@ -899,6 +1019,18 @@
   function fmtScore(v){
     if(v === null || v === undefined || v === "") return "—";
     return String(v);
+  }
+
+  function compactScore(match, side){
+    const res = getResult(match.id);
+    if(!res) return "";
+
+    const vals = side === "A"
+      ? [res.s1A, res.s2A, res.s3A]
+      : [res.s1B, res.s2B, res.s3B];
+
+    const shown = vals.filter(v => v !== null && v !== undefined && v !== "");
+    return shown.length ? shown.join(" ") : "";
   }
 
   function groupByOrder(){
@@ -1124,20 +1256,111 @@
       : `<p class="muted">Aucun match de poule B.</p>`;
   }
 
-  function renderFinal(){
-    const finals = normalMatches().filter(m =>
-      !["Poule A", "Poule B"].includes(String(m.label || "")) &&
-      m.type !== "animation"
-    );
+  function bracketTeamHtml(match, side){
+    const name = teamName(match, side);
+    const w = matchWinnerSide(match);
+    const score = compactScore(match, side);
 
-    finalList.innerHTML = finals.length
-      ? finals.map(m => `
-          <div class="bracket-step">
-            <h3 class="bracket-title">${esc(m.label || m.id)}</h3>
-            ${renderMatchCard(m)}
+    return `
+      <div class="bracket-team ${w === side ? "winner" : ""} ${isPlaceholderName(name) ? "placeholder" : ""}">
+        <span>${esc(name)}</span>
+        <span class="bracket-score">${esc(score)}</span>
+      </div>
+    `;
+  }
+
+  function bracketMatchHtml(match){
+    if(!match){
+      return `
+        <div class="bracket-match">
+          <div class="bracket-status">
+            <span>À venir</span>
+            <span class="bracket-detail">Détails</span>
           </div>
-        `).join("")
-      : `<p class="muted">Tableau final à venir.</p>`;
+          <div class="bracket-team placeholder">—</div>
+          <div class="bracket-team placeholder">—</div>
+        </div>
+      `;
+    }
+
+    const done = matchWinnerSide(match) ? "Terminé" : "À jouer";
+
+    return `
+      <div class="bracket-match" data-mid="${esc(match.id)}">
+        <div class="bracket-status">
+          <span>${esc(done)}</span>
+          <span class="bracket-detail">${esc(match.time || "Détails")}</span>
+        </div>
+        ${bracketTeamHtml(match, "A")}
+        ${bracketTeamHtml(match, "B")}
+      </div>
+    `;
+  }
+
+  function renderFinal(){
+    const byId = new Map(normalMatches().map(m => [m.id, m]));
+
+    const qf = [byId.get("MEN_QF1"), byId.get("MEN_QF2")].filter(Boolean);
+    const sf = [byId.get("MEN_SF1"), byId.get("MEN_SF2")].filter(Boolean);
+    const place = [byId.get("MEN_5_6"), byId.get("MEN_3_4")].filter(Boolean);
+    const final = [byId.get("MEN_FINAL")].filter(Boolean);
+
+    if(!qf.length && !sf.length && !place.length && !final.length){
+      finalList.innerHTML = `<p class="muted">Tableau final à venir.</p>`;
+      return;
+    }
+
+    finalList.innerHTML = `
+      <div class="bracket-nav">
+        <button type="button" data-round="qf" class="active">1/4</button>
+        <button type="button" data-round="sf">1/2</button>
+        <button type="button" data-round="places">Places</button>
+        <button type="button" data-round="finale">Finale</button>
+      </div>
+
+      <div class="bracket-scroll" id="bracketScroll">
+        <div class="bracket-board">
+          <div class="bracket-round" data-round-col="qf">
+            <div class="bracket-round-title">1/4</div>
+            ${qf.length ? qf.map(bracketMatchHtml).join("") : bracketMatchHtml(null)}
+          </div>
+
+          <div class="bracket-round" data-round-col="sf">
+            <div class="bracket-round-title">1/2</div>
+            ${sf.length ? sf.map(bracketMatchHtml).join("") : bracketMatchHtml(null)}
+          </div>
+
+          <div class="bracket-round" data-round-col="places">
+            <div class="bracket-round-title">Places</div>
+            ${place.length ? place.map(bracketMatchHtml).join("") : bracketMatchHtml(null)}
+          </div>
+
+          <div class="bracket-round" data-round-col="finale">
+            <div class="bracket-round-title">Finale</div>
+            ${final.length ? final.map(bracketMatchHtml).join("") : bracketMatchHtml(null)}
+          </div>
+        </div>
+      </div>
+    `;
+
+    const scroller = finalList.querySelector("#bracketScroll");
+    const buttons = Array.from(finalList.querySelectorAll(".bracket-nav button"));
+    const columns = Array.from(finalList.querySelectorAll("[data-round-col]"));
+
+    buttons.forEach(btn => {
+      btn.onclick = () => {
+        buttons.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+
+        const target = columns.find(col => col.dataset.roundCol === btn.dataset.round);
+        if(!target || !scroller) return;
+
+        scroller.scrollTo({
+          left: target.offsetLeft - 8,
+          behavior: "smooth"
+        });
+      };
+    });
   }
 
   function setActiveTab(tab){
