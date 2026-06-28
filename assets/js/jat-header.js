@@ -9,7 +9,6 @@ const EPREUVE_LABELS = {
 const EPREUVES = ["DM", "DD"];
 
 const headerMount = document.getElementById("jatHeader");
-
 const currentPage = location.pathname.split("/").pop() || "index.html";
 const needsZoneSelector = document.body.dataset.zoneSelector !== "none";
 
@@ -19,27 +18,23 @@ function navClass(page){
 
 function getSavedZone(){
   let epreuve = "DM";
-
   try{
     const savedEpreuve = localStorage.getItem("tsck_jat_epreuve");
     if(EPREUVES.includes(savedEpreuve)) epreuve = savedEpreuve;
   }catch(error){}
-
-  return { categorie: "Seniors", epreuve };
+  return { categorie:"Seniors", epreuve };
 }
 
 function saveZone(epreuve){
-  try{
-    localStorage.setItem("tsck_jat_epreuve", epreuve);
-  }catch(error){}
+  try{ localStorage.setItem("tsck_jat_epreuve", epreuve); }catch(error){}
 }
 
 function emitZoneChange(epreuve){
   document.dispatchEvent(new CustomEvent("jatZoneChange", {
-    detail: {
-      categorie: "Seniors",
+    detail:{
+      categorie:"Seniors",
       epreuve,
-      label: EPREUVE_LABELS[epreuve] || "Toutes les épreuves"
+      label:EPREUVE_LABELS[epreuve] || "Toutes les épreuves"
     }
   }));
 }
@@ -47,18 +42,14 @@ function emitZoneChange(epreuve){
 function centerActiveNav(){
   const nav = document.querySelector(".jat-nav");
   const active = document.querySelector(".jat-nav-link.primary");
-
   if(!nav || !active) return;
 
   const navRect = nav.getBoundingClientRect();
   const activeRect = active.getBoundingClientRect();
-  const activeCenter = active.offsetLeft + (activeRect.width / 2);
-  const target = activeCenter - (navRect.width / 2);
+  const activeCenter = active.offsetLeft + activeRect.width / 2;
+  const target = activeCenter - navRect.width / 2;
 
-  nav.scrollTo({
-    left: Math.max(0, target),
-    behavior: "auto"
-  });
+  nav.scrollTo({ left:Math.max(0, target), behavior:"auto" });
 }
 
 function centerActiveNavAfterLoad(){
@@ -265,10 +256,7 @@ function injectStyles(){
       padding:12px 0 14px;
     }
 
-    .jat-zone-inner{
-      display:grid;
-      gap:8px;
-    }
+    .jat-zone-inner{display:grid;gap:8px;}
 
     .jat-zone-line{
       display:flex;
@@ -310,14 +298,8 @@ function injectStyles(){
     }
 
     @media (min-width:760px){
-      .jat-header-inner{
-        grid-template-columns:100px 1fr 100px;
-      }
-
-      .jat-header-logo{
-        width:96px;
-        height:80px;
-      }
+      .jat-header-inner{grid-template-columns:100px 1fr 100px;}
+      .jat-header-logo{width:96px;height:80px;}
     }
 
     @media (max-width:759px){
@@ -328,9 +310,7 @@ function injectStyles(){
         --jat-total-top:222px;
       }
 
-      .jat-zone-line{
-        justify-content:flex-start;
-      }
+      .jat-zone-line{justify-content:flex-start;}
     }
   `;
   document.head.appendChild(style);
@@ -359,15 +339,19 @@ function renderHeader(){
 
         <div class="jat-nav-wrap">
           <span class="jat-nav-arrow left">‹</span>
+
           <nav class="jat-nav" aria-label="Navigation JAT">
             <a class="jat-nav-link" href="../index.html">🏠 Accueil public</a>
             <a class="${navClass("index.html")}" href="index.html">⚖️ JAT</a>
             <a class="${navClass("verification.html")}" href="verification.html">✅ Vérification</a>
             <a class="${navClass("programmation.html")}" href="programmation.html">📅 Programmation</a>
             <a class="${navClass("resultats.html")}" href="resultats.html">🏆 Résultats</a>
-            <a class="${navClass("classement.html")}" href="classement.html">📊 Classements</a>
+            <a class="${navClass("classement.html")}" href="classement.html">📊 Classement</a>
+            <a class="${navClass("arbitrage.html")}" href="arbitrage.html">🧑‍⚖️ Arbitrage</a>
+            <a class="jat-nav-link" href="../arbitre/index.html">🎾 Mode arbitre</a>
             <a class="jat-nav-link" href="#" id="jatBtnLogout">🚪 Déconnexion</a>
           </nav>
+
           <span class="jat-nav-arrow right">›</span>
         </div>
       </div>
@@ -418,12 +402,14 @@ function renderHeader(){
 
 function bindZoneButtons(initialEpreuve){
   let epreuve = initialEpreuve;
-
   const epreuveBtns = [...document.querySelectorAll("[data-jat-epreuve]")];
 
   function refresh(){
     epreuveBtns.forEach(btn => {
-      btn.setAttribute("aria-selected", btn.dataset.jatEpreuve === epreuve ? "true" : "false");
+      btn.setAttribute(
+        "aria-selected",
+        btn.dataset.jatEpreuve === epreuve ? "true" : "false"
+      );
     });
 
     saveZone(epreuve);
