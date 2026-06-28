@@ -1,0 +1,1157 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>JAT — Arbitrage — Open Beach Tennis TSCK</title>
+  <style>
+    :root{
+      --palm:#0b7a3b;
+      --palm-dark:#064d28;
+      --palm-light:#15a658;
+      --navy:#06284a;
+      --navy-dark:#03172b;
+      --sun:#ffd21f;
+      --sun-dark:#f3b800;
+      --text:#17212b;
+      --muted:#667085;
+      --card:rgba(255,255,255,.95);
+      --shadow:0 16px 40px rgba(16,24,40,.12);
+      --container:1180px;
+      --modebar-h:64px;
+    }
+    *{box-sizing:border-box;}
+    html,body{max-width:100%;overflow-x:hidden;}
+    body{
+      margin:0;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at 10% 0%, rgba(255,210,31,.20), transparent 26%),
+        radial-gradient(circle at 90% 8%, rgba(11,122,59,.16), transparent 26%),
+        linear-gradient(180deg,#eaf9ff 0%,#fff4d4 52%,#fff 100%);
+    }
+    a{color:inherit;text-decoration:none;}
+    .container{
+      width:min(var(--container), calc(100% - 20px));
+      margin:0 auto;
+    }
+    main{
+      padding-top:calc(var(--jat-total-top, 230px) + var(--modebar-h) + 24px);
+      padding-bottom:42px;
+    }
+    .section{margin-top:16px;}
+    .panel{
+      background:var(--card);
+      border:1px solid rgba(255,255,255,.7);
+      border-radius:24px;
+      box-shadow:var(--shadow);
+      padding:16px;
+    }
+    .panel-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:12px;
+      margin-bottom:12px;
+    }
+    .panel-title{
+      margin:0;
+      font-size:25px;
+      line-height:1.05;
+      letter-spacing:-.03em;
+      color:var(--navy-dark);
+    }
+    .panel-text{
+      margin:6px 0 0;
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.35;
+    }
+    .panel-tag{
+      flex-shrink:0;
+      padding:8px 13px;
+      border-radius:999px;
+      background:#e6f7ee;
+      color:var(--palm-dark);
+      font-size:12px;
+      font-weight:1000;
+      text-transform:uppercase;
+      letter-spacing:.06em;
+    }
+    .placeholder{
+      padding:13px 15px;
+      border-radius:18px;
+      background:linear-gradient(135deg,rgba(11,122,59,.10),rgba(255,210,31,.16));
+      border:1px solid rgba(11,122,59,.18);
+      color:#475467;
+      font-size:14px;
+      line-height:1.5;
+    }
+    .modebar{
+      position:fixed;
+      top:var(--jat-total-top, 230px);
+      left:0;
+      right:0;
+      z-index:998;
+      background:
+        radial-gradient(circle at 8% 0%, rgba(255,210,31,.28), transparent 28%),
+        radial-gradient(circle at 92% 0%, rgba(244,217,164,.20), transparent 28%),
+        linear-gradient(135deg,var(--navy-dark),var(--navy),var(--palm));
+      box-shadow:0 8px 18px rgba(16,24,40,.12);
+      border-bottom:2px solid var(--sun);
+      padding:10px 0 12px;
+    }
+    .modebar-inner{
+      width:min(var(--container), calc(100% - 20px));
+      margin:0 auto;
+      display:flex;
+      gap:10px;
+    }
+    .mode-btn{
+      flex:1;
+      appearance:none;
+      border:1px solid rgba(255,255,255,.36);
+      border-radius:999px;
+      min-height:42px;
+      padding:10px 16px;
+      font-weight:1000;
+      cursor:pointer;
+      background:rgba(255,255,255,.88);
+      color:var(--navy-dark);
+      box-shadow:0 5px 12px rgba(16,24,40,.08);
+      white-space:nowrap;
+      font-family:inherit;
+    }
+    .mode-btn.active{
+      background:linear-gradient(180deg,var(--sun),var(--sun-dark));
+      color:var(--navy-dark);
+      border-color:var(--sun);
+      box-shadow:0 8px 18px rgba(255,210,31,.22);
+    }
+    .match-list{
+      display:grid;
+      gap:14px;
+      margin-top:12px;
+    }
+    .match-card{
+      border-radius:18px;
+      border:1px solid rgba(16,24,40,.08);
+      padding:14px;
+      background:#fff;
+      box-shadow:0 8px 18px rgba(16,24,40,.06);
+    }
+    .match-card.courtA{
+      background:#fff8dd;
+      border-color:rgba(255,196,0,.35);
+    }
+    .match-card.courtB{
+      background:#ffeef2;
+      border-color:rgba(255,0,60,.20);
+    }
+    .match-head{
+      display:flex;
+      align-items:center;
+      gap:9px;
+      flex-wrap:wrap;
+      margin-bottom:11px;
+    }
+    .m-slot{
+      font-size:12px;
+      font-weight:1000;
+      color:#667085;
+      white-space:nowrap;
+    }
+    .m-time{
+      font-size:14px;
+      font-weight:1000;
+      white-space:nowrap;
+    }
+    .m-court{
+      flex:1;
+      min-width:0;
+      font-size:13px;
+      font-style:italic;
+      color:#475467;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .m-label{
+      padding:5px 10px;
+      border-radius:999px;
+      background:#f4f8ff;
+      color:var(--navy-dark);
+      border:1px solid rgba(6,40,74,.12);
+      font-size:12px;
+      font-weight:1000;
+      white-space:nowrap;
+    }
+    .status-pill{
+      display:inline-flex;
+      align-items:center;
+      gap:7px;
+      padding:6px 10px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:1000;
+      border:1px solid rgba(16,24,40,.10);
+      background:#fff;
+      white-space:nowrap;
+    }
+    .dot{
+      width:10px;
+      height:10px;
+      border-radius:999px;
+      display:inline-block;
+    }
+    .dot.gray{background:#94a3b8;}
+    .dot.blue{background:#0ea5e9;}
+    .dot.orange{background:#f59e0b;}
+    .dot.green{background:#22c55e;}
+    .dot.red{background:#ef4444;}
+    .teams{
+      display:grid;
+      gap:8px;
+      margin-top:8px;
+    }
+    .team-row{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      align-items:center;
+      padding:10px 12px;
+      border-radius:14px;
+      background:rgba(255,255,255,.70);
+      border:1px solid rgba(16,24,40,.07);
+    }
+    .team-name{
+      min-width:0;
+      font-weight:1000;
+      line-height:1.15;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .team-name.placeholder{
+      color:#667085;
+      font-style:italic;
+    }
+    .score-live{
+      display:grid;
+      grid-template-columns:42px 42px 42px 52px;
+      gap:6px;
+      flex:0 0 auto;
+      text-align:center;
+    }
+    .score-cell{
+      border-radius:12px;
+      background:#fff;
+      border:1px solid rgba(16,24,40,.10);
+      min-height:34px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:14px;
+      font-weight:1000;
+      font-variant-numeric:tabular-nums;
+    }
+    .score-head{
+      font-size:10px;
+      color:#667085;
+      font-weight:1000;
+      text-transform:uppercase;
+    }
+    .live-meta{
+      margin-top:10px;
+      font-size:13px;
+      color:#475467;
+      line-height:1.35;
+      display:grid;
+      gap:4px;
+    }
+    .actions{
+      margin-top:12px;
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+    .btn{
+      appearance:none;
+      border:1px solid rgba(16,24,40,.10);
+      background:#fff;
+      border-radius:999px;
+      min-height:40px;
+      padding:9px 14px;
+      font-size:13px;
+      font-weight:1000;
+      cursor:pointer;
+      color:var(--navy-dark);
+      text-align:center;
+      box-shadow:0 6px 14px rgba(16,24,40,.05);
+      white-space:nowrap;
+      font-family:inherit;
+    }
+    .btn.primary{
+      background:linear-gradient(180deg,var(--sun),var(--sun-dark));
+      color:var(--navy-dark);
+      border-color:var(--sun-dark);
+      box-shadow:0 10px 22px rgba(255,210,31,.22);
+    }
+    .btn.danger{
+      background:#fff5f5;
+      color:#8a1f1f;
+      border-color:#f1b2b2;
+    }
+    .btn.ok{
+      background:#ecfdf5;
+      color:#065f46;
+      border-color:#a7f3d0;
+    }
+    .btn:disabled{
+      opacity:.5;
+      cursor:not-allowed;
+    }
+    .muted{
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.45;
+    }
+    .modal-backdrop{
+      position:fixed;
+      inset:0;
+      z-index:3000;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:18px;
+      background:rgba(15,23,42,.52);
+    }
+    .modal{
+      width:min(560px,100%);
+      border-radius:24px;
+      background:#fff;
+      box-shadow:0 30px 80px rgba(0,0,0,.28);
+      padding:18px;
+    }
+    .modal-title{
+      margin:0;
+      font-size:22px;
+      font-weight:1000;
+      letter-spacing:-.03em;
+      color:var(--navy-dark);
+    }
+    .modal-text{
+      margin:6px 0 14px;
+      color:#667085;
+      font-size:14px;
+      line-height:1.4;
+    }
+    .modal-score-grid{
+      display:grid;
+      grid-template-columns:minmax(0,1fr) 64px 64px 64px;
+      gap:8px;
+      align-items:center;
+      margin-top:12px;
+    }
+    .modal-hdr{
+      text-align:center;
+      font-size:11px;
+      font-weight:1000;
+      color:#667085;
+      text-transform:uppercase;
+    }
+    .modal-team{
+      font-size:14px;
+      font-weight:1000;
+      line-height:1.15;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+    }
+    .modal-input{
+      width:64px;
+      height:44px;
+      border-radius:12px;
+      border:1px solid rgba(16,24,40,.16);
+      text-align:center;
+      font-size:16px;
+      font-weight:1000;
+      outline:none;
+    }
+    .modal-result{
+      margin-top:12px;
+      padding:12px 14px;
+      border-radius:16px;
+      background:#f8fafc;
+      border:1px solid rgba(16,24,40,.08);
+      font-size:13px;
+      font-weight:900;
+      color:#475467;
+      line-height:1.4;
+    }
+    .modal-actions{
+      margin-top:16px;
+      display:flex;
+      gap:10px;
+      justify-content:flex-end;
+      flex-wrap:wrap;
+    }
+    @media (min-width:760px){
+      .panel{padding:22px;}
+    }
+    @media (max-width:759px){
+      :root{--modebar-h:62px;}
+      main{
+        padding-top:calc(var(--jat-total-top, 222px) + var(--modebar-h) + 18px);
+      }
+      .modebar{
+        top:var(--jat-total-top, 222px);
+      }
+      .panel-title{font-size:23px;}
+      .team-row{
+        align-items:flex-start;
+        flex-direction:column;
+      }
+      .score-live{
+        width:100%;
+        grid-template-columns:1fr 1fr 1fr 1fr;
+      }
+      .actions{
+        justify-content:stretch;
+      }
+      .actions .btn{
+        flex:1 1 auto;
+      }
+      .modal-score-grid{
+        grid-template-columns:minmax(0,1fr) 54px 54px 54px;
+      }
+      .modal-input{
+        width:54px;
+      }
+    }
+    @media (orientation:landscape) and (max-height:520px){
+      #jatHeader{display:none !important;}
+      :root{
+        --jat-total-top:0px !important;
+        --modebar-h:50px;
+      }
+      .modebar{
+        top:0 !important;
+        padding:6px 0;
+      }
+      .mode-btn{
+        min-height:36px;
+        padding:7px 12px;
+        font-size:13px;
+      }
+      main{
+        padding-top:calc(var(--modebar-h) + 8px) !important;
+      }
+      .panel.summary-panel{
+        display:none;
+      }
+    }
+  </style>
+</head>
+<body data-zone-selector="select">
+<div id="jatHeader"></div>
+<div class="modebar">
+  <div class="modebar-inner">
+    <button class="mode-btn active" id="btnModeAll" type="button">🌍 Tous les matchs</button>
+    <button class="mode-btn" id="btnModeCategory" type="button">🎾 Épreuve active</button>
+  </div>
+</div>
+<main class="container">
+  <section class="section panel" id="accessDenied" style="display:none;">
+    <h2 class="panel-title">⛔ Accès refusé</h2>
+    <p class="panel-text">Cette page est réservée au JAT et aux administrateurs.</p>
+  </section>
+  <section class="section panel summary-panel" id="pageContent" style="display:none;">
+    <div class="panel-head">
+      <div>
+        <h1 class="panel-title">🧑‍⚖️ Arbitrage JAT</h1>
+        <p class="panel-text">
+          Envoie les matchs aux arbitres, suis les scores live, puis valide le résultat officiel.
+        </p>
+      </div>
+      <div class="panel-tag">JAT</div>
+    </div>
+    <div class="placeholder">
+      <strong id="zoneLabel">Tous les matchs</strong>
+      <div id="statusText" style="margin-top:6px;">Chargement…</div>
+    </div>
+  </section>
+  <section class="section panel" id="panelMatches" style="display:none;">
+    <div class="panel-head">
+      <div>
+        <h2 class="panel-title">📡 Matchs arbitrables</h2>
+        <p class="panel-text">
+          Un match envoyé au live devient disponible pour un profil arbitre. Le JAT valide ensuite le résultat officiel.
+        </p>
+      </div>
+      <div class="panel-tag">Live</div>
+    </div>
+    <div id="matchList"></div>
+  </section>
+</main>
+<div class="modal-backdrop" id="scoreModal">
+  <div class="modal" role="dialog" aria-modal="true">
+    <h2 class="modal-title">✅ Valider / modifier le résultat</h2>
+    <p class="modal-text" id="scoreModalSub">—</p>
+    <div class="modal-score-grid">
+      <div></div>
+      <div class="modal-hdr">Set 1</div>
+      <div class="modal-hdr">Set 2</div>
+      <div class="modal-hdr">STB</div>
+      <div class="modal-team" id="modalTeamA">Équipe A</div>
+      <input class="modal-input" id="modalS1A" inputmode="numeric">
+      <input class="modal-input" id="modalS2A" inputmode="numeric">
+      <input class="modal-input" id="modalS3A" inputmode="numeric">
+      <div class="modal-team" id="modalTeamB">Équipe B</div>
+      <input class="modal-input" id="modalS1B" inputmode="numeric">
+      <input class="modal-input" id="modalS2B" inputmode="numeric">
+      <input class="modal-input" id="modalS3B" inputmode="numeric">
+    </div>
+    <div class="modal-result" id="modalWinnerText">
+      Vainqueur calculé automatiquement selon les sets gagnés.
+    </div>
+    <div class="modal-actions">
+      <button class="btn danger" id="btnScoreCancel" type="button">Annuler</button>
+      <button class="btn ok" id="btnScoreConfirm" type="button">✅ Valider résultat officiel</button>
+    </div>
+  </div>
+</div>
+<script type="module" src="../assets/js/jat-header.js"></script>
+<script type="module">
+  import { auth, db } from "../assets/js/firebase.js";
+  import { getRoleByUid } from "../assets/js/session.js";
+  import {
+    onAuthStateChanged
+  } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+  import {
+    doc,
+    collection,
+    onSnapshot,
+    setDoc,
+    updateDoc,
+    deleteDoc,
+    serverTimestamp
+  } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+  const EVENT_ID = "tsck-open-juin-2026";
+  const EPREUVES = ["DM", "DD"];
+  const EPREUVE_LABELS = {
+    DM:"Double Messieurs",
+    DD:"Double Dames"
+  };
+  const accessDenied = document.getElementById("accessDenied");
+  const pageContent = document.getElementById("pageContent");
+  const panelMatches = document.getElementById("panelMatches");
+  const btnModeAll = document.getElementById("btnModeAll");
+  const btnModeCategory = document.getElementById("btnModeCategory");
+  const zoneLabel = document.getElementById("zoneLabel");
+  const statusText = document.getElementById("statusText");
+  const matchList = document.getElementById("matchList");
+  const scoreModal = document.getElementById("scoreModal");
+  const scoreModalSub = document.getElementById("scoreModalSub");
+  const modalTeamA = document.getElementById("modalTeamA");
+  const modalTeamB = document.getElementById("modalTeamB");
+  const modalS1A = document.getElementById("modalS1A");
+  const modalS2A = document.getElementById("modalS2A");
+  const modalS3A = document.getElementById("modalS3A");
+  const modalS1B = document.getElementById("modalS1B");
+  const modalS2B = document.getElementById("modalS2B");
+  const modalS3B = document.getElementById("modalS3B");
+  const modalWinnerText = document.getElementById("modalWinnerText");
+  const btnScoreCancel = document.getElementById("btnScoreCancel");
+  const btnScoreConfirm = document.getElementById("btnScoreConfirm");
+  let mode = "all";
+  let currentEpreuve = "DM";
+  let currentProg = null;
+  let resultsByMatch = new Map();
+  let liveByMatch = new Map();
+  let poolValidationDoc = null;
+  let currentRole = null;
+  let modalMatchId = null;
+  let unsubProg = null;
+  let unsubResults = null;
+  let unsubLive = null;
+  let unsubPoolValidation = null;
+  function esc(s){
+    return (s ?? "").toString()
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+  }
+  function generalProgRef(){
+    return doc(db, "events", EVENT_ID, "programmations", "general");
+  }
+  function resultsCol(){
+    return collection(db, "events", EVENT_ID, "resultats", "general", "matches");
+  }
+  function liveCol(){
+    return collection(db, "events", EVENT_ID, "live_matches");
+  }
+  function liveRef(matchId){
+    return doc(db, "events", EVENT_ID, "live_matches", matchId);
+  }
+  function resultRef(matchId){
+    return doc(db, "events", EVENT_ID, "resultats", "general", "matches", matchId);
+  }
+  function poolValidationRef(){
+    return doc(db, "events", EVENT_ID, "validations", `Seniors_${currentEpreuve}_poules`);
+  }
+  function zoneText(){
+    if(mode === "all") return "Tous les matchs";
+    return EPREUVE_LABELS[currentEpreuve] || currentEpreuve;
+  }
+  function courtLabel(court){
+    if(court === "A") return "Terrain 1";
+    if(court === "B") return "Terrain 2";
+    if(court === "ANIM") return "Animation";
+    return "Terrain";
+  }
+  function toNum(v){
+    if(v === null || v === undefined || v === "") return null;
+    const n = Number(String(v).replace(",", ".").trim());
+    return Number.isFinite(n) ? n : null;
+  }
+  function getResult(mid){
+    return resultsByMatch.get(mid) || null;
+  }
+  function getLive(mid){
+    return liveByMatch.get(mid) || null;
+  }
+  function computeWinner(payload){
+    const sets = [
+      [toNum(payload.s1A), toNum(payload.s1B)],
+      [toNum(payload.s2A), toNum(payload.s2B)],
+      [toNum(payload.s3A), toNum(payload.s3B)]
+    ];
+    let setsA = 0;
+    let setsB = 0;
+    for(const [a,b] of sets){
+      if(a === null || b === null) continue;
+      if(a > b) setsA++;
+      else if(b > a) setsB++;
+    }
+    if(setsA > setsB) return "A";
+    if(setsB > setsA) return "B";
+    return null;
+  }
+  function allMatches(){
+    return Array.isArray(currentProg?.matches)
+      ? [...currentProg.matches]
+      : [];
+  }
+  function matchById(id){
+    return allMatches().find(m => m.id === id) || null;
+  }
+  function getValidatedPoolRows(pool){
+    if(!poolValidationDoc?.validatedAt) return [];
+    const pools = poolValidationDoc.pools || {};
+    const direct = poolValidationDoc[pool] || null;
+    const rows =
+      pools?.[pool]?.positions ||
+      pools?.[pool]?.ranking ||
+      pools?.[pool] ||
+      direct?.positions ||
+      direct?.ranking ||
+      direct ||
+      [];
+    return Array.isArray(rows) ? rows : [];
+  }
+  function resolvePoolRank(pool, rank){
+    const rows = getValidatedPoolRows(pool);
+    const row = rows[Number(rank) - 1] || null;
+    if(!row) return null;
+    if(row.team) return row.team;
+    return {
+      id:row.id || row.teamId || null,
+      teamName:row.teamName || row.name || row.equipe || `${rank}e Poule ${pool}`
+    };
+  }
+  function winnerSide(res){
+    return computeWinner(res);
+  }
+  function resolveDynamicTeam(match, side, guard = new Set()){
+    if(!match) return null;
+    const raw = side === "A" ? match.teamA : match.teamB;
+    const ref = side === "A" ? match.A : match.B;
+    if(ref?.type === "team"){
+      return ref.team || { teamName:raw || "Équipe" };
+    }
+    if(ref?.type === "poolRank"){
+      return resolvePoolRank(ref.pool, ref.rank)
+        || { teamName:`${ref.rank}${Number(ref.rank) === 1 ? "er" : "e"} Poule ${ref.pool}` };
+    }
+    if(ref?.type === "winner" || ref?.type === "loser"){
+      const sourceId = ref.matchId;
+      if(!sourceId || guard.has(sourceId)){
+        return { teamName:raw || "Équipe" };
+      }
+      guard.add(sourceId);
+      const source = matchById(sourceId);
+      const w = winnerSide(getResult(sourceId));
+      if(!source || (w !== "A" && w !== "B")){
+        return { teamName:raw || "Équipe" };
+      }
+      const wantedSide = ref.type === "winner"
+        ? w
+        : (w === "A" ? "B" : "A");
+      return resolveDynamicTeam(source, wantedSide, guard);
+    }
+    return { teamName:raw || "Équipe" };
+  }
+  function teamName(match, side){
+    return resolveDynamicTeam(match, side)?.teamName
+      || (side === "A" ? match.teamA : match.teamB)
+      || "Équipe";
+  }
+  function isPlaceholderName(name){
+    const raw = String(name || "");
+    return raw.includes("Poule") || raw.includes("Vainqueur") || raw.includes("Perdant") || raw.includes("QF") || raw.includes("DF");
+  }
+  function visibleMatches(){
+    return allMatches()
+      .filter(m => m.type !== "winner")
+      .filter(m => m.type !== "animation")
+      .filter(m => String(m.categorie || "Seniors") === "Seniors")
+      .filter(m => {
+        if(mode === "all") return true;
+        return String(m.epreuve || "DM") === currentEpreuve;
+      })
+      .sort((a,b)=>{
+        if(Number(a.order) !== Number(b.order)){
+          return Number(a.order || 9999) - Number(b.order || 9999);
+        }
+        return String(a.court || "").localeCompare(String(b.court || ""));
+      });
+  }
+  function statusInfo(live){
+    if(!live) return { cls:"gray", text:"Non envoyé" };
+    if(live.status === "available") return { cls:"orange", text:"Disponible arbitre" };
+    if(live.status === "taken") return { cls:"blue", text:"Pris par arbitre" };
+    if(live.status === "finished") return { cls:"red", text:"Score proposé" };
+    if(live.status === "validated") return { cls:"green", text:"Score validé" };
+    return { cls:"gray", text:"Live" };
+  }
+  function scoreCell(v){
+    if(v === null || v === undefined || v === "") return "—";
+    return String(v);
+  }
+  function renderMatchCard(match){
+    const live = getLive(match.id);
+    const status = statusInfo(live);
+    const cls =
+      match.court === "A"
+        ? "courtA"
+        : match.court === "B"
+          ? "courtB"
+          : "";
+    const teamA = teamName(match, "A");
+    const teamB = teamName(match, "B");
+    const officiel = getResult(match.id);
+    const officialWinner = computeWinner(officiel);
+    return `
+      <div class="match-card ${esc(cls)}">
+        <div class="match-head">
+          <div class="m-slot">#${esc(match.order || "—")}</div>
+          <div class="m-time">${esc(match.time || "—")}</div>
+          <div class="m-court">${esc(courtLabel(match.court))}</div>
+          <div class="m-label">${esc(match.label || match.id)}</div>
+          <div class="status-pill">
+            <span class="dot ${esc(status.cls)}"></span>
+            ${esc(status.text)}
+          </div>
+        </div>
+        <div class="teams">
+          <div class="team-row">
+            <div class="team-name ${isPlaceholderName(teamA) ? "placeholder" : ""}">
+              ${esc(teamA)}
+            </div>
+            <div class="score-live">
+              <div>
+                <div class="score-head">Pts</div>
+                <div class="score-cell">${esc(scoreCell(live?.pointsA))}</div>
+              </div>
+              <div>
+                <div class="score-head">S1</div>
+                <div class="score-cell">${esc(scoreCell(live?.s1A ?? officiel?.s1A))}</div>
+              </div>
+              <div>
+                <div class="score-head">S2</div>
+                <div class="score-cell">${esc(scoreCell(live?.s2A ?? officiel?.s2A))}</div>
+              </div>
+              <div>
+                <div class="score-head">STB</div>
+                <div class="score-cell">${esc(scoreCell(live?.stbA ?? officiel?.s3A))}</div>
+              </div>
+            </div>
+          </div>
+          <div class="team-row">
+            <div class="team-name ${isPlaceholderName(teamB) ? "placeholder" : ""}">
+              ${esc(teamB)}
+            </div>
+            <div class="score-live">
+              <div>
+                <div class="score-head">Pts</div>
+                <div class="score-cell">${esc(scoreCell(live?.pointsB))}</div>
+              </div>
+              <div>
+                <div class="score-head">S1</div>
+                <div class="score-cell">${esc(scoreCell(live?.s1B ?? officiel?.s1B))}</div>
+              </div>
+              <div>
+                <div class="score-head">S2</div>
+                <div class="score-cell">${esc(scoreCell(live?.s2B ?? officiel?.s2B))}</div>
+              </div>
+              <div>
+                <div class="score-head">STB</div>
+                <div class="score-cell">${esc(scoreCell(live?.stbB ?? officiel?.s3B))}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="live-meta">
+          ${
+            live?.takenByEmail
+              ? `<div>🧑‍⚖️ Arbitre : <strong>${esc(live.takenByEmail)}</strong></div>`
+              : `<div>🧑‍⚖️ Aucun arbitre connecté</div>`
+          }
+          ${
+            live?.serverSide
+              ? `<div>🎾 Service : <strong>${live.serverSide === "A" ? esc(teamA) : esc(teamB)}</strong></div>`
+              : ``
+          }
+          ${
+            live?.inputMode
+              ? `<div>⌨️ Saisie : <strong>${live.inputMode === "points" ? "Points" : "Jeux"}</strong></div>`
+              : ``
+          }
+          ${
+            officialWinner
+              ? `<div>✅ Résultat officiel : <strong>${officialWinner === "A" ? esc(teamA) : esc(teamB)}</strong></div>`
+              : ``
+          }
+        </div>
+        <div class="actions">
+          ${
+            !live
+              ? `
+                <button class="btn primary" type="button" data-act="open" data-id="${esc(match.id)}">
+                  📡 Envoyer au live
+                </button>
+              `
+              : ""
+          }
+          ${
+            live?.status === "available"
+              ? `
+                <button class="btn danger" type="button" data-act="close" data-id="${esc(match.id)}">
+                  ❌ Retirer du live
+                </button>
+              `
+              : ""
+          }
+          ${
+            live?.status === "taken"
+              ? `
+                <button class="btn danger" type="button" data-act="forceclose" data-id="${esc(match.id)}">
+                  ⛔ Fermer live
+                </button>
+              `
+              : ""
+          }
+          ${
+            live && live.status !== "validated"
+              ? `
+                <button class="btn ok" type="button" data-act="validate" data-id="${esc(match.id)}">
+                  ✅ Valider / modifier le résultat
+                </button>
+              `
+              : ""
+          }
+          ${
+            !live && officiel
+              ? `
+                <button class="btn ok" type="button" data-act="validate" data-id="${esc(match.id)}">
+                  ✏️ Modifier résultat officiel
+                </button>
+              `
+              : ""
+          }
+          ${
+            live?.status === "validated"
+              ? `<button class="btn" type="button" disabled>✔️ Score officiel</button>`
+              : ""
+          }
+        </div>
+      </div>
+    `;
+  }
+  function render(){
+    zoneLabel.textContent = zoneText();
+    btnModeAll.classList.toggle("active", mode === "all");
+    btnModeCategory.classList.toggle("active", mode === "category");
+    if(!currentProg){
+      statusText.textContent = "Programmation générale non disponible.";
+      matchList.innerHTML = `<p class="muted">Aucun match disponible.</p>`;
+      return;
+    }
+    const rows = visibleMatches();
+    statusText.textContent = `${rows.length} match(s) affiché(s).`;
+    matchList.innerHTML = rows.length
+      ? `<div class="match-list">${rows.map(renderMatchCard).join("")}</div>`
+      : `<p class="muted">Aucun match dans cette zone.</p>`;
+  }
+  async function openLive(matchId){
+    const match = matchById(matchId);
+    if(!match) return;
+    const teamA = teamName(match, "A");
+    const teamB = teamName(match, "B");
+    await setDoc(liveRef(matchId), {
+      matchId,
+      eventId:EVENT_ID,
+      categorie:match.categorie || "Seniors",
+      epreuve:match.epreuve || "DM",
+      label:match.label || null,
+      order:match.order || null,
+      time:match.time || null,
+      court:match.court || null,
+      teamA,
+      teamB,
+      status:"available",
+      takenBy:null,
+      takenByEmail:null,
+      inputMode:"points",
+      currentPhase:"set1",
+      serverSide:"A",
+      pointsA:0,
+      pointsB:0,
+      s1A:0,
+      s1B:0,
+      s2A:0,
+      s2B:0,
+      stbA:0,
+      stbB:0,
+      createdAt:serverTimestamp(),
+      updatedAt:serverTimestamp(),
+      updatedBy:auth.currentUser?.uid || null
+    }, { merge:true });
+  }
+  async function closeLive(matchId){
+    const ok = confirm("Retirer ce match du live arbitre ?");
+    if(!ok) return;
+    await deleteDoc(liveRef(matchId));
+  }
+  function openValidationModal(matchId){
+    const match = matchById(matchId);
+    const live = getLive(matchId);
+    const officiel = getResult(matchId);
+    if(!match) return;
+    modalMatchId = matchId;
+    modalTeamA.textContent = teamName(match, "A");
+    modalTeamB.textContent = teamName(match, "B");
+    scoreModalSub.textContent =
+      `${match.label || match.id} · ${match.time || "—"} · ${courtLabel(match.court)}`;
+    modalS1A.value = live?.s1A ?? officiel?.s1A ?? "";
+    modalS1B.value = live?.s1B ?? officiel?.s1B ?? "";
+    modalS2A.value = live?.s2A ?? officiel?.s2A ?? "";
+    modalS2B.value = live?.s2B ?? officiel?.s2B ?? "";
+    modalS3A.value = live?.stbA ?? officiel?.s3A ?? "";
+    modalS3B.value = live?.stbB ?? officiel?.s3B ?? "";
+    refreshModalWinner();
+    scoreModal.style.display = "flex";
+  }
+  function closeModal(){
+    scoreModal.style.display = "none";
+    modalMatchId = null;
+  }
+  function refreshModalWinner(){
+    const payload = {
+      s1A:modalS1A.value,
+      s1B:modalS1B.value,
+      s2A:modalS2A.value,
+      s2B:modalS2B.value,
+      s3A:modalS3A.value,
+      s3B:modalS3B.value
+    };
+    const winner = computeWinner(payload);
+    if(winner === "A"){
+      modalWinnerText.textContent = `✅ Vainqueur calculé : ${modalTeamA.textContent}`;
+    }else if(winner === "B"){
+      modalWinnerText.textContent = `✅ Vainqueur calculé : ${modalTeamB.textContent}`;
+    }else{
+      modalWinnerText.textContent = "⏳ Résultat incomplet ou égalité.";
+    }
+  }
+  async function confirmValidation(){
+    if(!modalMatchId) return;
+    const payload = {
+      s1A:modalS1A.value.trim(),
+      s1B:modalS1B.value.trim(),
+      s2A:modalS2A.value.trim(),
+      s2B:modalS2B.value.trim(),
+      s3A:modalS3A.value.trim(),
+      s3B:modalS3B.value.trim(),
+      updatedAt:serverTimestamp(),
+      updatedBy:auth.currentUser?.email || auth.currentUser?.uid || null
+    };
+    payload.winnerSide = computeWinner(payload);
+    await setDoc(resultRef(modalMatchId), payload, { merge:true });
+    if(getLive(modalMatchId)){
+      await updateDoc(liveRef(modalMatchId), {
+        status:"validated",
+        validatedAt:serverTimestamp(),
+        validatedBy:auth.currentUser?.email || auth.currentUser?.uid || null,
+        updatedAt:serverTimestamp()
+      });
+    }
+    closeModal();
+  }
+  matchList.addEventListener("click", async (event) => {
+    const btn = event.target.closest("button[data-act]");
+    if(!btn) return;
+    const act = btn.dataset.act;
+    const id = btn.dataset.id;
+    if(!id) return;
+    try{
+      if(act === "open") await openLive(id);
+      else if(act === "close") await closeLive(id);
+      else if(act === "forceclose") await closeLive(id);
+      else if(act === "validate") openValidationModal(id);
+    }catch(error){
+      console.error(error);
+      alert("Erreur Firestore ❌");
+    }
+  });
+  [
+    modalS1A,
+    modalS1B,
+    modalS2A,
+    modalS2B,
+    modalS3A,
+    modalS3B
+  ].forEach(el => {
+    el.addEventListener("input", refreshModalWinner);
+  });
+  btnScoreCancel.onclick = closeModal;
+  btnScoreConfirm.onclick = confirmValidation;
+  scoreModal.addEventListener("click", (event) => {
+    if(event.target === scoreModal) closeModal();
+  });
+  function setMode(next){
+    mode = next === "category" ? "category" : "all";
+    render();
+  }
+  btnModeAll.onclick = () => setMode("all");
+  btnModeCategory.onclick = () => setMode("category");
+  document.addEventListener("jatZoneChange", (event) => {
+    const d = event.detail || {};
+    if(EPREUVES.includes(d.epreuve)){
+      currentEpreuve = d.epreuve;
+    }
+    try{
+      localStorage.setItem("tsck_jat_epreuve", currentEpreuve);
+    }catch(error){}
+    mode = "category";
+    restartPoolValidationListener();
+    render();
+  });
+  function restartPoolValidationListener(){
+    if(unsubPoolValidation){
+      unsubPoolValidation();
+      unsubPoolValidation = null;
+    }
+    unsubPoolValidation = onSnapshot(poolValidationRef(), (snap) => {
+      poolValidationDoc = snap.exists() ? (snap.data() || {}) : null;
+      render();
+    }, (error) => {
+      console.error(error);
+      poolValidationDoc = null;
+      render();
+    });
+  }
+  function startListeners(){
+    stopListeners();
+    unsubProg = onSnapshot(generalProgRef(), (snap) => {
+      currentProg = snap.exists() ? (snap.data() || null) : null;
+      render();
+    });
+    unsubResults = onSnapshot(resultsCol(), (snap) => {
+      resultsByMatch = new Map();
+      snap.forEach(d => {
+        resultsByMatch.set(d.id, d.data() || {});
+      });
+      render();
+    });
+    unsubLive = onSnapshot(liveCol(), (snap) => {
+      liveByMatch = new Map();
+      snap.forEach(d => {
+        liveByMatch.set(d.id, d.data() || {});
+      });
+      render();
+    });
+    restartPoolValidationListener();
+  }
+  function stopListeners(){
+    if(unsubProg){
+      unsubProg();
+      unsubProg = null;
+    }
+    if(unsubResults){
+      unsubResults();
+      unsubResults = null;
+    }
+    if(unsubLive){
+      unsubLive();
+      unsubLive = null;
+    }
+    if(unsubPoolValidation){
+      unsubPoolValidation();
+      unsubPoolValidation = null;
+    }
+  }
+  function showDenied(){
+    accessDenied.style.display = "block";
+    pageContent.style.display = "none";
+    panelMatches.style.display = "none";
+    stopListeners();
+  }
+  function showJat(){
+    accessDenied.style.display = "none";
+    pageContent.style.display = "block";
+    panelMatches.style.display = "block";
+    try{
+      const savedEpreuve = localStorage.getItem("tsck_jat_epreuve");
+      if(EPREUVES.includes(savedEpreuve)) currentEpreuve = savedEpreuve;
+    }catch(error){}
+    startListeners();
+  }
+  onAuthStateChanged(auth, async (user) => {
+    accessDenied.style.display = "none";
+    pageContent.style.display = "none";
+    panelMatches.style.display = "none";
+    if(!user){
+      showDenied();
+      return;
+    }
+    try{
+      currentRole = await getRoleByUid(user.uid);
+      if(currentRole !== "admin" && currentRole !== "jat"){
+        showDenied();
+        return;
+      }
+      showJat();
+    }catch(error){
+      console.error(error);
+      showDenied();
+    }
+  });
+</script>
+</body>
+</html>
