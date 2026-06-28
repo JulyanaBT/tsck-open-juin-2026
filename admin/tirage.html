@@ -1,0 +1,1130 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin — Tirage — Open Beach Tennis TSCK</title>
+
+  <style>
+    :root{
+      --palm:#0b7a3b;
+      --palm-dark:#064d28;
+      --palm-light:#15a658;
+      --navy:#06284a;
+      --navy-dark:#03172b;
+      --sun:#ffd21f;
+      --sun-dark:#f3b800;
+      --text:#17212b;
+      --muted:#667085;
+      --card:rgba(255,255,255,.95);
+      --shadow:0 16px 40px rgba(16,24,40,.12);
+      --container:1180px;
+    }
+
+    *{box-sizing:border-box;}
+    html,body{max-width:100%;overflow-x:hidden;}
+
+    body{
+      margin:0;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at 10% 0%, rgba(255,210,31,.20), transparent 26%),
+        radial-gradient(circle at 90% 8%, rgba(11,122,59,.16), transparent 26%),
+        linear-gradient(180deg,#eaf9ff 0%,#fff4d4 52%,#fff 100%);
+    }
+
+    a{color:inherit;text-decoration:none;}
+
+    .container{
+      width:min(var(--container), calc(100% - 28px));
+      margin:0 auto;
+    }
+
+    main{
+      padding-top:calc(var(--admin-total-top, 230px) + 34px);
+      padding-bottom:42px;
+    }
+
+    .section{margin-top:18px;}
+
+    .panel{
+      background:var(--card);
+      border:1px solid rgba(255,255,255,.7);
+      border-radius:24px;
+      box-shadow:var(--shadow);
+      padding:18px;
+    }
+
+    .panel-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:12px;
+      margin-bottom:14px;
+    }
+
+    .panel-title{
+      margin:0;
+      font-size:26px;
+      line-height:1.05;
+      letter-spacing:-.03em;
+      color:var(--navy-dark);
+    }
+
+    .panel-text{
+      margin:6px 0 0;
+      color:var(--muted);
+      font-size:15px;
+      line-height:1.45;
+    }
+
+    .panel-tag{
+      flex-shrink:0;
+      padding:8px 13px;
+      border-radius:999px;
+      background:#e6f7ee;
+      color:var(--palm-dark);
+      font-size:12px;
+      font-weight:1000;
+      text-transform:uppercase;
+      letter-spacing:.06em;
+    }
+
+    .status-box{
+      margin-top:12px;
+      padding:14px 16px;
+      border-radius:18px;
+      background:linear-gradient(135deg,rgba(11,122,59,.10),rgba(255,210,31,.16));
+      border:1px solid rgba(11,122,59,.18);
+      color:#475467;
+      font-size:14px;
+      line-height:1.5;
+    }
+
+    .status-box strong{color:var(--navy-dark);}
+
+    .grid{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:10px;
+    }
+
+    .btn{
+      appearance:none;
+      border:1px solid rgba(16,24,40,.10);
+      background:#fff;
+      border-radius:999px;
+      min-height:46px;
+      padding:11px 16px;
+      font-size:14px;
+      font-weight:1000;
+      cursor:pointer;
+      color:var(--navy-dark);
+      text-align:center;
+      box-shadow:0 6px 14px rgba(16,24,40,.05);
+      white-space:nowrap;
+      font-family:inherit;
+    }
+
+    .btn.primary,
+    .btn.is-active{
+      background:linear-gradient(180deg,var(--sun),var(--sun-dark));
+      color:var(--navy-dark);
+      border-color:var(--sun-dark);
+      box-shadow:0 10px 22px rgba(255,210,31,.22);
+    }
+
+    .btn.green{
+      background:linear-gradient(135deg,var(--palm),var(--palm-light));
+      color:#fff;
+      border-color:var(--palm);
+    }
+
+    .btn.danger{
+      background:#fff5f5;
+      color:#8a1f1f;
+      border-color:#f1b2b2;
+    }
+
+    .btn:disabled{
+      opacity:.55;
+      cursor:not-allowed;
+    }
+
+    .roulette-wheel{
+      min-height:72px;
+      border-radius:18px;
+      border:1px solid rgba(16,24,40,.08);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:1000;
+      font-size:18px;
+      background:linear-gradient(180deg,#fff,#fafafa);
+      text-align:center;
+      padding:12px;
+      box-shadow:0 8px 18px rgba(16,24,40,.06);
+      color:var(--navy-dark);
+    }
+
+    .pool-grid{
+      display:grid;
+      gap:12px;
+      grid-template-columns:1fr;
+      margin-top:12px;
+    }
+
+    .pool-card{
+      border:1px solid rgba(16,24,40,.08);
+      border-radius:18px;
+      background:#fff;
+      padding:13px;
+      box-shadow:0 8px 18px rgba(16,24,40,.06);
+    }
+
+    .pool-title{
+      font-size:13px;
+      font-weight:1000;
+      color:var(--palm-dark);
+      text-transform:uppercase;
+      letter-spacing:.06em;
+      margin-bottom:10px;
+    }
+
+    .pool-list,
+    .item-list{
+      display:grid;
+      gap:8px;
+    }
+
+    .pool-slot{
+      border:1px solid #eee;
+      border-radius:14px;
+      background:#fafafa;
+      padding:10px 12px;
+      font-weight:1000;
+      font-size:14px;
+      line-height:1.2;
+      min-width:0;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .pool-slot.empty{
+      background:#f7fbff;
+      border-color:#d9ebfb;
+      color:#667085;
+      font-style:italic;
+    }
+
+    .pool-slot.seed{
+      background:#fff9e8;
+      border-color:#f1dca1;
+      color:var(--navy-dark);
+    }
+
+    .item-list{
+      margin-top:10px;
+    }
+
+    .item-card{
+      border:1px solid rgba(16,24,40,.08);
+      border-radius:16px;
+      background:#fff;
+      padding:11px 12px;
+      box-shadow:0 6px 14px rgba(16,24,40,.05);
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      align-items:center;
+    }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      padding:4px 10px;
+      border-radius:999px;
+      font-size:12px;
+      border:1px solid rgba(11,122,59,.18);
+      background:#e6f7ee;
+      color:var(--palm-dark);
+      white-space:nowrap;
+      font-weight:1000;
+    }
+
+    .muted{
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.45;
+    }
+
+    @media (min-width:760px){
+      .panel{padding:22px;}
+      .grid.three{grid-template-columns:repeat(3,1fr);}
+      .grid.two{grid-template-columns:1fr 1fr;}
+      .pool-grid{grid-template-columns:1fr 1fr;}
+    }
+
+    @media (max-width:759px){
+      main{
+        padding-top:calc(var(--admin-total-top, 222px) + 28px);
+      }
+
+      .panel-title{font-size:24px;}
+    }
+  </style>
+</head>
+
+<body data-zone-selector="select">
+
+<div id="adminHeader"></div>
+
+<main class="container">
+
+  <section class="section panel" id="accessDenied" style="display:none;">
+    <h2 class="panel-title">⛔ Accès refusé</h2>
+    <p class="panel-text">Cette page est réservée aux administrateurs.</p>
+  </section>
+
+  <section class="section panel" id="pageContent" style="display:none;">
+    <div class="panel-head">
+      <div>
+        <h1 class="panel-title">🎲 Tirage au sort</h1>
+        <p class="panel-text">
+          Tirage simplifié TSCK : uniquement Double Messieurs. Double Dames annulé.
+        </p>
+      </div>
+      <div class="panel-tag">Admin</div>
+    </div>
+
+    <div class="status-box">
+      Épreuve sélectionnée :
+      <strong id="zoneLabel">Double Messieurs</strong>
+      <br>
+      TS1 est placée en Poule A, TS2 en Poule B, puis tirage aléatoire des autres équipes.
+    </div>
+  </section>
+
+  <section class="section panel" id="panelVisibility" style="display:none;">
+    <div class="panel-head">
+      <div>
+        <h2 class="panel-title">👀 Visibilité publique</h2>
+        <p class="panel-text" id="visibilityText">Chargement…</p>
+      </div>
+      <div class="panel-tag">Public</div>
+    </div>
+
+    <div class="grid two">
+      <button class="btn" id="btnPublicHide">🔒 Mettre en maintenance</button>
+      <button class="btn" id="btnPublicShow">✅ Rendre visible</button>
+    </div>
+  </section>
+
+  <section class="section panel" id="panelCancelled" style="display:none;">
+    <div class="panel-head">
+      <div>
+        <h2 class="panel-title">👩 Double Dames</h2>
+        <p class="panel-text">
+          Tournoi annulé en raison d’un nombre d’équipes insuffisant.
+        </p>
+      </div>
+      <div class="panel-tag">Annulé</div>
+    </div>
+
+    <div class="status-box">
+      Aucun tirage à effectuer pour le tableau Double Dames.
+    </div>
+  </section>
+
+  <section class="section panel" id="adminUI" style="display:none;">
+    <div class="panel-head">
+      <div>
+        <h2 class="panel-title">🎛️ Commandes</h2>
+        <p class="panel-text" id="status">Chargement…</p>
+      </div>
+      <div class="panel-tag">DM</div>
+    </div>
+
+    <div class="grid three">
+      <button class="btn primary" id="btnLoad" type="button">🔄 Charger équipes</button>
+      <button class="btn green" id="btnStart" type="button">▶️ Lancer</button>
+      <button class="btn" id="btnNext" type="button">🎰 Tirage suivant</button>
+      <button class="btn primary" id="btnValidate" type="button">✅ Valider</button>
+      <button class="btn danger" id="btnReset" type="button">🧨 Réinitialiser</button>
+      <a class="btn" id="btnPublic" href="../public/tirage.html?adminPreview=1">👀 Vue publique</a>
+    </div>
+
+    <div class="status-box" id="ruleText">
+      Règle : deux poules A et B. TS1 en Poule A, TS2 en Poule B.
+    </div>
+  </section>
+
+  <section class="section panel" id="panelDraw" style="display:none;">
+    <div class="panel-head">
+      <div>
+        <h2 class="panel-title">📌 Aperçu du tirage</h2>
+        <p class="panel-text" id="drawInfo">—</p>
+      </div>
+      <div class="panel-tag">Direct</div>
+    </div>
+
+    <div>
+      <div style="font-weight:1000;margin-bottom:8px;">🎰 Roulette admin</div>
+      <div class="roulette-wheel" id="wheel">—</div>
+      <div class="muted" id="wheelSub" style="margin-top:8px;">—</div>
+    </div>
+
+    <div style="margin-top:16px;">
+      <div style="font-weight:1000;margin-bottom:8px;">🏖️ Poules</div>
+
+      <div class="pool-grid">
+        <div class="pool-card">
+          <div class="pool-title">Poule A</div>
+          <div id="drawPoolAList" class="pool-list"></div>
+        </div>
+
+        <div class="pool-card">
+          <div class="pool-title">Poule B</div>
+          <div id="drawPoolBList" class="pool-list"></div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:16px;">
+      <div style="font-weight:1000;margin-bottom:8px;">📥 Urne / restant à tirer</div>
+      <div id="remainingList" class="item-list"></div>
+    </div>
+
+    <div style="margin-top:16px;">
+      <div style="font-weight:1000;margin-bottom:8px;">📌 Déjà révélés</div>
+      <div id="revealedList" class="item-list"></div>
+    </div>
+  </section>
+
+</main>
+
+<script type="module" src="../assets/js/admin-header.js"></script>
+
+<script type="module">
+  import { auth, db } from "../assets/js/firebase.js";
+  import { getRoleByUid } from "../assets/js/session.js";
+
+  import {
+    onAuthStateChanged
+  } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+
+  import {
+    collection,
+    getDocs,
+    query,
+    orderBy,
+    doc,
+    getDoc,
+    setDoc,
+    updateDoc,
+    onSnapshot,
+    serverTimestamp
+  } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
+  const EVENT_ID = "tsck-open-juin-2026";
+
+  const EPREUVE_LABELS = {
+    DM:"Double Messieurs",
+    DD:"Double Dames"
+  };
+
+  const accessDenied = document.getElementById("accessDenied");
+  const pageContent = document.getElementById("pageContent");
+  const panelVisibility = document.getElementById("panelVisibility");
+  const panelCancelled = document.getElementById("panelCancelled");
+  const adminUI = document.getElementById("adminUI");
+  const panelDraw = document.getElementById("panelDraw");
+
+  const zoneLabel = document.getElementById("zoneLabel");
+  const visibilityText = document.getElementById("visibilityText");
+  const statusEl = document.getElementById("status");
+  const drawInfo = document.getElementById("drawInfo");
+
+  const btnPublicHide = document.getElementById("btnPublicHide");
+  const btnPublicShow = document.getElementById("btnPublicShow");
+
+  const btnLoad = document.getElementById("btnLoad");
+  const btnStart = document.getElementById("btnStart");
+  const btnNext = document.getElementById("btnNext");
+  const btnValidate = document.getElementById("btnValidate");
+  const btnReset = document.getElementById("btnReset");
+
+  const wheel = document.getElementById("wheel");
+  const wheelSub = document.getElementById("wheelSub");
+
+  const drawPoolAList = document.getElementById("drawPoolAList");
+  const drawPoolBList = document.getElementById("drawPoolBList");
+  const remainingList = document.getElementById("remainingList");
+  const revealedList = document.getElementById("revealedList");
+
+  let currentEpreuve = "DM";
+  let cachedTeams = [];
+  let currentDraw = null;
+  let unsubDraw = null;
+  let unsubVisibility = null;
+  let isAdminReady = false;
+
+  function esc(s){
+    return (s ?? "").toString()
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;");
+  }
+
+  function toNum(v){
+    if(v === null || v === undefined || v === "") return null;
+    const n = typeof v === "number" ? v : Number(String(v).replace(",", ".").trim());
+    return Number.isFinite(n) ? n : null;
+  }
+
+  function teamRank(t){
+    const a = toNum(t.p1Rank);
+    const b = toNum(t.p2Rank);
+    if(a === null || b === null) return Number.POSITIVE_INFINITY;
+    return a + b;
+  }
+
+  function zoneKey(){
+    return `Seniors_${currentEpreuve}`;
+  }
+
+  function zoneText(){
+    return EPREUVE_LABELS[currentEpreuve] || currentEpreuve;
+  }
+
+  function drawRef(){
+    return doc(db, "events", EVENT_ID, "tirages", zoneKey());
+  }
+
+  function visibilityRef(){
+    return doc(db, "events", EVENT_ID, "config", "tirage");
+  }
+
+  function equipesCol(){
+    return collection(db, "events", EVENT_ID, "equipes");
+  }
+
+  function randomShuffle(arr){
+    const a = arr.slice();
+
+    const rand = (n) => {
+      const u = new Uint32Array(1);
+      crypto.getRandomValues(u);
+      return u[0] % n;
+    };
+
+    for(let i = a.length - 1; i > 0; i--){
+      const j = rand(i + 1);
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+
+    return a;
+  }
+
+  function teamNameOnly(t){
+    return t?.teamName || "Équipe";
+  }
+
+  function teamLabel(t){
+    if(!t) return "—";
+    return `${t.teamName || "Équipe"} (${t.joueur1FirstName || "?"} / ${t.joueur2FirstName || "?"})`;
+  }
+
+  function poolSizes(){
+    const total = cachedTeams.length;
+    return {
+      A: Math.ceil(total / 2),
+      B: Math.floor(total / 2)
+    };
+  }
+
+  async function fetchTeams(){
+    const snap = await getDocs(query(equipesCol(), orderBy("createdAt", "asc")));
+    const rows = [];
+
+    snap.forEach(d => {
+      const x = d.data() || {};
+
+      if(String(x.epreuve || "").trim() !== currentEpreuve) return;
+      if(x.stby === true) return;
+      if(x.list === "wait") return;
+
+      rows.push({
+        id:d.id,
+        createdAtMs:x.createdAt?.toMillis ? x.createdAt.toMillis() : 0,
+        teamName:x.teamName || "",
+        joueur1FirstName:x.joueur1FirstName || x.p1FirstName || x.joueur1?.firstName || "",
+        joueur2FirstName:x.joueur2FirstName || x.p2FirstName || x.joueur2?.firstName || "",
+        p1Rank:x.p1Rank ?? x.joueur1Rank ?? x.joueur1?.rank ?? null,
+        p2Rank:x.p2Rank ?? x.joueur2Rank ?? x.joueur2?.rank ?? null
+      });
+    });
+
+    rows.sort((a,b) => {
+      const ar = teamRank(a);
+      const br = teamRank(b);
+      if(ar !== br) return ar - br;
+      return (a.createdAtMs || 0) - (b.createdAtMs || 0);
+    });
+
+    return rows;
+  }
+
+  function parseToken(token){
+    const s = String(token || "");
+    if(s.startsWith("A:")) return { pool:"A", id:s.slice(2) };
+    if(s.startsWith("B:")) return { pool:"B", id:s.slice(2) };
+    return { pool:null, id:s };
+  }
+
+  function findTeam(id){
+    return cachedTeams.find(t => t.id === id) || null;
+  }
+
+  function remainingTokens(){
+    const order = Array.isArray(currentDraw?.order) ? currentDraw.order : [];
+    const revealed = Number(currentDraw?.revealed || 0);
+    return order.slice(revealed);
+  }
+
+  function revealedTokens(){
+    const order = Array.isArray(currentDraw?.order) ? currentDraw.order : [];
+    const revealed = Number(currentDraw?.revealed || 0);
+    return order.slice(0, revealed);
+  }
+
+  function tokenLabel(token){
+    const p = parseToken(token);
+    const team = findTeam(p.id);
+    const dest = p.pool === "A" ? "Poule A" : "Poule B";
+    return `${dest} → ${teamLabel(team)}`;
+  }
+
+  function buildDrawState(){
+    const seed1 = currentDraw?.seed1 || cachedTeams[0] || null;
+    const seed2 = currentDraw?.seed2 || cachedTeams[1] || null;
+
+    const state = {
+      seed1,
+      seed2,
+      poolA: seed1 ? [seed1] : [],
+      poolB: seed2 ? [seed2] : []
+    };
+
+    for(const token of revealedTokens()){
+      const p = parseToken(token);
+      const team = findTeam(p.id);
+      if(!team) continue;
+
+      if(p.pool === "A" && !state.poolA.some(t => t.id === team.id)){
+        state.poolA.push(team);
+      }
+
+      if(p.pool === "B" && !state.poolB.some(t => t.id === team.id)){
+        state.poolB.push(team);
+      }
+    }
+
+    return state;
+  }
+
+  function teamHtml(t, opts = {}){
+    const cls = opts.seed ? "pool-slot seed" : "pool-slot";
+    const suffix = opts.seedLabel ? ` — ${esc(opts.seedLabel)}` : "";
+    return `<div class="${cls}">${esc(teamNameOnly(t))}${suffix}</div>`;
+  }
+
+  function emptyHtml(text = "—"){
+    return `<div class="pool-slot empty">${esc(text)}</div>`;
+  }
+
+  function itemCardHtml(text, badge){
+    return `
+      <div class="item-card">
+        <div style="min-width:0;"><b>${esc(text)}</b></div>
+        <span class="pill">${esc(badge)}</span>
+      </div>
+    `;
+  }
+
+  function updateZoneDisplay(){
+    zoneLabel.textContent = zoneText();
+  }
+
+  function renderCurrent(){
+    updateZoneDisplay();
+
+    if(currentEpreuve === "DD"){
+      panelCancelled.style.display = "block";
+      adminUI.style.display = "none";
+      panelDraw.style.display = "none";
+      return;
+    }
+
+    panelCancelled.style.display = "none";
+    adminUI.style.display = "block";
+    panelDraw.style.display = "block";
+    renderDraw();
+  }
+
+  function renderDraw(){
+    const size = poolSizes();
+    const state = buildDrawState();
+
+    if(!currentDraw){
+      statusEl.textContent = "ℹ️ Aucun tirage préparé. Clique sur “Charger équipes”.";
+      drawInfo.textContent = "—";
+      wheel.textContent = "—";
+      wheelSub.textContent = "—";
+      drawPoolAList.innerHTML = emptyHtml("En attente");
+      drawPoolBList.innerHTML = emptyHtml("En attente");
+      remainingList.innerHTML = `<p class="muted" style="margin:0;">—</p>`;
+      revealedList.innerHTML = `<p class="muted" style="margin:0;">—</p>`;
+      setDrawButtons();
+      return;
+    }
+
+    if(currentDraw.status === "running"){
+      statusEl.textContent = "▶️ Tirage en cours.";
+    }else if(currentDraw.status === "pending_validation"){
+      statusEl.textContent = "🏁 Tirage terminé — en attente de validation.";
+    }else if(currentDraw.status === "validated"){
+      statusEl.textContent = "✅ Tirage validé.";
+    }else{
+      statusEl.textContent = "✅ Tirage prêt.";
+    }
+
+    drawPoolAList.innerHTML = Array.from({ length:size.A }, (_, i) => {
+      return state.poolA[i]
+        ? teamHtml(state.poolA[i], i === 0 ? { seed:true, seedLabel:"TS1" } : {})
+        : emptyHtml(`Place ${i + 1} en attente`);
+    }).join("");
+
+    drawPoolBList.innerHTML = Array.from({ length:size.B }, (_, i) => {
+      return state.poolB[i]
+        ? teamHtml(state.poolB[i], i === 0 ? { seed:true, seedLabel:"TS2" } : {})
+        : emptyHtml(`Place ${i + 1} en attente`);
+    }).join("");
+
+    const remaining = remainingTokens();
+    const revealed = revealedTokens();
+
+    remainingList.innerHTML = remaining.length
+      ? remaining.map(tok => itemCardHtml(tokenLabel(tok), "urne")).join("")
+      : `<p class="muted" style="margin:0;">Aucune équipe restante.</p>`;
+
+    revealedList.innerHTML = revealed.length
+      ? revealed.map((tok, i) => itemCardHtml(`#${i + 1} — ${tokenLabel(tok)}`, "tiré")).join("")
+      : `<p class="muted" style="margin:0;">Aucun tirage révélé.</p>`;
+
+    const placed = state.poolA.length + state.poolB.length;
+    drawInfo.textContent = `${placed}/${cachedTeams.length} équipe(s) placée(s).`;
+
+    setDrawButtons();
+  }
+
+  function setDrawButtons(){
+    const status = currentDraw?.status || "idle";
+    const ready = Array.isArray(currentDraw?.order);
+    const total = Array.isArray(currentDraw?.order) ? currentDraw.order.length : 0;
+    const revealed = Number(currentDraw?.revealed || 0);
+
+    btnLoad.disabled = false;
+    btnStart.disabled = !ready || status === "running" || status === "pending_validation" || status === "validated";
+    btnNext.disabled = !(status === "running") || revealed >= total;
+    btnValidate.disabled = !(status === "pending_validation");
+    btnReset.disabled = false;
+  }
+
+  async function prepareDraw(){
+    cachedTeams = await fetchTeams();
+
+    if(currentEpreuve !== "DM"){
+      renderCurrent();
+      return;
+    }
+
+    if(cachedTeams.length < 3){
+      throw new Error(`Il faut au moins 3 équipes pour faire deux poules. Actuellement : ${cachedTeams.length}.`);
+    }
+
+    const seed1 = cachedTeams[0] || null;
+    const seed2 = cachedTeams[1] || null;
+    const others = randomShuffle(cachedTeams.slice(2));
+
+    const size = poolSizes();
+    const order = [];
+
+    let countA = 1;
+    let countB = 1;
+
+    for(const team of others){
+      if(countA < size.A && (countA <= countB || countB >= size.B)){
+        order.push(`A:${team.id}`);
+        countA++;
+      }else{
+        order.push(`B:${team.id}`);
+        countB++;
+      }
+    }
+
+    await setDoc(drawRef(), {
+      eventId:EVENT_ID,
+      categorie:"Seniors",
+      epreuve:currentEpreuve,
+      key:zoneKey(),
+      status:"idle",
+      mode:"draw",
+      seed1,
+      seed2,
+      teams:cachedTeams,
+      order,
+      revealed:0,
+      revealedAtMs:[],
+      createdAt:serverTimestamp(),
+      updatedAt:serverTimestamp(),
+      validatedAt:null,
+      updatedBy:auth.currentUser?.uid || null
+    }, { merge:true });
+
+    wheel.textContent = "—";
+    wheelSub.textContent = "Tirage préparé.";
+  }
+
+  async function startDraw(){
+    const snap = await getDoc(drawRef());
+    const d = snap.exists() ? (snap.data() || {}) : null;
+
+    if(!d || !Array.isArray(d.order)){
+      alert("Prépare d’abord le tirage avec “Charger équipes”.");
+      return;
+    }
+
+    await updateDoc(drawRef(), {
+      status:"running",
+      revealed:0,
+      revealedAtMs:[],
+      validatedAt:null,
+      updatedAt:serverTimestamp(),
+      updatedBy:auth.currentUser?.uid || null
+    });
+
+    wheel.textContent = "—";
+    wheelSub.textContent = "Tirage lancé.";
+  }
+
+  async function rouletteSpin(finalText, durationMs = 1200){
+    const start = Date.now();
+    const fake = ["🎾", "🌪️", "🔥", "🍀", "⚡️", "🎲", "🏖️"];
+
+    wheelSub.textContent = "La roulette tourne…";
+
+    return new Promise(resolve => {
+      const tick = () => {
+        const elapsed = Date.now() - start;
+
+        if(elapsed >= durationMs){
+          wheel.textContent = finalText;
+          wheelSub.textContent = "✅ Révélé";
+          resolve();
+          return;
+        }
+
+        wheel.textContent =
+          fake[Math.floor(Math.random() * fake.length)] + " " +
+          fake[Math.floor(Math.random() * fake.length)];
+
+        requestAnimationFrame(tick);
+      };
+
+      tick();
+    });
+  }
+
+  async function nextPick(){
+    if(!currentDraw || currentDraw.status !== "running"){
+      alert("Le tirage n’est pas en cours.");
+      return;
+    }
+
+    const order = Array.isArray(currentDraw.order) ? currentDraw.order : [];
+    const revealed = Number(currentDraw.revealed || 0);
+
+    if(revealed >= order.length){
+      alert("Tout a déjà été tiré.");
+      return;
+    }
+
+    const token = order[revealed];
+
+    await rouletteSpin(tokenLabel(token), 1200);
+
+    const newRevealed = revealed + 1;
+    const revealedAtMs = Array.isArray(currentDraw.revealedAtMs)
+      ? currentDraw.revealedAtMs.slice()
+      : [];
+
+    revealedAtMs.push(Date.now());
+
+    await updateDoc(drawRef(), {
+      revealed:newRevealed,
+      revealedAtMs,
+      updatedAt:serverTimestamp(),
+      updatedBy:auth.currentUser?.uid || null
+    });
+
+    if(newRevealed >= order.length){
+      await updateDoc(drawRef(), {
+        status:"pending_validation",
+        updatedAt:serverTimestamp(),
+        updatedBy:auth.currentUser?.uid || null
+      });
+    }
+  }
+
+  async function validateDraw(){
+    const ok = confirm("Valider le tirage Double Messieurs ?");
+    if(!ok) return;
+
+    await updateDoc(drawRef(), {
+      status:"validated",
+      validatedAt:serverTimestamp(),
+      updatedAt:serverTimestamp(),
+      updatedBy:auth.currentUser?.uid || null
+    });
+  }
+
+  async function resetDraw(){
+    const ok = confirm("⚠️ Réinitialiser le tirage Double Messieurs ?");
+    if(!ok) return;
+
+    const typed = prompt("Tape exactement : RESET");
+    if(typed !== "RESET"){
+      alert("Annulé.");
+      return;
+    }
+
+    await setDoc(drawRef(), {
+      eventId:EVENT_ID,
+      categorie:"Seniors",
+      epreuve:currentEpreuve,
+      key:zoneKey(),
+      status:"idle",
+      mode:"draw",
+      seed1:null,
+      seed2:null,
+      teams:[],
+      order:[],
+      revealed:0,
+      revealedAtMs:[],
+      updatedAt:serverTimestamp(),
+      validatedAt:null,
+      updatedBy:auth.currentUser?.uid || null
+    }, { merge:true });
+
+    wheel.textContent = "—";
+    wheelSub.textContent = "Réinitialisé.";
+  }
+
+  async function setPublicVisible(value){
+    await setDoc(visibilityRef(), {
+      publicVisible:value === true,
+      updatedAt:serverTimestamp(),
+      updatedBy:auth.currentUser?.uid || null
+    }, { merge:true });
+  }
+
+  function startVisibilityListener(){
+    if(unsubVisibility){
+      unsubVisibility();
+      unsubVisibility = null;
+    }
+
+    unsubVisibility = onSnapshot(visibilityRef(), (snap) => {
+      const data = snap.exists() ? (snap.data() || {}) : {};
+      const visible = data.publicVisible === true;
+
+      visibilityText.innerHTML = visible
+        ? "Statut actuel : <strong>visible publiquement ✅</strong>"
+        : "Statut actuel : <strong>maintenance / masqué 🔒</strong>";
+
+      btnPublicShow.classList.toggle("is-active", visible);
+      btnPublicHide.classList.toggle("is-active", !visible);
+    });
+  }
+
+  function stopListeners(){
+    if(unsubDraw){
+      unsubDraw();
+      unsubDraw = null;
+    }
+
+    if(unsubVisibility){
+      unsubVisibility();
+      unsubVisibility = null;
+    }
+  }
+
+  function startDrawListener(){
+    if(unsubDraw){
+      unsubDraw();
+      unsubDraw = null;
+    }
+
+    currentDraw = null;
+    cachedTeams = [];
+
+    if(currentEpreuve === "DD"){
+      renderCurrent();
+      return;
+    }
+
+    unsubDraw = onSnapshot(drawRef(), async (snap) => {
+      currentDraw = snap.exists() ? (snap.data() || {}) : null;
+      cachedTeams = await fetchTeams();
+      renderCurrent();
+    }, (error) => {
+      console.error(error);
+      statusEl.textContent = "❌ Impossible de charger le tirage.";
+    });
+  }
+
+  async function changeZone(epreuve){
+    currentEpreuve = epreuve || currentEpreuve;
+    wheel.textContent = "—";
+    wheelSub.textContent = "—";
+
+    if(isAdminReady){
+      startDrawListener();
+    }
+  }
+
+  document.addEventListener("adminZoneChange", async (event) => {
+    const detail = event.detail || {};
+    if(!detail.epreuve) return;
+    await changeZone(detail.epreuve);
+  });
+
+  btnPublicHide.onclick = async () => {
+    await setPublicVisible(false);
+  };
+
+  btnPublicShow.onclick = async () => {
+    await setPublicVisible(true);
+  };
+
+  btnLoad.onclick = async () => {
+    btnLoad.disabled = true;
+    statusEl.textContent = "Chargement des équipes…";
+
+    try{
+      await prepareDraw();
+      startDrawListener();
+    }catch(error){
+      console.error(error);
+      alert("Erreur ❌\n\n" + (error?.message || "Impossible de préparer le tirage."));
+    }finally{
+      btnLoad.disabled = false;
+    }
+  };
+
+  btnStart.onclick = async () => {
+    try{
+      await startDraw();
+    }catch(error){
+      console.error(error);
+      alert("Erreur ❌");
+    }
+  };
+
+  btnNext.onclick = async () => {
+    try{
+      await nextPick();
+    }catch(error){
+      console.error(error);
+      alert("Erreur ❌");
+    }
+  };
+
+  btnValidate.onclick = async () => {
+    try{
+      await validateDraw();
+    }catch(error){
+      console.error(error);
+      alert("Erreur ❌");
+    }
+  };
+
+  btnReset.onclick = async () => {
+    try{
+      await resetDraw();
+    }catch(error){
+      console.error(error);
+      alert("Erreur ❌");
+    }
+  };
+
+  function showDenied(){
+    accessDenied.style.display = "block";
+    pageContent.style.display = "none";
+    panelVisibility.style.display = "none";
+    panelCancelled.style.display = "none";
+    adminUI.style.display = "none";
+    panelDraw.style.display = "none";
+    stopListeners();
+  }
+
+  function showAdmin(){
+    accessDenied.style.display = "none";
+    pageContent.style.display = "block";
+    panelVisibility.style.display = "block";
+    startVisibilityListener();
+    startDrawListener();
+  }
+
+  onAuthStateChanged(auth, async (user) => {
+    stopListeners();
+
+    accessDenied.style.display = "none";
+    pageContent.style.display = "none";
+    panelVisibility.style.display = "none";
+    panelCancelled.style.display = "none";
+    adminUI.style.display = "none";
+    panelDraw.style.display = "none";
+
+    if(!user){
+      showDenied();
+      return;
+    }
+
+    try{
+      const role = await getRoleByUid(user.uid);
+
+      if(role !== "admin"){
+        showDenied();
+        return;
+      }
+
+      try{
+        const savedEpreuve = localStorage.getItem("tsck_admin_epreuve");
+        if(["DM","DD"].includes(savedEpreuve)) currentEpreuve = savedEpreuve;
+      }catch(error){}
+
+      isAdminReady = true;
+      showAdmin();
+
+    }catch(error){
+      console.error(error);
+      showDenied();
+    }
+  });
+</script>
+
+</body>
+</html>
