@@ -392,7 +392,7 @@
     </div>
 
     <div style="margin-top:16px;">
-      <div style="font-weight:1000;margin-bottom:8px;">📥 Urne / restant à tirer</div>
+      <div style="font-weight:1000;margin-bottom:8px;">📥 Urne</div>
       <div id="remainingList" class="item-list"></div>
     </div>
 
@@ -716,7 +716,7 @@
     const revealed = revealedTokens();
 
     remainingList.innerHTML = remaining.length
-      ? remaining.map(tok => itemCardHtml(tokenLabel(tok), "urne")).join("")
+      ? `<p class="muted" style="margin:0;">🎲 ${remaining.length} équipe${remaining.length > 1 ? "s" : ""} encore dans l’urne — noms masqués.</p>`
       : `<p class="muted" style="margin:0;">Aucune équipe restante.</p>`;
 
     revealedList.innerHTML = revealed.length
