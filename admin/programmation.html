@@ -135,12 +135,6 @@
       box-shadow:0 10px 22px rgba(255,210,31,.22);
     }
 
-    .btn.green{
-      background:linear-gradient(135deg,var(--palm),var(--palm-light));
-      color:#fff;
-      border-color:var(--palm);
-    }
-
     .btn.danger{
       background:#fff5f5;
       color:#8a1f1f;
@@ -284,10 +278,6 @@
       }
 
       .panel-title{font-size:24px;}
-
-      .panel-head{
-        align-items:flex-start;
-      }
     }
   </style>
 </head>
@@ -351,7 +341,7 @@
     </div>
 
     <div class="status-box">
-      Les matchs de poule sont créés depuis les poules du tirage. Les phases finales se résolvent automatiquement avec les résultats.
+      Les matchs de poule sont créés depuis les poules du tirage. Une équipe ne peut pas jouer deux matchs sur le même créneau.
     </div>
   </section>
 
@@ -367,7 +357,7 @@
     <div id="adminList"></div>
 
     <p class="muted" style="margin-top:12px;">
-      🕒 modifie l’heure. 🟡/🔴 change le terrain. ↑ ↓ échangent l’ordre.
+      🕒 modifie l’heure. Terrain change le terrain. ↑ ↓ échangent l’ordre.
     </p>
   </section>
 
@@ -390,7 +380,6 @@
     updateDoc,
     deleteDoc,
     onSnapshot,
-    collection,
     serverTimestamp
   } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
@@ -450,10 +439,6 @@
     return doc(db, "events", EVENT_ID, "tirages", "Seniors_DM");
   }
 
-  function resultsCollection(){
-    return collection(db, "events", EVENT_ID, "resultats", "general", "matches");
-  }
-
   function timeForOrder(order){
     return ORDER_TIMES[Number(order)] || "À confirmer";
   }
@@ -467,12 +452,6 @@
 
   function teamTitle(t){
     return t?.teamName || t?.title || "Équipe";
-  }
-
-  function teamSub(t){
-    const a = t?.joueur1FirstName || t?.p1FirstName || "";
-    const b = t?.joueur2FirstName || t?.p2FirstName || "";
-    return [a,b].filter(Boolean).join(" / ");
   }
 
   function makeTeamRef(team){
@@ -629,38 +608,42 @@
       "Séance ludique et accessible à tous les âges."
     ));
 
-    const poolMatches = [
-      ...orderedPoolMatches("A", poolA),
-      ...orderedPoolMatches("B", poolB)
-    ];
+    const poolAMatches = orderedPoolMatches("A", poolA);
+    const poolBMatches = orderedPoolMatches("B", poolB);
 
-    const slots = [
-      { order:2, court:"A" },
-      { order:2, court:"B" },
-      { order:3, court:"A" },
-      { order:3, court:"B" },
-      { order:4, court:"A" },
-      { order:4, court:"B" },
-      { order:5, court:"A" },
-      { order:5, court:"B" },
-      { order:7, court:"A" },
-      { order:7, court:"B" }
-    ];
+    const poolOrders = [2, 3, 4, 5, 7, 8];
 
-    poolMatches.forEach((m, index) => {
-      const slot = slots[index] || { order:7 + index, court:index % 2 === 0 ? "A" : "B" };
+    for(let i = 0; i < Math.max(poolAMatches.length, poolBMatches.length); i++){
+      const order = poolOrders[i] || (8 + i);
 
-      matches.push(makeMatch(
-        m.id,
-        slot.order,
-        slot.court,
-        makeTeamRef(m.a),
-        makeTeamRef(m.b),
-        teamTitle(m.a),
-        teamTitle(m.b),
-        `Poule ${m.pool}`
-      ));
-    });
+      const matchA = poolAMatches[i];
+      if(matchA){
+        matches.push(makeMatch(
+          matchA.id,
+          order,
+          "A",
+          makeTeamRef(matchA.a),
+          makeTeamRef(matchA.b),
+          teamTitle(matchA.a),
+          teamTitle(matchA.b),
+          "Poule A"
+        ));
+      }
+
+      const matchB = poolBMatches[i];
+      if(matchB){
+        matches.push(makeMatch(
+          matchB.id,
+          order,
+          "B",
+          makeTeamRef(matchB.a),
+          makeTeamRef(matchB.b),
+          teamTitle(matchB.a),
+          teamTitle(matchB.b),
+          "Poule B"
+        ));
+      }
+    }
 
     matches.push(makeAnimation(
       "ANIM_TECHNIQUE",
@@ -672,7 +655,7 @@
 
     matches.push(makeMatch(
       "MEN_QF1",
-      8,
+      9,
       "A",
       makePoolRank("A", 2),
       makePoolRank("B", 3),
@@ -683,7 +666,7 @@
 
     matches.push(makeMatch(
       "MEN_QF2",
-      8,
+      9,
       "B",
       makePoolRank("B", 2),
       makePoolRank("A", 3),
@@ -694,7 +677,7 @@
 
     matches.push(makeMatch(
       "MEN_SF1",
-      9,
+      10,
       "A",
       makePoolRank("A", 1),
       makeWinner("MEN_QF2"),
@@ -705,7 +688,7 @@
 
     matches.push(makeMatch(
       "MEN_SF2",
-      9,
+      10,
       "B",
       makePoolRank("B", 1),
       makeWinner("MEN_QF1"),
@@ -716,7 +699,7 @@
 
     matches.push(makeMatch(
       "MEN_5_6",
-      10,
+      11,
       "A",
       makeLoser("MEN_QF1"),
       makeLoser("MEN_QF2"),
@@ -727,7 +710,7 @@
 
     matches.push(makeMatch(
       "MEN_3_4",
-      10,
+      11,
       "B",
       makeLoser("MEN_SF1"),
       makeLoser("MEN_SF2"),
@@ -738,7 +721,7 @@
 
     matches.push(makeMatch(
       "MEN_FINAL",
-      11,
+      12,
       "A",
       makeWinner("MEN_SF1"),
       makeWinner("MEN_SF2"),
