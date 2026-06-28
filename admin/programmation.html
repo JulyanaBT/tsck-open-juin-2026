@@ -3,20 +3,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Admin — Programmation — Open Beach Tennis TSCK</title>
+  <title>Admin — Résultats — Open Beach Tennis TSCK</title>
 
   <style>
     :root{
-      --palm:#0b7a3b;
-      --palm-dark:#064d28;
-      --palm-light:#15a658;
-      --navy:#06284a;
-      --navy-dark:#03172b;
-      --sun:#ffd21f;
-      --sun-dark:#f3b800;
-      --text:#17212b;
-      --muted:#667085;
-      --card:rgba(255,255,255,.95);
+      --palm:#0b7a3b; --palm-dark:#064d28; --palm-light:#15a658;
+      --navy:#06284a; --navy-dark:#03172b;
+      --sun:#ffd21f; --sun-dark:#f3b800;
+      --text:#17212b; --muted:#667085; --card:rgba(255,255,255,.95);
       --shadow:0 16px 40px rgba(16,24,40,.12);
       --container:1180px;
     }
@@ -34,18 +28,8 @@
         linear-gradient(180deg,#eaf9ff 0%,#fff4d4 52%,#fff 100%);
     }
 
-    a{color:inherit;text-decoration:none;}
-
-    .container{
-      width:min(var(--container), calc(100% - 28px));
-      margin:0 auto;
-    }
-
-    main{
-      padding-top:calc(var(--admin-total-top, 230px) + 34px);
-      padding-bottom:42px;
-    }
-
+    .container{width:min(var(--container), calc(100% - 28px));margin:0 auto;}
+    main{padding-top:calc(var(--admin-total-top, 230px) + 34px);padding-bottom:42px;}
     .section{margin-top:18px;}
 
     .panel{
@@ -102,13 +86,32 @@
       line-height:1.5;
     }
 
-    .status-box strong{color:var(--navy-dark);}
-
-    .grid{
-      display:grid;
-      grid-template-columns:1fr;
-      gap:10px;
+    .warn-box{
+      margin-top:12px;
+      padding:12px 14px;
+      border-radius:16px;
+      background:#fff7e6;
+      border:1px solid #ffd37a;
+      color:#9a5b00;
+      font-size:13px;
+      font-weight:900;
+      line-height:1.45;
     }
+
+    .ok-box{
+      margin-top:12px;
+      padding:12px 14px;
+      border-radius:16px;
+      background:#ecfdf5;
+      border:1px solid rgba(16,185,129,.28);
+      color:#064e3b;
+      font-size:13px;
+      font-weight:900;
+      line-height:1.45;
+    }
+
+    .grid{display:grid;gap:10px;}
+    .grid.two{grid-template-columns:1fr 1fr;}
 
     .btn{
       appearance:none;
@@ -123,7 +126,6 @@
       color:var(--navy-dark);
       text-align:center;
       box-shadow:0 6px 14px rgba(16,24,40,.05);
-      white-space:nowrap;
       font-family:inherit;
     }
 
@@ -132,7 +134,12 @@
       background:linear-gradient(180deg,var(--sun),var(--sun-dark));
       color:var(--navy-dark);
       border-color:var(--sun-dark);
-      box-shadow:0 10px 22px rgba(255,210,31,.22);
+    }
+
+    .btn.green{
+      background:linear-gradient(135deg,var(--palm),var(--palm-light));
+      color:#fff;
+      border-color:var(--palm);
     }
 
     .btn.danger{
@@ -146,138 +153,125 @@
       cursor:not-allowed;
     }
 
-    .match-list{
-      display:grid;
-      gap:12px;
-      margin-top:12px;
-    }
+    .match-list{display:grid;gap:14px;margin-top:12px;}
 
     .match-card{
-      border-radius:18px;
+      border-radius:20px;
       border:1px solid rgba(16,24,40,.08);
-      padding:13px;
+      padding:14px;
       background:#fff;
       box-shadow:0 8px 18px rgba(16,24,40,.06);
     }
 
-    .match-card.courtA{
-      background:#fff8dd;
-      border-color:rgba(255,196,0,.35);
-    }
-
-    .match-card.courtB{
-      background:#ffeef2;
-      border-color:rgba(255,0,60,.20);
-    }
-
-    .match-card.animation{
-      background:#e6f7ee;
-      border-color:rgba(11,122,59,.22);
-    }
+    .match-card.courtA{background:#fff8dd;border-color:rgba(255,196,0,.35);}
+    .match-card.courtB{background:#ffeef2;border-color:rgba(255,0,60,.20);}
 
     .match-head{
       display:flex;
       align-items:center;
       gap:8px;
       flex-wrap:wrap;
-      margin-bottom:10px;
+      margin-bottom:12px;
     }
 
-    .m-order{
+    .m-slot,.m-time,.m-label{
       font-size:12px;
+      font-weight:1000;
+      padding:5px 9px;
+      border-radius:999px;
+      background:#f8fafc;
+      color:#344054;
+    }
+
+    .m-label{background:#e6f7ee;color:var(--palm-dark);}
+
+    .score-grid{
+      display:grid;
+      grid-template-columns:minmax(0,1fr) 52px 52px 52px;
+      gap:8px;
+      align-items:center;
+    }
+
+    .hdr{
+      font-size:11px;
       font-weight:1000;
       color:#667085;
+      text-align:center;
     }
 
-    .m-time{
-      font-size:14px;
-      font-weight:1000;
-      color:var(--navy-dark);
-    }
-
-    .m-court{
-      flex:1;
-      min-width:0;
-      font-size:13px;
-      font-style:italic;
-      color:#475467;
-    }
-
-    .m-label{
-      padding:5px 10px;
-      border-radius:999px;
-      background:#f4f8ff;
-      color:var(--palm-dark);
-      border:1px solid rgba(11,122,59,.12);
-      font-size:12px;
-      font-weight:1000;
-    }
-
-    .team-row{margin-top:8px;}
-
-    .team-name{
-      font-size:16px;
+    .team-title{
+      font-size:15px;
       font-weight:1000;
       line-height:1.15;
-      color:#17212b;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
     }
 
-    .team-name.placeholder{
-      color:#667085;
-      font-style:italic;
-    }
+    .placeholder{color:#667085;font-style:italic;}
 
-    .team-sub{
-      margin-top:3px;
-      font-size:13px;
-      color:#475467;
-      font-weight:800;
-    }
-
-    .vs-line{
-      margin:8px 0 4px;
+    .sc{
+      width:52px;
+      height:42px;
+      border-radius:12px;
+      border:1px solid rgba(16,24,40,.14);
       text-align:center;
       font-weight:1000;
-      letter-spacing:2px;
-      opacity:.55;
-      font-size:12px;
+      font-size:15px;
+      outline:none;
+      background:#fff;
     }
 
     .actions{
+      margin-top:14px;
       display:flex;
-      gap:6px;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
       flex-wrap:wrap;
-      justify-content:flex-end;
-      margin-top:12px;
     }
 
-    .btnx{
-      padding:8px 10px;
-      border-radius:999px;
-      border:1px solid #ddd;
-      background:#fff;
-      cursor:pointer;
+    .winner{
+      font-size:13px;
       font-weight:1000;
+      color:#475467;
     }
 
-    .muted{
-      color:var(--muted);
-      font-size:14px;
-      line-height:1.45;
+    .winner.ok{color:#087a35;}
+
+    .standings{
+      margin-top:14px;
+      border-radius:16px;
+      background:#fff;
+      border:1px solid rgba(16,24,40,.08);
+      overflow:hidden;
     }
+
+    .standings-actions{
+      padding:12px;
+      display:grid;
+      gap:8px;
+      background:#fbfdff;
+      border-top:1px solid rgba(16,24,40,.08);
+    }
+
+    table{width:100%;border-collapse:collapse;font-size:13px;}
+    th,td{padding:9px 7px;border-bottom:1px solid rgba(16,24,40,.08);text-align:center;}
+    th:first-child,td:first-child,th:nth-child(2),td:nth-child(2){text-align:left;}
+    th{background:#f8fafc;color:#475467;font-size:12px;text-transform:uppercase;}
+
+    .muted{color:var(--muted);font-size:14px;line-height:1.45;}
 
     @media (min-width:760px){
-      .panel{padding:22px;}
-      .grid.two{grid-template-columns:1fr 1fr;}
-      .grid.three{grid-template-columns:repeat(3,1fr);}
+      .standings-actions{grid-template-columns:1fr 1fr;}
     }
 
     @media (max-width:759px){
-      main{
-        padding-top:calc(var(--admin-total-top, 222px) + 28px);
-      }
-
+      main{padding-top:calc(var(--admin-total-top, 222px) + 28px);}
       .panel-title{font-size:24px;}
+      .grid.two{grid-template-columns:1fr;}
+      .score-grid{grid-template-columns:minmax(0,1fr) 46px 46px 46px;}
+      .sc{width:46px;}
     }
   </style>
 </head>
@@ -296,17 +290,15 @@
   <section class="section panel" id="pageContent" style="display:none;">
     <div class="panel-head">
       <div>
-        <h1 class="panel-title">📅 Programmation</h1>
-        <p class="panel-text">
-          Programmation TSCK : Double Messieurs uniquement, 2 terrains, créneaux de 45 minutes.
-        </p>
+        <h1 class="panel-title">🏆 Résultats</h1>
+        <p class="panel-text">Saisie des scores du tableau Double Messieurs.</p>
       </div>
       <div class="panel-tag">Admin</div>
     </div>
 
     <div class="status-box">
-      Double Dames : <strong>tournoi annulé en raison d’un nombre d’équipes insuffisant.</strong><br>
-      Double Messieurs : programmation générée depuis le tirage validé.
+      Double Dames : <strong>tournoi annulé</strong>.<br>
+      Les classements de poules doivent être validés avant d’alimenter les quarts et demi-finales.
     </div>
   </section>
 
@@ -325,40 +317,16 @@
     </div>
   </section>
 
-  <section class="section panel" id="panelBuild" style="display:none;">
+  <section class="section panel" id="panelResults" style="display:none;">
     <div class="panel-head">
       <div>
-        <h2 class="panel-title">⚙️ Génération</h2>
-        <p class="panel-text" id="buildStatus">Chargement…</p>
+        <h2 class="panel-title">🏁 Saisie des scores</h2>
+        <p class="panel-text" id="statusText">Chargement…</p>
       </div>
-      <div class="panel-tag">Planning</div>
-    </div>
-
-    <div class="grid three">
-      <button class="btn primary" id="btnGenerate" type="button">🌐 Générer la programmation</button>
-      <button class="btn danger" id="btnReset" type="button">🧨 Réinitialiser</button>
-      <a class="btn" href="../public/programmation.html?adminPreview=1">👀 Aperçu public</a>
-    </div>
-
-    <div class="status-box">
-      Les matchs de poule sont créés depuis les poules du tirage. Une équipe ne peut pas jouer deux matchs sur le même créneau.
-    </div>
-  </section>
-
-  <section class="section panel" id="panelSchedule" style="display:none;">
-    <div class="panel-head">
-      <div>
-        <h2 class="panel-title">🗓️ Chronologie</h2>
-        <p class="panel-text" id="schedStatus">—</p>
-      </div>
-      <div class="panel-tag">Direct</div>
+      <div class="panel-tag">Live</div>
     </div>
 
     <div id="adminList"></div>
-
-    <p class="muted" style="margin-top:12px;">
-      🕒 modifie l’heure. Terrain change le terrain. ↑ ↓ échangent l’ordre.
-    </p>
   </section>
 
 </main>
@@ -369,15 +337,12 @@
   import { auth, db } from "../assets/js/firebase.js";
   import { getRoleByUid } from "../assets/js/session.js";
 
-  import {
-    onAuthStateChanged
-  } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+  import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 
   import {
     doc,
-    getDoc,
+    collection,
     setDoc,
-    updateDoc,
     deleteDoc,
     onSnapshot,
     serverTimestamp
@@ -388,591 +353,553 @@
   const accessDenied = document.getElementById("accessDenied");
   const pageContent = document.getElementById("pageContent");
   const panelVisibility = document.getElementById("panelVisibility");
-  const panelBuild = document.getElementById("panelBuild");
-  const panelSchedule = document.getElementById("panelSchedule");
+  const panelResults = document.getElementById("panelResults");
 
   const visibilityText = document.getElementById("visibilityText");
-  const buildStatus = document.getElementById("buildStatus");
-  const schedStatus = document.getElementById("schedStatus");
+  const statusText = document.getElementById("statusText");
   const adminList = document.getElementById("adminList");
-
   const btnPublicHide = document.getElementById("btnPublicHide");
   const btnPublicShow = document.getElementById("btnPublicShow");
-  const btnGenerate = document.getElementById("btnGenerate");
-  const btnReset = document.getElementById("btnReset");
 
   let currentProg = null;
-  let unsubProg = null;
-  let unsubVisibility = null;
+  let resultsMap = new Map();
+  let poolValidation = null;
 
-  const ORDER_TIMES = {
-    1:"11h00",
-    2:"12h00",
-    3:"12h45",
-    4:"13h30",
-    5:"14h15",
-    6:"15h00",
-    7:"16h00",
-    8:"16h45",
-    9:"17h30",
-    10:"18h15",
-    11:"19h00",
-    12:"19h45"
-  };
+  let unsubProg = null;
+  let unsubResults = null;
+  let unsubVisibility = null;
+  let unsubPoolValidation = null;
 
   function esc(s){
     return (s ?? "").toString()
       .replaceAll("&","&amp;")
       .replaceAll("<","&lt;")
-      .replaceAll(">","&gt;");
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
   }
 
   function generalProgRef(){
     return doc(db, "events", EVENT_ID, "programmations", "general");
   }
 
+  function resultsCollection(){
+    return collection(db, "events", EVENT_ID, "resultats", "general", "matches");
+  }
+
   function visibilityRef(){
-    return doc(db, "events", EVENT_ID, "config", "programmation");
+    return doc(db, "events", EVENT_ID, "config", "resultats");
   }
 
-  function drawRef(){
-    return doc(db, "events", EVENT_ID, "tirages", "Seniors_DM");
+  function poolValidationRef(){
+    return doc(db, "events", EVENT_ID, "validations", "poules_DM");
   }
 
-  function timeForOrder(order){
-    return ORDER_TIMES[Number(order)] || "À confirmer";
+  function toNum(v){
+    if(v === null || v === undefined || v === "") return null;
+    const n = Number(String(v).replace(",", ".").trim());
+    return Number.isFinite(n) ? n : null;
+  }
+
+  function getResult(mid){
+    return resultsMap.get(mid) || null;
+  }
+
+  function winnerSide(res){
+    if(!res) return null;
+
+    if(res.winnerSide === "A" || res.winnerSide === "B"){
+      return res.winnerSide;
+    }
+
+    let a = 0;
+    let b = 0;
+
+    [["s1A","s1B"],["s2A","s2B"],["s3A","s3B"]].forEach(([ka,kb])=>{
+      const na = toNum(res[ka]);
+      const nb = toNum(res[kb]);
+
+      if(na === null || nb === null || na === nb) return;
+
+      if(na > nb) a++;
+      else b++;
+    });
+
+    if(a > b) return "A";
+    if(b > a) return "B";
+    return null;
+  }
+
+  function allMatches(){
+    return Array.isArray(currentProg?.matches)
+      ? [...currentProg.matches]
+      : [];
+  }
+
+  function normalMatches(){
+    return allMatches()
+      .filter(m => m.type !== "animation")
+      .filter(m => m.type !== "winner")
+      .filter(m => String(m.epreuve || "DM") === "DM")
+      .sort((a,b)=>{
+        if(Number(a.order) !== Number(b.order)) return Number(a.order) - Number(b.order);
+        return String(a.court || "").localeCompare(String(b.court || ""));
+      });
+  }
+
+  function matchById(id){
+    return allMatches().find(m => m.id === id) || null;
+  }
+
+  function poolKeyFromMatch(match){
+    const label = String(match?.label || "");
+    if(label.includes("Poule A")) return "A";
+    if(label.includes("Poule B")) return "B";
+    return null;
+  }
+
+  function isPoolMatchId(matchId){
+    const match = matchById(matchId);
+    return poolKeyFromMatch(match) === "A" || poolKeyFromMatch(match) === "B";
+  }
+
+  function poolMatches(pool){
+    return normalMatches().filter(m => poolKeyFromMatch(m) === pool);
+  }
+
+  function allPoolMatches(){
+    return [...poolMatches("A"), ...poolMatches("B")];
+  }
+
+  function arePoolMatchesComplete(){
+    const list = allPoolMatches();
+    return list.length > 0 && list.every(m => winnerSide(getResult(m.id)) !== null);
+  }
+
+  function isPoolValidationActive(){
+    return poolValidation?.validated === true;
+  }
+
+  function buildPoolRanking(pool){
+    const stats = new Map();
+
+    function ensure(name){
+      const key = String(name || "Équipe").trim();
+
+      if(!stats.has(key)){
+        stats.set(key, {
+          teamName:key,
+          points:0,
+          wins:0,
+          setsWon:0,
+          setsLost:0,
+          gamesWon:0,
+          gamesLost:0
+        });
+      }
+
+      return stats.get(key);
+    }
+
+    poolMatches(pool).forEach(match => {
+      const res = getResult(match.id);
+      const w = winnerSide(res);
+
+      const nameA = teamName(match, "A", { allowUnvalidatedPoolRanks:true });
+      const nameB = teamName(match, "B", { allowUnvalidatedPoolRanks:true });
+
+      const A = ensure(nameA);
+      const B = ensure(nameB);
+
+      if(w !== "A" && w !== "B") return;
+
+      let setsA = 0;
+      let setsB = 0;
+
+      [["s1A","s1B"],["s2A","s2B"],["s3A","s3B"]].forEach(([ka,kb])=>{
+        const ga = toNum(res[ka]);
+        const gb = toNum(res[kb]);
+
+        if(ga === null || gb === null) return;
+
+        A.gamesWon += ga;
+        A.gamesLost += gb;
+        B.gamesWon += gb;
+        B.gamesLost += ga;
+
+        if(ga > gb) setsA++;
+        else if(gb > ga) setsB++;
+      });
+
+      A.setsWon += setsA;
+      A.setsLost += setsB;
+      B.setsWon += setsB;
+      B.setsLost += setsA;
+
+      if(w === "A"){
+        A.points += 2;
+        A.wins++;
+        B.points += 1;
+      }else{
+        B.points += 2;
+        B.wins++;
+        A.points += 1;
+      }
+    });
+
+    return [...stats.values()].sort((a,b)=>{
+      if(b.points !== a.points) return b.points - a.points;
+      if(b.wins !== a.wins) return b.wins - a.wins;
+
+      const sdA = a.setsWon - a.setsLost;
+      const sdB = b.setsWon - b.setsLost;
+      if(sdB !== sdA) return sdB - sdA;
+
+      const gdA = a.gamesWon - a.gamesLost;
+      const gdB = b.gamesWon - b.gamesLost;
+      if(gdB !== gdA) return gdB - gdA;
+
+      return a.teamName.localeCompare(b.teamName, "fr");
+    });
+  }
+
+  function resolvePoolRank(pool, rank, options = {}){
+    if(!options.allowUnvalidatedPoolRanks && !isPoolValidationActive()){
+      return null;
+    }
+
+    const ranking = buildPoolRanking(pool);
+    return ranking[Number(rank) - 1]?.teamName || null;
+  }
+
+  function resolveMatchWinnerOrLoser(matchId, want, options = {}){
+    const source = matchById(matchId);
+    if(!source) return null;
+
+    const side = winnerSide(getResult(matchId));
+    if(side !== "A" && side !== "B") return null;
+
+    const target = want === "winner" ? side : (side === "A" ? "B" : "A");
+    return teamName(source, target, options);
+  }
+
+  function resolveDynamicText(raw, options = {}){
+    const value = String(raw || "").trim();
+
+    if(/^1(?:er)?\s+Poule A$/i.test(value)) return resolvePoolRank("A", 1, options);
+    if(/^2e\s+Poule A$/i.test(value)) return resolvePoolRank("A", 2, options);
+    if(/^3e\s+Poule A$/i.test(value)) return resolvePoolRank("A", 3, options);
+
+    if(/^1(?:er)?\s+Poule B$/i.test(value)) return resolvePoolRank("B", 1, options);
+    if(/^2e\s+Poule B$/i.test(value)) return resolvePoolRank("B", 2, options);
+    if(/^3e\s+Poule B$/i.test(value)) return resolvePoolRank("B", 3, options);
+
+    if(/^Vainqueur QF1$/i.test(value)) return resolveMatchWinnerOrLoser("MEN_QF1", "winner", options);
+    if(/^Vainqueur QF2$/i.test(value)) return resolveMatchWinnerOrLoser("MEN_QF2", "winner", options);
+    if(/^Perdant QF1$/i.test(value)) return resolveMatchWinnerOrLoser("MEN_QF1", "loser", options);
+    if(/^Perdant QF2$/i.test(value)) return resolveMatchWinnerOrLoser("MEN_QF2", "loser", options);
+
+    if(/^Vainqueur DF1$/i.test(value)) return resolveMatchWinnerOrLoser("MEN_SF1", "winner", options);
+    if(/^Vainqueur DF2$/i.test(value)) return resolveMatchWinnerOrLoser("MEN_SF2", "winner", options);
+    if(/^Perdant DF1$/i.test(value)) return resolveMatchWinnerOrLoser("MEN_SF1", "loser", options);
+    if(/^Perdant DF2$/i.test(value)) return resolveMatchWinnerOrLoser("MEN_SF2", "loser", options);
+
+    return null;
+  }
+
+  function teamName(match, side, options = {}){
+    const ref = side === "A" ? match.A : match.B;
+
+    if(ref?.type === "team"){
+      return ref.team?.teamName || ref.teamName || ref.title || "Équipe";
+    }
+
+    if(ref?.type === "poolRank"){
+      return resolvePoolRank(ref.pool, ref.rank, options)
+        || `${ref.rank}e Poule ${ref.pool}`;
+    }
+
+    if(ref?.type === "winner" || ref?.type === "loser"){
+      return resolveMatchWinnerOrLoser(ref.matchId, ref.type, options)
+        || `${ref.type === "winner" ? "Vainqueur" : "Perdant"} ${ref.matchId}`;
+    }
+
+    const raw = side === "A" ? match.teamA : match.teamB;
+    return resolveDynamicText(raw, options) || raw || "Équipe";
+  }
+
+  function isPlaceholder(name){
+    return /Poule|Vainqueur|Perdant|Équipe/.test(String(name || ""));
   }
 
   function courtLabel(court){
     if(court === "A") return "Terrain 1";
     if(court === "B") return "Terrain 2";
-    if(court === "ANIM") return "Animation";
     return "Terrain";
   }
 
-  function teamTitle(t){
-    return t?.teamName || t?.title || "Équipe";
-  }
+  function renderMatch(match){
+    const stored = getResult(match.id) || {};
+    const win = winnerSide(stored);
 
-  function makeTeamRef(team){
-    return {
-      type:"team",
-      id:team?.id || null,
-      team:team || null
-    };
-  }
+    const a = teamName(match, "A");
+    const b = teamName(match, "B");
 
-  function makePoolRank(pool, rank){
-    return {
-      type:"poolRank",
-      pool,
-      rank
-    };
-  }
-
-  function makeWinner(matchId){
-    return {
-      type:"winner",
-      matchId
-    };
-  }
-
-  function makeLoser(matchId){
-    return {
-      type:"loser",
-      matchId
-    };
-  }
-
-  function makeMatch(id, order, court, A, B, teamA, teamB, label){
-    return {
-      id,
-      order,
-      time:timeForOrder(order),
-      court,
-      categorie:"Seniors",
-      epreuve:"DM",
-      A,
-      B,
-      teamA,
-      teamB,
-      subA:"",
-      subB:"",
-      label
-    };
-  }
-
-  function makeAnimation(id, order, time, label, detail){
-    return {
-      id,
-      order,
-      time,
-      court:"ANIM",
-      type:"animation",
-      categorie:"Animation",
-      epreuve:"ANIM",
-      teamA:label,
-      teamB:detail,
-      label:"Animation"
-    };
-  }
-
-  function buildPoolsFromDraw(draw){
-    const teams = Array.isArray(draw?.teams) ? draw.teams : [];
-    const byId = new Map(teams.map(t => [t.id, t]));
-
-    const seed1 = draw?.seed1 || teams[0] || null;
-    const seed2 = draw?.seed2 || teams[1] || null;
-
-    const poolA = seed1 ? [seed1] : [];
-    const poolB = seed2 ? [seed2] : [];
-
-    const order = Array.isArray(draw?.order) ? draw.order : [];
-    const revealed = Number(draw?.revealed || order.length || 0);
-
-    order.slice(0, revealed).forEach(token => {
-      const s = String(token || "");
-      const pool = s.startsWith("A:") ? "A" : s.startsWith("B:") ? "B" : null;
-      const id = s.slice(2);
-      const team = byId.get(id);
-
-      if(!pool || !team) return;
-
-      if(pool === "A" && !poolA.some(t => t.id === team.id)) poolA.push(team);
-      if(pool === "B" && !poolB.some(t => t.id === team.id)) poolB.push(team);
-    });
-
-    return { poolA, poolB };
-  }
-
-  function rankScore(team){
-    const a = Number(team?.p1Rank ?? team?.joueur1Rank ?? 999999);
-    const b = Number(team?.p2Rank ?? team?.joueur2Rank ?? 999999);
-    return (Number.isFinite(a) ? a : 999999) + (Number.isFinite(b) ? b : 999999);
-  }
-
-  function orderedPoolMatches(poolName, teams){
-    const list = [...teams];
-
-    if(list.length < 3) return [];
-
-    list.sort((a,b) => rankScore(a) - rankScore(b));
-
-    const best1 = list[0];
-    const best2 = list[1];
-    const others = list.slice(2);
-
-    const pairs = [];
-
-    if(list.length === 3){
-      pairs.push([best1, others[0]]);
-      pairs.push([best2, others[0]]);
-      pairs.push([best1, best2]);
-    }else if(list.length === 4){
-      pairs.push([best1, others[1]]);
-      pairs.push([best2, others[0]]);
-      pairs.push([best1, others[0]]);
-      pairs.push([best2, others[1]]);
-      pairs.push([others[0], others[1]]);
-      pairs.push([best1, best2]);
-    }else{
-      for(let i = 0; i < list.length; i++){
-        for(let j = i + 1; j < list.length; j++){
-          pairs.push([list[i], list[j]]);
-        }
-      }
-    }
-
-    return pairs.map((pair, index) => ({
-      id:`MEN_${poolName}${index + 1}`,
-      pool:poolName,
-      a:pair[0],
-      b:pair[1]
-    }));
-  }
-
-  function buildProgrammation(draw){
-    const { poolA, poolB } = buildPoolsFromDraw(draw);
-
-    if(poolA.length < 3 || poolB.length < 3){
-      throw new Error("Le tirage validé doit contenir au moins 3 équipes dans chaque poule.");
-    }
-
-    const matches = [];
-
-    matches.push(makeAnimation(
-      "ANIM_INITIATION",
-      1,
-      "11h00 - 12h00",
-      "Initiation Beach Tennis avec Tamily",
-      "Séance ludique et accessible à tous les âges."
-    ));
-
-    const poolAMatches = orderedPoolMatches("A", poolA);
-    const poolBMatches = orderedPoolMatches("B", poolB);
-
-    const poolOrders = [2, 3, 4, 5, 7, 8];
-
-    for(let i = 0; i < Math.max(poolAMatches.length, poolBMatches.length); i++){
-      const order = poolOrders[i] || (8 + i);
-
-      const matchA = poolAMatches[i];
-      if(matchA){
-        matches.push(makeMatch(
-          matchA.id,
-          order,
-          "A",
-          makeTeamRef(matchA.a),
-          makeTeamRef(matchA.b),
-          teamTitle(matchA.a),
-          teamTitle(matchA.b),
-          "Poule A"
-        ));
-      }
-
-      const matchB = poolBMatches[i];
-      if(matchB){
-        matches.push(makeMatch(
-          matchB.id,
-          order,
-          "B",
-          makeTeamRef(matchB.a),
-          makeTeamRef(matchB.b),
-          teamTitle(matchB.a),
-          teamTitle(matchB.b),
-          "Poule B"
-        ));
-      }
-    }
-
-    matches.push(makeAnimation(
-      "ANIM_TECHNIQUE",
-      6,
-      "15h00 - 16h00",
-      "Session technique avec Mathias",
-      "Exercices, déplacements et situations de jeu pour compétiteurs."
-    ));
-
-    matches.push(makeMatch(
-      "MEN_QF1",
-      9,
-      "A",
-      makePoolRank("A", 2),
-      makePoolRank("B", 3),
-      "2e Poule A",
-      "3e Poule B",
-      "Quart de finale 1"
-    ));
-
-    matches.push(makeMatch(
-      "MEN_QF2",
-      9,
-      "B",
-      makePoolRank("B", 2),
-      makePoolRank("A", 3),
-      "2e Poule B",
-      "3e Poule A",
-      "Quart de finale 2"
-    ));
-
-    matches.push(makeMatch(
-      "MEN_SF1",
-      10,
-      "A",
-      makePoolRank("A", 1),
-      makeWinner("MEN_QF2"),
-      "1er Poule A",
-      "Vainqueur QF2",
-      "Demi-finale 1"
-    ));
-
-    matches.push(makeMatch(
-      "MEN_SF2",
-      10,
-      "B",
-      makePoolRank("B", 1),
-      makeWinner("MEN_QF1"),
-      "1er Poule B",
-      "Vainqueur QF1",
-      "Demi-finale 2"
-    ));
-
-    matches.push(makeMatch(
-      "MEN_5_6",
-      11,
-      "A",
-      makeLoser("MEN_QF1"),
-      makeLoser("MEN_QF2"),
-      "Perdant QF1",
-      "Perdant QF2",
-      "Place 5 / 6"
-    ));
-
-    matches.push(makeMatch(
-      "MEN_3_4",
-      11,
-      "B",
-      makeLoser("MEN_SF1"),
-      makeLoser("MEN_SF2"),
-      "Perdant DF1",
-      "Perdant DF2",
-      "Place 3 / 4"
-    ));
-
-    matches.push(makeMatch(
-      "MEN_FINAL",
-      12,
-      "A",
-      makeWinner("MEN_SF1"),
-      makeWinner("MEN_SF2"),
-      "Vainqueur DF1",
-      "Vainqueur DF2",
-      "Finale"
-    ));
-
-    return matches;
-  }
-
-  async function generateProgrammation(){
-    const snap = await getDoc(drawRef());
-    const draw = snap.exists() ? snap.data() : null;
-
-    if(!draw || draw.status !== "validated"){
-      throw new Error("Le tirage Double Messieurs doit être validé avant de générer la programmation.");
-    }
-
-    const matches = buildProgrammation(draw);
-
-    await setDoc(generalProgRef(), {
-      eventId:EVENT_ID,
-      key:"general",
-      source:{
-        type:"tsck_programmation_depuis_tirage_dm",
-        generatedAt:new Date().toISOString()
-      },
-      matches,
-      updatedAt:serverTimestamp(),
-      updatedBy:auth.currentUser?.uid || null
-    }, { merge:true });
-
-    return matches;
-  }
-
-  async function resetProgrammation(){
-    await deleteDoc(generalProgRef());
-  }
-
-  function allMatches(){
-    return Array.isArray(currentProg?.matches) ? [...currentProg.matches] : [];
-  }
-
-  function renderTeam(text, isPlaceholder = false){
-    return `<div class="team-name ${isPlaceholder ? "placeholder" : ""}">${esc(text || "Équipe")}</div>`;
-  }
-
-  function renderCard(match){
-    const cls =
-      match.type === "animation"
-        ? "animation"
-        : match.court === "A"
-          ? "courtA"
-          : match.court === "B"
-            ? "courtB"
-            : "";
-
-    if(match.type === "animation"){
-      return `
-        <div class="match-card ${cls}">
-          <div class="match-head">
-            <div class="m-order">#${esc(match.order)}</div>
-            <div class="m-time">${esc(match.time)}</div>
-            <div class="m-court">${esc(courtLabel(match.court))}</div>
-            <div class="m-label">${esc(match.label)}</div>
-          </div>
-
-          <div class="team-row">
-            ${renderTeam(match.teamA)}
-            <div class="team-sub">${esc(match.teamB || "")}</div>
-          </div>
-        </div>
-      `;
-    }
-
-    const placeholderA = String(match.teamA || "").includes("Poule") || String(match.teamA || "").includes("Vainqueur") || String(match.teamA || "").includes("Perdant");
-    const placeholderB = String(match.teamB || "").includes("Poule") || String(match.teamB || "").includes("Vainqueur") || String(match.teamB || "").includes("Perdant");
+    const cls = match.court === "A" ? "courtA" : match.court === "B" ? "courtB" : "";
 
     return `
-      <div class="match-card ${cls}">
+      <div class="match-card ${esc(cls)}" data-mid="${esc(match.id)}">
         <div class="match-head">
-          <div class="m-order">#${esc(match.order)}</div>
-          <div class="m-time">${esc(match.time)}</div>
-          <div class="m-court">${esc(courtLabel(match.court))}</div>
-          <div class="m-label">${esc(match.label || "")}</div>
+          <div class="m-slot">#${esc(match.order || "—")}</div>
+          <div class="m-time">${esc(match.time || "—")}</div>
+          <div class="m-label">${esc(match.label || match.id)}</div>
+          <div class="m-label">${esc(courtLabel(match.court))}</div>
         </div>
 
-        <div class="team-row">
-          ${renderTeam(match.teamA, placeholderA)}
-        </div>
+        <div class="score-grid">
+          <div></div>
+          <div class="hdr">S1</div>
+          <div class="hdr">S2</div>
+          <div class="hdr">S3</div>
 
-        <div class="vs-line">VS</div>
+          <div>
+            <div class="team-title ${isPlaceholder(a) ? "placeholder" : ""}">${esc(a)}</div>
+          </div>
+          <input class="sc" data-k="s1A" value="${esc(stored.s1A ?? "")}">
+          <input class="sc" data-k="s2A" value="${esc(stored.s2A ?? "")}">
+          <input class="sc" data-k="s3A" value="${esc(stored.s3A ?? "")}">
 
-        <div class="team-row">
-          ${renderTeam(match.teamB, placeholderB)}
+          <div>
+            <div class="team-title ${isPlaceholder(b) ? "placeholder" : ""}">${esc(b)}</div>
+          </div>
+          <input class="sc" data-k="s1B" value="${esc(stored.s1B ?? "")}">
+          <input class="sc" data-k="s2B" value="${esc(stored.s2B ?? "")}">
+          <input class="sc" data-k="s3B" value="${esc(stored.s3B ?? "")}">
         </div>
 
         <div class="actions">
-          <button class="btnx" data-act="time" data-id="${esc(match.id)}">🕒</button>
-          <button class="btnx" data-act="court" data-id="${esc(match.id)}">Terrain</button>
-          <button class="btnx" data-act="up" data-order="${esc(match.order)}">↑</button>
-          <button class="btnx" data-act="down" data-order="${esc(match.order)}">↓</button>
+          <div class="winner ${win ? "ok" : ""}">
+            ${win ? `✅ Vainqueur : ${win === "A" ? esc(a) : esc(b)}` : "⏳ Résultat incomplet"}
+          </div>
+
+          <button class="btn primary" data-save="${esc(match.id)}" type="button">💾 Enregistrer</button>
         </div>
       </div>
     `;
   }
 
-  function renderList(){
-    const matches = allMatches();
+  function renderValidationStatus(){
+    const complete = arePoolMatchesComplete();
+    const validated = isPoolValidationActive();
 
-    matches.sort((a,b) => {
-      if(Number(a.order) !== Number(b.order)) return Number(a.order) - Number(b.order);
-      return String(a.court || "").localeCompare(String(b.court || ""));
-    });
+    if(validated){
+      return `
+        <div class="ok-box">
+          ✅ Classements de poules validés. Les quarts et demi-finales utilisent désormais ce classement.
+        </div>
+      `;
+    }
 
-    schedStatus.textContent = currentProg
-      ? `✅ ${matches.length} élément(s) dans la programmation`
-      : "Aucune programmation enregistrée.";
+    if(complete){
+      return `
+        <div class="warn-box">
+          ⚠️ Tous les matchs de poule sont terminés, mais le classement n’est pas encore validé.
+          Les matchs suivants restent donc en attente.
+        </div>
+      `;
+    }
 
-    adminList.innerHTML = matches.length
-      ? `<div class="match-list">${matches.map(renderCard).join("")}</div>`
-      : `<p class="muted" style="margin:0;">Aucune programmation.</p>`;
+    return `
+      <div class="warn-box">
+        ⏳ Validation impossible pour le moment : tous les matchs de poule doivent être saisis.
+      </div>
+    `;
   }
 
-  async function patchMatches(matches){
-    await updateDoc(generalProgRef(), {
-      matches,
+  function renderStandings(){
+    const a = buildPoolRanking("A");
+    const b = buildPoolRanking("B");
+    const complete = arePoolMatchesComplete();
+    const validated = isPoolValidationActive();
+
+    function table(rows, title){
+      return `
+        <div class="standings">
+          <table>
+            <thead>
+              <tr><th colspan="6">${esc(title)}</th></tr>
+              <tr><th>#</th><th>Équipe</th><th>Pts</th><th>V</th><th>Sets</th><th>Jeux</th></tr>
+            </thead>
+            <tbody>
+              ${rows.length ? rows.map((r,i)=>`
+                <tr>
+                  <td>${i + 1}</td>
+                  <td>${esc(r.teamName)}</td>
+                  <td>${r.points}</td>
+                  <td>${r.wins}</td>
+                  <td>${r.setsWon - r.setsLost}</td>
+                  <td>${r.gamesWon - r.gamesLost}</td>
+                </tr>
+              `).join("") : `<tr><td colspan="6">Classement à venir</td></tr>`}
+            </tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    const actions = `
+      <div class="standings-actions">
+        <button
+          class="btn green"
+          id="btnValidatePools"
+          type="button"
+          ${complete && !validated ? "" : "disabled"}
+        >✅ Valider les classements de poules</button>
+
+        <button
+          class="btn danger"
+          id="btnUnvalidatePools"
+          type="button"
+          ${validated ? "" : "disabled"}
+        >↩️ Annuler la validation</button>
+      </div>
+    `;
+
+    return `
+      ${renderValidationStatus()}
+      ${table(a, "Poule A")}
+      ${table(b, "Poule B")}
+      ${actions}
+    `;
+  }
+
+  function bindValidationButtons(){
+    const btnValidate = document.getElementById("btnValidatePools");
+    const btnUnvalidate = document.getElementById("btnUnvalidatePools");
+
+    if(btnValidate){
+      btnValidate.onclick = async () => {
+        if(!arePoolMatchesComplete()){
+          alert("Tous les matchs de poule doivent être terminés avant validation.");
+          return;
+        }
+
+        const ok = confirm("Valider les classements de poules ?");
+        if(!ok) return;
+
+        await setDoc(poolValidationRef(), {
+          validated:true,
+          categorie:"Seniors",
+          epreuve:"DM",
+          poolA:buildPoolRanking("A"),
+          poolB:buildPoolRanking("B"),
+          validatedAt:serverTimestamp(),
+          validatedBy:auth.currentUser?.uid || null,
+          updatedAt:serverTimestamp()
+        }, { merge:true });
+      };
+    }
+
+    if(btnUnvalidate){
+      btnUnvalidate.onclick = async () => {
+        const ok = confirm("Annuler la validation des classements de poules ?");
+        if(!ok) return;
+
+        await deleteDoc(poolValidationRef());
+      };
+    }
+  }
+
+  function render(){
+    const matches = normalMatches();
+
+    statusText.textContent = currentProg
+      ? `${matches.length} match(s) affiché(s)`
+      : "Programmation introuvable.";
+
+    if(!currentProg){
+      adminList.innerHTML = `<p class="muted">Génère d’abord la programmation générale.</p>`;
+      return;
+    }
+
+    adminList.innerHTML = `
+      ${renderStandings()}
+      <div class="match-list">${matches.map(renderMatch).join("")}</div>
+    `;
+
+    bindValidationButtons();
+  }
+
+  async function invalidatePoolValidationIfNeeded(matchId){
+    if(!isPoolMatchId(matchId)) return;
+    if(!isPoolValidationActive()) return;
+
+    await deleteDoc(poolValidationRef());
+  }
+
+  adminList.addEventListener("click", async (event) => {
+    const btn = event.target.closest("[data-save]");
+    if(!btn) return;
+
+    const mid = btn.dataset.save;
+    const card = btn.closest(".match-card");
+
+    const get = (k) => (card.querySelector(`[data-k="${k}"]`)?.value || "").trim();
+
+    const payload = {
+      s1A:get("s1A"),
+      s2A:get("s2A"),
+      s3A:get("s3A"),
+      s1B:get("s1B"),
+      s2B:get("s2B"),
+      s3B:get("s3B"),
       updatedAt:serverTimestamp(),
       updatedBy:auth.currentUser?.uid || null
-    });
-  }
+    };
 
-  async function editTime(id){
-    const matches = allMatches();
-    const m = matches.find(x => x.id === id);
-    if(!m) return;
+    payload.winnerSide = winnerSide(payload);
 
-    const next = prompt("Nouvelle heure :", m.time || "");
-    if(next === null) return;
-
-    m.time = next.trim() || "À confirmer";
-    await patchMatches(matches);
-  }
-
-  async function toggleCourt(id){
-    const matches = allMatches();
-    const m = matches.find(x => x.id === id);
-    if(!m || m.type === "animation") return;
-
-    m.court = m.court === "A" ? "B" : "A";
-    await patchMatches(matches);
-  }
-
-  async function swapOrder(order, dir){
-    const matches = allMatches();
-    const currentOrder = Number(order);
-    const targetOrder = dir === "up" ? currentOrder - 1 : currentOrder + 1;
-
-    matches.forEach(m => {
-      if(Number(m.order) === currentOrder){
-        m.order = targetOrder;
-        if(m.type !== "animation") m.time = timeForOrder(targetOrder);
-      }else if(Number(m.order) === targetOrder){
-        m.order = currentOrder;
-        if(m.type !== "animation") m.time = timeForOrder(currentOrder);
-      }
-    });
-
-    await patchMatches(matches);
-  }
+    await setDoc(doc(resultsCollection(), mid), payload, { merge:true });
+    await invalidatePoolValidationIfNeeded(mid);
+  });
 
   async function setPublicVisible(value){
     await setDoc(visibilityRef(), {
       publicVisible:value === true,
-      maintenance:value !== true,
       updatedAt:serverTimestamp(),
       updatedBy:auth.currentUser?.uid || null
     }, { merge:true });
   }
 
-  btnGenerate.onclick = async () => {
-    btnGenerate.disabled = true;
-    buildStatus.textContent = "Génération en cours…";
-
-    try{
-      const matches = await generateProgrammation();
-      buildStatus.textContent = `✅ Programmation générée : ${matches.length} élément(s).`;
-    }catch(error){
-      console.error(error);
-      buildStatus.textContent = "❌ " + (error?.message || "Erreur génération.");
-      alert("Erreur ❌\n\n" + (error?.message || "Impossible de générer."));
-    }finally{
-      btnGenerate.disabled = false;
-    }
-  };
-
-  btnReset.onclick = async () => {
-    const ok = confirm("Réinitialiser la programmation ?");
-    if(!ok) return;
-
-    try{
-      await resetProgrammation();
-    }catch(error){
-      console.error(error);
-      alert("Erreur suppression.");
-    }
-  };
-
   btnPublicHide.onclick = () => setPublicVisible(false);
   btnPublicShow.onclick = () => setPublicVisible(true);
 
-  adminList.addEventListener("click", async (event) => {
-    const btn = event.target.closest("button[data-act]");
-    if(!btn) return;
-
-    try{
-      if(btn.dataset.act === "time") await editTime(btn.dataset.id);
-      if(btn.dataset.act === "court") await toggleCourt(btn.dataset.id);
-      if(btn.dataset.act === "up") await swapOrder(btn.dataset.order, "up");
-      if(btn.dataset.act === "down") await swapOrder(btn.dataset.order, "down");
-    }catch(error){
-      console.error(error);
-      alert("Erreur ❌");
-    }
-  });
-
   function startListeners(){
-    if(unsubProg) unsubProg();
-    if(unsubVisibility) unsubVisibility();
+    stopListeners();
 
     unsubProg = onSnapshot(generalProgRef(), (snap) => {
-      currentProg = snap.exists() ? snap.data() : null;
+      currentProg = snap.exists() ? (snap.data() || null) : null;
+      render();
+    });
 
-      buildStatus.textContent = currentProg
-        ? "✅ Programmation présente."
-        : "ℹ️ Aucune programmation enregistrée.";
+    unsubResults = onSnapshot(resultsCollection(), (snap) => {
+      resultsMap = new Map();
+      snap.forEach(d => resultsMap.set(d.id, d.data() || {}));
+      render();
+    });
 
-      renderList();
-    }, (error) => {
-      console.error(error);
-      buildStatus.textContent = "❌ Erreur de lecture programmation.";
+    unsubPoolValidation = onSnapshot(poolValidationRef(), (snap) => {
+      poolValidation = snap.exists() ? (snap.data() || null) : null;
+      render();
     });
 
     unsubVisibility = onSnapshot(visibilityRef(), (snap) => {
-      const data = snap.exists() ? snap.data() : {};
+      const data = snap.exists() ? (snap.data() || {}) : {};
       const visible = data.publicVisible === true;
 
       visibilityText.innerHTML = visible
         ? "Statut actuel : <strong>visible publiquement ✅</strong>"
-        : "Statut actuel : <strong>maintenance 🔒</strong>";
+        : "Statut actuel : <strong>maintenance / masqué 🔒</strong>";
 
       btnPublicShow.classList.toggle("is-active", visible);
       btnPublicHide.classList.toggle("is-active", !visible);
@@ -980,23 +907,22 @@
   }
 
   function stopListeners(){
-    if(unsubProg){
-      unsubProg();
-      unsubProg = null;
-    }
+    if(unsubProg) unsubProg();
+    if(unsubResults) unsubResults();
+    if(unsubVisibility) unsubVisibility();
+    if(unsubPoolValidation) unsubPoolValidation();
 
-    if(unsubVisibility){
-      unsubVisibility();
-      unsubVisibility = null;
-    }
+    unsubProg = null;
+    unsubResults = null;
+    unsubVisibility = null;
+    unsubPoolValidation = null;
   }
 
   function showDenied(){
     accessDenied.style.display = "block";
     pageContent.style.display = "none";
     panelVisibility.style.display = "none";
-    panelBuild.style.display = "none";
-    panelSchedule.style.display = "none";
+    panelResults.style.display = "none";
     stopListeners();
   }
 
@@ -1004,8 +930,7 @@
     accessDenied.style.display = "none";
     pageContent.style.display = "block";
     panelVisibility.style.display = "block";
-    panelBuild.style.display = "block";
-    panelSchedule.style.display = "block";
+    panelResults.style.display = "block";
     startListeners();
   }
 
