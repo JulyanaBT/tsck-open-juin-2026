@@ -42,31 +42,32 @@
     }
 
     main{
-      padding-top:calc(var(--public-total-top, 158px) + 22px);
+      padding-top:calc(var(--public-total-top, 158px) + 18px);
       padding-bottom:42px;
     }
 
-    .section{margin-top:16px;}
+    .section{margin-top:14px;}
 
     .panel{
       background:var(--card);
       border:1px solid rgba(255,255,255,.7);
       border-radius:24px;
       box-shadow:var(--shadow);
-      padding:18px;
+      padding:16px;
+      min-width:0;
     }
 
     .panel-head{
       display:flex;
       justify-content:space-between;
       align-items:flex-start;
-      gap:12px;
-      margin-bottom:14px;
+      gap:10px;
+      margin-bottom:12px;
     }
 
     .panel-title{
       margin:0;
-      font-size:26px;
+      font-size:24px;
       line-height:1.05;
       letter-spacing:-.03em;
       color:var(--navy-dark);
@@ -75,76 +76,106 @@
     .panel-text{
       margin:6px 0 0;
       color:var(--muted);
-      font-size:15px;
-      line-height:1.45;
+      font-size:14px;
+      line-height:1.4;
     }
 
     .panel-tag{
       flex-shrink:0;
-      padding:8px 13px;
+      padding:7px 11px;
       border-radius:999px;
       background:#e6f7ee;
       color:var(--palm-dark);
-      font-size:12px;
+      font-size:11px;
       font-weight:1000;
       text-transform:uppercase;
       letter-spacing:.06em;
     }
 
-    .tabs{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:8px;
-      margin-top:14px;
-    }
-
-    .tab-btn{
-      min-height:44px;
-      padding:10px 12px;
-      border-radius:999px;
-      border:1px solid rgba(16,24,40,.10);
-      background:#fff;
-      color:var(--navy);
-      font-size:14px;
-      font-weight:1000;
-      cursor:pointer;
-      box-shadow:0 8px 16px rgba(16,24,40,.05);
-    }
-
-    .tab-btn[aria-selected="true"]{
-      background:linear-gradient(180deg,var(--sun),var(--sun-dark));
-      color:var(--navy-dark);
-      border-color:var(--sun-dark);
-    }
-
     .status-box,
     .placeholder{
-      margin-top:12px;
-      padding:14px 16px;
+      margin-top:10px;
+      padding:13px 14px;
       border-radius:18px;
       background:linear-gradient(135deg,rgba(11,122,59,.10),rgba(255,210,31,.16));
       border:1px solid rgba(11,122,59,.18);
       color:#475467;
       font-size:14px;
-      line-height:1.5;
+      line-height:1.45;
     }
 
     .status-box strong,
     .placeholder strong{color:var(--navy-dark);}
 
+    .last-draw{
+      display:grid;
+      gap:8px;
+      margin-top:10px;
+      padding:16px;
+      border-radius:20px;
+      background:linear-gradient(135deg,var(--navy-dark),var(--navy),var(--palm));
+      color:#fff;
+      box-shadow:0 10px 22px rgba(16,24,40,.14);
+      min-width:0;
+    }
+
+    .last-draw-label{
+      font-size:12px;
+      font-weight:1000;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      color:var(--sun);
+    }
+
+    .last-draw-main{
+      font-size:22px;
+      line-height:1.05;
+      font-weight:1000;
+      word-break:break-word;
+    }
+
+    .last-draw-sub{
+      font-size:13px;
+      line-height:1.35;
+      color:#fff8d8;
+      font-weight:800;
+    }
+
+    .btn{
+      appearance:none;
+      border:none;
+      width:100%;
+      min-height:48px;
+      border-radius:18px;
+      padding:12px 15px;
+      font-family:inherit;
+      font-size:15px;
+      font-weight:1000;
+      cursor:pointer;
+      background:linear-gradient(180deg,var(--sun),var(--sun-dark));
+      color:var(--navy-dark);
+      box-shadow:0 10px 20px rgba(255,210,31,.22);
+    }
+
+    .btn:disabled{
+      opacity:.55;
+      cursor:not-allowed;
+    }
+
     .pool-grid{
       display:grid;
-      gap:12px;
+      gap:10px;
       grid-template-columns:1fr;
-      margin-top:12px;
+      margin-top:10px;
     }
 
     .pool-card{
       border:1px solid rgba(16,24,40,.08);
       border-radius:18px;
       background:#fff;
-      padding:13px;
+      padding:12px;
       box-shadow:0 8px 18px rgba(16,24,40,.06);
+      min-width:0;
     }
 
     .pool-title{
@@ -153,13 +184,14 @@
       color:var(--palm-dark);
       text-transform:uppercase;
       letter-spacing:.06em;
-      margin-bottom:10px;
+      margin-bottom:9px;
     }
 
     .pool-list,
     .item-list{
       display:grid;
       gap:8px;
+      min-width:0;
     }
 
     .pool-slot{
@@ -169,10 +201,9 @@
       padding:10px 12px;
       font-weight:1000;
       font-size:14px;
-      line-height:1.2;
+      line-height:1.25;
       min-width:0;
-      overflow:hidden;
-      text-overflow:ellipsis;
+      word-break:break-word;
     }
 
     .pool-slot.empty{
@@ -194,13 +225,13 @@
       background:#fff;
       padding:11px 12px;
       box-shadow:0 6px 14px rgba(16,24,40,.05);
-      display:flex;
-      justify-content:space-between;
-      gap:10px;
-      align-items:center;
+      display:grid;
+      gap:6px;
+      min-width:0;
     }
 
     .pill{
+      justify-self:start;
       display:inline-flex;
       align-items:center;
       padding:4px 10px;
@@ -220,16 +251,23 @@
     }
 
     @media (min-width:760px){
+      main{
+        padding-top:calc(var(--public-total-top, 158px) + 22px);
+      }
+
       .panel{padding:22px;}
       .pool-grid{grid-template-columns:1fr 1fr;}
+      .last-draw-main{font-size:28px;}
     }
 
     @media (max-width:759px){
       main{
-        padding-top:calc(var(--public-total-top, 150px) + 18px);
+        padding-top:calc(var(--public-total-top, 150px) + 16px);
       }
 
-      .panel-title{font-size:24px;}
+      .panel-head{
+        display:grid;
+      }
     }
   </style>
 </head>
@@ -264,15 +302,17 @@
       <div class="panel-tag" id="pageTag">Public</div>
     </div>
 
-    <div class="tabs" role="tablist" aria-label="Épreuve">
-      <button class="tab-btn" type="button" data-epreuve="DM" aria-selected="true">👨 Double Messieurs</button>
-      <button class="tab-btn" type="button" data-epreuve="DD" aria-selected="false">👩 Double Dames</button>
+    <div class="last-draw" id="lastDrawBox">
+      <div class="last-draw-label">Dernier tirage</div>
+      <div class="last-draw-main" id="lastDrawMain">Chargement…</div>
+      <div class="last-draw-sub" id="lastDrawSub">Les équipes apparaîtront au fur et à mesure du tirage.</div>
+    </div>
+
+    <div style="margin-top:12px;">
+      <button class="btn" id="btnReplay" type="button">▶️ Replay du tirage</button>
     </div>
 
     <div class="status-box">
-      Épreuve affichée :
-      <strong id="zoneLabel">Double Messieurs</strong>
-      <br>
       Statut :
       <strong id="drawStatus">Chargement…</strong>
     </div>
@@ -281,7 +321,7 @@
   <section class="section panel" id="cancelledPanel" style="display:none;">
     <div class="panel-head">
       <div>
-        <h2 class="panel-title">👩 Double Dames</h2>
+        <h2 class="panel-title">Tournoi annulé</h2>
         <p class="panel-text">
           Tournoi annulé en raison d’un nombre d’équipes insuffisant.
         </p>
@@ -291,7 +331,7 @@
 
     <div class="placeholder">
       <p><strong>Tournoi annulé.</strong></p>
-      <p>Le tableau Double Dames ne donnera pas lieu à un tirage au sort.</p>
+      <p>Le tableau ne donnera pas lieu à un tirage au sort.</p>
     </div>
   </section>
 
@@ -301,7 +341,7 @@
         <h2 class="panel-title">🏖️ Poules</h2>
         <p class="panel-text" id="drawInfo">—</p>
       </div>
-      <div class="panel-tag">DM</div>
+      <div class="panel-tag">Poules</div>
     </div>
 
     <div class="pool-grid">
@@ -320,20 +360,16 @@
   <section class="section panel" id="detailsPanel" style="display:none;">
     <div class="panel-head">
       <div>
-        <h2 class="panel-title">📌 Suivi du tirage</h2>
-        <p class="panel-text">Équipes révélées et tirages restants.</p>
+        <h2 class="panel-title">📌 Historique</h2>
+        <p class="panel-text">Équipes déjà révélées.</p>
       </div>
-      <div class="panel-tag">Détails</div>
+      <div class="panel-tag">Tirage</div>
     </div>
 
-    <div>
-      <div style="font-weight:1000;margin-bottom:8px;">📌 Déjà révélés</div>
-      <div id="revealedList" class="item-list"></div>
-    </div>
+    <div id="revealedList" class="item-list"></div>
 
-    <div style="margin-top:16px;">
-      <div style="font-weight:1000;margin-bottom:8px;">📥 Restant à tirer</div>
-      <div id="remainingList" class="item-list"></div>
+    <div class="status-box">
+      <strong id="remainingCount">—</strong>
     </div>
   </section>
 
@@ -360,11 +396,6 @@
 
   const EVENT_ID = "tsck-open-juin-2026";
 
-  const EPREUVE_LABELS = {
-    DM:"Double Messieurs",
-    DD:"Double Dames"
-  };
-
   const params = new URLSearchParams(location.search);
   let currentEpreuve = params.get("epreuve") || "DM";
 
@@ -374,6 +405,7 @@
   let currentDraw = null;
   let unsubDraw = null;
   let unsubVisibility = null;
+  let replayRunning = false;
 
   const maintenancePanel = document.getElementById("maintenancePanel");
   const workPanel = document.getElementById("workPanel");
@@ -383,16 +415,17 @@
 
   const workIntro = document.getElementById("workIntro");
   const pageTag = document.getElementById("pageTag");
-  const zoneLabel = document.getElementById("zoneLabel");
   const drawStatus = document.getElementById("drawStatus");
   const drawInfo = document.getElementById("drawInfo");
+
+  const lastDrawMain = document.getElementById("lastDrawMain");
+  const lastDrawSub = document.getElementById("lastDrawSub");
+  const btnReplay = document.getElementById("btnReplay");
 
   const poolAList = document.getElementById("poolAList");
   const poolBList = document.getElementById("poolBList");
   const revealedList = document.getElementById("revealedList");
-  const remainingList = document.getElementById("remainingList");
-
-  const tabButtons = Array.from(document.querySelectorAll(".tab-btn"));
+  const remainingCount = document.getElementById("remainingCount");
 
   function esc(s){
     return (s ?? "").toString()
@@ -418,10 +451,6 @@
     return `Seniors_${currentEpreuve}`;
   }
 
-  function zoneText(){
-    return EPREUVE_LABELS[currentEpreuve] || currentEpreuve;
-  }
-
   function drawRef(){
     return doc(db, "events", EVENT_ID, "tirages", zoneKey());
   }
@@ -436,14 +465,6 @@
 
   function canSeeWork(){
     return publicVisible || isPrivileged;
-  }
-
-  function syncTabs(){
-    tabButtons.forEach(btn => {
-      btn.setAttribute("aria-selected", btn.dataset.epreuve === currentEpreuve ? "true" : "false");
-    });
-
-    zoneLabel.textContent = zoneText();
   }
 
   async function fetchTeams(){
@@ -525,7 +546,7 @@
     return `${dest} → ${teamLabel(team)}`;
   }
 
-  function buildState(){
+  function buildState(tokens = revealedTokens()){
     const seed1 = currentDraw?.seed1 || cachedTeams[0] || null;
     const seed2 = currentDraw?.seed2 || cachedTeams[1] || null;
 
@@ -534,7 +555,7 @@
       poolB: seed2 ? [seed2] : []
     };
 
-    for(const token of revealedTokens()){
+    for(const token of tokens){
       const p = parseToken(token);
       const team = findTeam(p.id);
       if(!team) continue;
@@ -596,15 +617,16 @@
   }
 
   function renderCurrent(){
-    syncTabs();
-
     if(!canSeeWork()) return;
 
     if(currentEpreuve === "DD"){
       drawStatus.textContent = "Tournoi annulé.";
+      lastDrawMain.textContent = "Tournoi annulé";
+      lastDrawSub.textContent = "Nombre d’équipes insuffisant.";
       cancelledPanel.style.display = "block";
       drawPanel.style.display = "none";
       detailsPanel.style.display = "none";
+      btnReplay.disabled = true;
       return;
     }
 
@@ -615,29 +637,9 @@
     renderDraw();
   }
 
-  function renderDraw(){
-    if(!currentDraw){
-      drawStatus.textContent = "Aucun tirage préparé.";
-      drawInfo.textContent = "—";
-      poolAList.innerHTML = `<div class="pool-slot empty">En attente</div>`;
-      poolBList.innerHTML = `<div class="pool-slot empty">En attente</div>`;
-      revealedList.innerHTML = `<p class="muted" style="margin:0;">Aucun tirage révélé.</p>`;
-      remainingList.innerHTML = `<p class="muted" style="margin:0;">—</p>`;
-      return;
-    }
-
-    if(currentDraw.status === "running"){
-      drawStatus.textContent = "Tirage en cours.";
-    }else if(currentDraw.status === "pending_validation"){
-      drawStatus.textContent = "Tirage terminé — en attente de validation.";
-    }else if(currentDraw.status === "validated"){
-      drawStatus.textContent = "Tirage validé.";
-    }else{
-      drawStatus.textContent = "Tirage préparé.";
-    }
-
+  function renderPools(tokens = revealedTokens()){
     const size = poolSizes();
-    const state = buildState();
+    const state = buildState(tokens);
 
     poolAList.innerHTML = Array.from({ length:size.A }, (_, index) => {
       return poolSlotHtml(
@@ -655,20 +657,107 @@
       );
     }).join("");
 
+    const placed = state.poolA.length + state.poolB.length;
+    drawInfo.textContent = `${placed}/${cachedTeams.length} équipe(s) placée(s).`;
+  }
+
+  function renderDraw(){
+    if(!currentDraw){
+      drawStatus.textContent = "Aucun tirage préparé.";
+      lastDrawMain.textContent = "En attente";
+      lastDrawSub.textContent = "Le tirage n’a pas encore été préparé.";
+      drawInfo.textContent = "—";
+      poolAList.innerHTML = `<div class="pool-slot empty">En attente</div>`;
+      poolBList.innerHTML = `<div class="pool-slot empty">En attente</div>`;
+      revealedList.innerHTML = `<p class="muted" style="margin:0;">Aucun tirage révélé.</p>`;
+      remainingCount.textContent = "—";
+      btnReplay.disabled = true;
+      return;
+    }
+
+    if(currentDraw.status === "running"){
+      drawStatus.textContent = "Tirage en cours.";
+    }else if(currentDraw.status === "pending_validation"){
+      drawStatus.textContent = "Tirage terminé — en attente de validation.";
+    }else if(currentDraw.status === "validated"){
+      drawStatus.textContent = "Tirage validé.";
+    }else{
+      drawStatus.textContent = "Tirage préparé.";
+    }
+
     const revealed = revealedTokens();
     const remaining = remainingTokens();
+
+    renderPools(revealed);
+
+    if(revealed.length){
+      const last = revealed[revealed.length - 1];
+      lastDrawMain.textContent = tokenLabel(last);
+      lastDrawSub.textContent = `Tirage n°${revealed.length}`;
+    }else{
+      lastDrawMain.textContent = "En attente du premier tirage";
+      lastDrawSub.textContent = "Les têtes de série sont déjà placées.";
+    }
 
     revealedList.innerHTML = revealed.length
       ? revealed.map((tok, i) => itemCardHtml(`#${i + 1} — ${tokenLabel(tok)}`, "tiré")).join("")
       : `<p class="muted" style="margin:0;">Aucun tirage révélé.</p>`;
 
-    remainingList.innerHTML = remaining.length
-      ? remaining.map(tok => itemCardHtml(tokenLabel(tok), "urne")).join("")
-      : `<p class="muted" style="margin:0;">Aucune équipe restante.</p>`;
+    remainingCount.textContent = remaining.length
+      ? `${remaining.length} équipe${remaining.length > 1 ? "s" : ""} encore dans l’urne.`
+      : "Aucune équipe restante.";
 
-    const placed = state.poolA.length + state.poolB.length;
-    drawInfo.textContent = `${placed}/${cachedTeams.length} équipe(s) placée(s).`;
+    btnReplay.disabled = revealed.length === 0;
   }
+
+  function sleep(ms){
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  async function replayDraw(){
+    if(replayRunning) return;
+
+    const revealed = revealedTokens();
+    if(!revealed.length) return;
+
+    replayRunning = true;
+    btnReplay.disabled = true;
+    btnReplay.textContent = "⏳ Replay en cours…";
+
+    try{
+      const shown = [];
+
+      renderPools([]);
+      revealedList.innerHTML = `<p class="muted" style="margin:0;">Replay en cours…</p>`;
+      lastDrawMain.textContent = "Replay du tirage";
+      lastDrawSub.textContent = "Les équipes vont apparaître dans l’ordre.";
+      await sleep(700);
+
+      for(let i = 0; i < revealed.length; i++){
+        const token = revealed[i];
+        shown.push(token);
+
+        lastDrawMain.textContent = tokenLabel(token);
+        lastDrawSub.textContent = `Tirage n°${i + 1}`;
+
+        renderPools(shown);
+
+        revealedList.innerHTML = shown.length
+          ? shown.map((tok, index) => itemCardHtml(`#${index + 1} — ${tokenLabel(tok)}`, "tiré")).join("")
+          : `<p class="muted" style="margin:0;">Aucun tirage révélé.</p>`;
+
+        await sleep(1000);
+      }
+
+      lastDrawSub.textContent = "Replay terminé.";
+    }finally{
+      replayRunning = false;
+      btnReplay.disabled = false;
+      btnReplay.textContent = "▶️ Replay du tirage";
+    }
+  }
+
+  btnReplay.onclick = replayDraw;
 
   function stopDrawListener(){
     if(unsubDraw){
@@ -715,26 +804,6 @@
     });
   }
 
-  function changeEpreuve(epreuve){
-    currentEpreuve = epreuve || currentEpreuve;
-
-    try{
-      const url = new URL(location.href);
-      url.searchParams.set("epreuve", currentEpreuve);
-      history.replaceState(null, "", url.toString());
-    }catch(error){}
-
-    syncTabs();
-    startDrawListener();
-  }
-
-  tabButtons.forEach(btn => {
-    btn.addEventListener("click", () => {
-      changeEpreuve(btn.dataset.epreuve);
-    });
-  });
-
-  syncTabs();
   startVisibilityListener();
   startDrawListener();
 
