@@ -1,0 +1,831 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>JAT — Résultats — Open Beach Tennis TSCK</title>
+
+  <style>
+    :root{
+      --palm:#0b7a3b; --palm-dark:#064d28; --palm-light:#15a658;
+      --navy:#06284a; --navy-dark:#03172b;
+      --sun:#ffd21f; --sun-dark:#f3b800;
+      --text:#17212b; --muted:#667085; --card:rgba(255,255,255,.95);
+      --shadow:0 16px 40px rgba(16,24,40,.12);
+      --container:1180px;
+    }
+
+    *{box-sizing:border-box;}
+    html,body{max-width:100%;overflow-x:hidden;}
+
+    body{
+      margin:0;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at 10% 0%, rgba(255,210,31,.20), transparent 26%),
+        radial-gradient(circle at 90% 8%, rgba(11,122,59,.16), transparent 26%),
+        linear-gradient(180deg,#eaf9ff 0%,#fff4d4 52%,#fff 100%);
+    }
+
+    .container{width:min(var(--container), calc(100% - 28px));margin:0 auto;}
+    main{padding-top:calc(var(--jat-total-top, 230px) + 34px);padding-bottom:42px;}
+    .section{margin-top:18px;}
+
+    .panel{
+      background:var(--card);
+      border:1px solid rgba(255,255,255,.7);
+      border-radius:24px;
+      box-shadow:var(--shadow);
+      padding:18px;
+    }
+
+    .panel-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:14px;}
+    .panel-title{margin:0;font-size:26px;line-height:1.05;letter-spacing:-.03em;color:var(--navy-dark);}
+    .panel-text{margin:6px 0 0;color:var(--muted);font-size:15px;line-height:1.45;}
+
+    .panel-tag{
+      flex-shrink:0;
+      padding:8px 13px;
+      border-radius:999px;
+      background:#e6f7ee;
+      color:var(--palm-dark);
+      font-size:12px;
+      font-weight:1000;
+      text-transform:uppercase;
+      letter-spacing:.06em;
+    }
+
+    .status-box{
+      margin-top:12px;
+      padding:14px 16px;
+      border-radius:18px;
+      background:linear-gradient(135deg,rgba(11,122,59,.10),rgba(255,210,31,.16));
+      border:1px solid rgba(11,122,59,.18);
+      color:#475467;
+      font-size:14px;
+      line-height:1.5;
+    }
+
+    .grid{display:grid;gap:10px;}
+    .grid.two{grid-template-columns:1fr 1fr;}
+
+    .btn{
+      appearance:none;
+      border:1px solid rgba(16,24,40,.10);
+      background:#fff;
+      border-radius:999px;
+      min-height:42px;
+      padding:10px 16px;
+      font-size:14px;
+      font-weight:1000;
+      cursor:pointer;
+      color:var(--navy-dark);
+      text-align:center;
+      box-shadow:0 6px 14px rgba(16,24,40,.05);
+      white-space:nowrap;
+      font-family:inherit;
+    }
+
+    .btn.primary,
+    .btn.is-active{
+      background:linear-gradient(180deg,var(--sun),var(--sun-dark));
+      color:var(--navy-dark);
+      border-color:var(--sun-dark);
+    }
+
+    .btn.green{
+      background:linear-gradient(135deg,var(--palm),var(--palm-light));
+      color:#fff;
+      border-color:var(--palm);
+    }
+
+    .btn.danger{
+      background:#fff5f5;
+      color:#8a1f1f;
+      border-color:#f1b2b2;
+    }
+
+    .btn:disabled{opacity:.55;cursor:not-allowed;}
+
+    .match-list{display:grid;gap:14px;margin-top:12px;}
+
+    .match-card{
+      border-radius:20px;
+      border:1px solid rgba(16,24,40,.08);
+      padding:14px;
+      background:#fff;
+      box-shadow:0 8px 18px rgba(16,24,40,.06);
+    }
+
+    .match-card.courtA{background:#fff8dd;border-color:rgba(255,196,0,.35);}
+    .match-card.courtB{background:#ffeef2;border-color:rgba(255,0,60,.20);}
+
+    .match-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px;}
+
+    .m-slot,.m-time,.m-label{
+      font-size:12px;
+      font-weight:1000;
+      padding:5px 9px;
+      border-radius:999px;
+      background:#f8fafc;
+      color:#344054;
+    }
+
+    .m-label{background:#e6f7ee;color:var(--palm-dark);}
+
+    .score-grid{
+      display:grid;
+      grid-template-columns:minmax(0,1fr) 52px 52px 52px;
+      gap:8px;
+      align-items:center;
+    }
+
+    .hdr{font-size:11px;font-weight:1000;color:#667085;text-align:center;}
+
+    .team-title{
+      font-size:15px;
+      font-weight:1000;
+      line-height:1.15;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .placeholder{color:#667085;font-style:italic;}
+
+    .sc{
+      width:52px;
+      height:42px;
+      border-radius:12px;
+      border:1px solid rgba(16,24,40,.14);
+      text-align:center;
+      font-weight:1000;
+      font-size:15px;
+      outline:none;
+      background:#fff;
+    }
+
+    .actions{margin-top:14px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+    .winner{font-size:13px;font-weight:1000;color:#475467;}
+    .winner.ok{color:#087a35;}
+
+    .standings{
+      margin-top:14px;
+      border-radius:16px;
+      background:#fff;
+      border:1px solid rgba(16,24,40,.08);
+      overflow:hidden;
+    }
+
+    table{width:100%;border-collapse:collapse;font-size:13px;}
+    th,td{padding:9px 7px;border-bottom:1px solid rgba(16,24,40,.08);text-align:center;}
+    th:first-child,td:first-child,th:nth-child(2),td:nth-child(2){text-align:left;}
+    th{background:#f8fafc;color:#475467;font-size:12px;text-transform:uppercase;}
+
+    .validation-box{
+      margin-top:12px;
+      padding:13px;
+      border-radius:16px;
+      border:1px solid rgba(16,24,40,.10);
+      background:#fff;
+      display:grid;
+      gap:10px;
+    }
+
+    .validation-ok{
+      background:#ecfdf5;
+      border-color:rgba(16,185,129,.30);
+      color:#064e3b;
+    }
+
+    .validation-warn{
+      background:#fff7e6;
+      border-color:#ffd37a;
+      color:#9a5b00;
+    }
+
+    .muted{color:var(--muted);font-size:14px;line-height:1.45;}
+
+    @media (max-width:759px){
+      main{padding-top:calc(var(--jat-total-top, 222px) + 28px);}
+      .panel-title{font-size:24px;}
+      .grid.two{grid-template-columns:1fr;}
+      .score-grid{grid-template-columns:minmax(0,1fr) 46px 46px 46px;}
+      .sc{width:46px;}
+    }
+  </style>
+</head>
+
+<body data-zone-selector="none">
+
+<div id="jatHeader"></div>
+
+<main class="container">
+
+  <section class="section panel" id="accessDenied" style="display:none;">
+    <h2 class="panel-title">⛔ Accès refusé</h2>
+    <p class="panel-text">Cette page est réservée au JAT et aux administrateurs.</p>
+  </section>
+
+  <section class="section panel" id="pageContent" style="display:none;">
+    <div class="panel-head">
+      <div>
+        <h1 class="panel-title">🏆 Résultats JAT</h1>
+        <p class="panel-text">Saisie des scores et validation sportive du Double Messieurs.</p>
+      </div>
+      <div class="panel-tag">JAT</div>
+    </div>
+
+    <div class="status-box">
+      Double Dames : <strong>tournoi annulé</strong>.<br>
+      Les classements de poules doivent être validés avant d’être utilisés pour les phases finales.
+    </div>
+  </section>
+
+  <section class="section panel" id="panelResults" style="display:none;">
+    <div class="panel-head">
+      <div>
+        <h2 class="panel-title">🏁 Saisie des scores</h2>
+        <p class="panel-text" id="statusText">Chargement…</p>
+      </div>
+      <div class="panel-tag">Live</div>
+    </div>
+
+    <div id="adminList"></div>
+  </section>
+
+</main>
+
+<script type="module" src="../assets/js/jat-header.js"></script>
+
+<script type="module">
+  import { auth, db } from "../assets/js/firebase.js";
+  import { getRoleByUid } from "../assets/js/session.js";
+
+  import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+
+  import {
+    doc,
+    collection,
+    setDoc,
+    onSnapshot,
+    serverTimestamp,
+    updateDoc
+  } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
+  const EVENT_ID = "tsck-open-juin-2026";
+
+  const accessDenied = document.getElementById("accessDenied");
+  const pageContent = document.getElementById("pageContent");
+  const panelResults = document.getElementById("panelResults");
+  const statusText = document.getElementById("statusText");
+  const adminList = document.getElementById("adminList");
+
+  let currentProg = null;
+  let resultsMap = new Map();
+  let poolValidation = null;
+
+  let unsubProg = null;
+  let unsubResults = null;
+  let unsubValidation = null;
+
+  function esc(s){
+    return (s ?? "").toString()
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+  }
+
+  function generalProgRef(){
+    return doc(db, "events", EVENT_ID, "programmations", "general");
+  }
+
+  function resultsCollection(){
+    return collection(db, "events", EVENT_ID, "resultats", "general", "matches");
+  }
+
+  function poolValidationRef(){
+    return doc(db, "events", EVENT_ID, "validations", "poules_DM");
+  }
+
+  function toNum(v){
+    if(v === null || v === undefined || v === "") return null;
+    const n = Number(String(v).replace(",", ".").trim());
+    return Number.isFinite(n) ? n : null;
+  }
+
+  function getResult(mid){
+    return resultsMap.get(mid) || null;
+  }
+
+  function winnerSide(res){
+    if(!res) return null;
+
+    if(res.winnerSide === "A" || res.winnerSide === "B"){
+      return res.winnerSide;
+    }
+
+    let a = 0;
+    let b = 0;
+
+    [["s1A","s1B"],["s2A","s2B"],["s3A","s3B"]].forEach(([ka,kb])=>{
+      const na = toNum(res[ka]);
+      const nb = toNum(res[kb]);
+
+      if(na === null || nb === null || na === nb) return;
+
+      if(na > nb) a++;
+      else b++;
+    });
+
+    if(a > b) return "A";
+    if(b > a) return "B";
+    return null;
+  }
+
+  function allMatches(){
+    return Array.isArray(currentProg?.matches) ? [...currentProg.matches] : [];
+  }
+
+  function normalMatches(){
+    return allMatches()
+      .filter(m => m.type !== "animation")
+      .filter(m => m.type !== "winner")
+      .filter(m => String(m.epreuve || "DM") === "DM")
+      .sort((a,b)=>{
+        if(Number(a.order) !== Number(b.order)) return Number(a.order) - Number(b.order);
+        return String(a.court || "").localeCompare(String(b.court || ""));
+      });
+  }
+
+  function matchById(id){
+    return allMatches().find(m => m.id === id) || null;
+  }
+
+  function poolKeyFromMatch(match){
+    const label = String(match?.label || "");
+    if(label.includes("Poule A")) return "A";
+    if(label.includes("Poule B")) return "B";
+    return null;
+  }
+
+  function poolMatches(pool){
+    return normalMatches().filter(m => poolKeyFromMatch(m) === pool);
+  }
+
+  function poolResultSignature(){
+    const ids = [...poolMatches("A"), ...poolMatches("B")].map(m => m.id).sort();
+
+    return ids.map(id => {
+      const r = getResult(id) || {};
+      return [
+        id,
+        r.s1A ?? "",
+        r.s1B ?? "",
+        r.s2A ?? "",
+        r.s2B ?? "",
+        r.s3A ?? "",
+        r.s3B ?? "",
+        r.winnerSide ?? ""
+      ].join("|");
+    }).join("||");
+  }
+
+  function poolsComplete(){
+    const list = [...poolMatches("A"), ...poolMatches("B")];
+    if(!list.length) return false;
+    return list.every(m => winnerSide(getResult(m.id)) !== null);
+  }
+
+  function poolsValidated(){
+    if(!poolValidation?.validatedAt) return false;
+    return poolValidation?.signature === poolResultSignature();
+  }
+
+  function buildPoolRanking(pool){
+    const stats = new Map();
+
+    function ensure(name){
+      const key = String(name || "Équipe").trim();
+
+      if(!stats.has(key)){
+        stats.set(key, {
+          teamName:key,
+          points:0,
+          wins:0,
+          setsWon:0,
+          setsLost:0,
+          gamesWon:0,
+          gamesLost:0
+        });
+      }
+
+      return stats.get(key);
+    }
+
+    poolMatches(pool).forEach(match => {
+      const res = getResult(match.id);
+      const w = winnerSide(res);
+
+      const nameA = teamName(match, "A");
+      const nameB = teamName(match, "B");
+
+      const A = ensure(nameA);
+      const B = ensure(nameB);
+
+      if(w !== "A" && w !== "B") return;
+
+      let setsA = 0;
+      let setsB = 0;
+
+      [["s1A","s1B"],["s2A","s2B"],["s3A","s3B"]].forEach(([ka,kb])=>{
+        const ga = toNum(res[ka]);
+        const gb = toNum(res[kb]);
+
+        if(ga === null || gb === null) return;
+
+        A.gamesWon += ga;
+        A.gamesLost += gb;
+        B.gamesWon += gb;
+        B.gamesLost += ga;
+
+        if(ga > gb) setsA++;
+        else if(gb > ga) setsB++;
+      });
+
+      A.setsWon += setsA;
+      A.setsLost += setsB;
+      B.setsWon += setsB;
+      B.setsLost += setsA;
+
+      if(w === "A"){
+        A.points += 2;
+        A.wins++;
+        B.points += 1;
+      }else{
+        B.points += 2;
+        B.wins++;
+        A.points += 1;
+      }
+    });
+
+    return [...stats.values()].sort((a,b)=>{
+      if(b.points !== a.points) return b.points - a.points;
+      if(b.wins !== a.wins) return b.wins - a.wins;
+
+      const sdA = a.setsWon - a.setsLost;
+      const sdB = b.setsWon - b.setsLost;
+      if(sdB !== sdA) return sdB - sdA;
+
+      const gdA = a.gamesWon - a.gamesLost;
+      const gdB = b.gamesWon - b.gamesLost;
+      if(gdB !== gdA) return gdB - gdA;
+
+      return a.teamName.localeCompare(b.teamName, "fr");
+    });
+  }
+
+  function resolvePoolRank(pool, rank){
+    if(!poolsValidated()) return null;
+
+    const ranking = buildPoolRanking(pool);
+    return ranking[Number(rank) - 1]?.teamName || null;
+  }
+
+  function resolveMatchWinnerOrLoser(matchId, want){
+    const source = matchById(matchId);
+    if(!source) return null;
+
+    const side = winnerSide(getResult(matchId));
+    if(side !== "A" && side !== "B") return null;
+
+    const target = want === "winner" ? side : (side === "A" ? "B" : "A");
+    return teamName(source, target);
+  }
+
+  function teamName(match, side){
+    const ref = side === "A" ? match.A : match.B;
+
+    if(ref?.type === "team"){
+      return ref.team?.teamName || ref.teamName || ref.title || "Équipe";
+    }
+
+    if(ref?.type === "poolRank"){
+      return resolvePoolRank(ref.pool, ref.rank)
+        || `${ref.rank}e Poule ${ref.pool}`;
+    }
+
+    if(ref?.type === "winner" || ref?.type === "loser"){
+      return resolveMatchWinnerOrLoser(ref.matchId, ref.type)
+        || `${ref.type === "winner" ? "Vainqueur" : "Perdant"} ${ref.matchId}`;
+    }
+
+    const raw = side === "A" ? match.teamA : match.teamB;
+    return raw || "Équipe";
+  }
+
+  function isPlaceholder(name){
+    return /Poule|Vainqueur|Perdant|Équipe/.test(String(name || ""));
+  }
+
+  function courtLabel(court){
+    if(court === "A") return "Terrain 1";
+    if(court === "B") return "Terrain 2";
+    return "Terrain";
+  }
+
+  function renderMatch(match){
+    const stored = getResult(match.id) || {};
+    const win = winnerSide(stored);
+
+    const a = teamName(match, "A");
+    const b = teamName(match, "B");
+
+    const cls = match.court === "A" ? "courtA" : match.court === "B" ? "courtB" : "";
+
+    return `
+      <div class="match-card ${esc(cls)}" data-mid="${esc(match.id)}">
+        <div class="match-head">
+          <div class="m-slot">#${esc(match.order || "—")}</div>
+          <div class="m-time">${esc(match.time || "—")}</div>
+          <div class="m-label">${esc(match.label || match.id)}</div>
+          <div class="m-label">${esc(courtLabel(match.court))}</div>
+        </div>
+
+        <div class="score-grid">
+          <div></div>
+          <div class="hdr">S1</div>
+          <div class="hdr">S2</div>
+          <div class="hdr">S3</div>
+
+          <div>
+            <div class="team-title ${isPlaceholder(a) ? "placeholder" : ""}">${esc(a)}</div>
+          </div>
+          <input class="sc" data-k="s1A" value="${esc(stored.s1A ?? "")}">
+          <input class="sc" data-k="s2A" value="${esc(stored.s2A ?? "")}">
+          <input class="sc" data-k="s3A" value="${esc(stored.s3A ?? "")}">
+
+          <div>
+            <div class="team-title ${isPlaceholder(b) ? "placeholder" : ""}">${esc(b)}</div>
+          </div>
+          <input class="sc" data-k="s1B" value="${esc(stored.s1B ?? "")}">
+          <input class="sc" data-k="s2B" value="${esc(stored.s2B ?? "")}">
+          <input class="sc" data-k="s3B" value="${esc(stored.s3B ?? "")}">
+        </div>
+
+        <div class="actions">
+          <div class="winner ${win ? "ok" : ""}">
+            ${win ? `✅ Vainqueur : ${win === "A" ? esc(a) : esc(b)}` : "⏳ Résultat incomplet"}
+          </div>
+
+          <button class="btn primary" data-save="${esc(match.id)}" type="button">💾 Enregistrer</button>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderStandings(){
+    const a = buildPoolRanking("A");
+    const b = buildPoolRanking("B");
+
+    function table(rows, title){
+      return `
+        <div class="standings">
+          <table>
+            <thead>
+              <tr><th colspan="6">${esc(title)}</th></tr>
+              <tr><th>#</th><th>Équipe</th><th>Pts</th><th>V</th><th>Sets</th><th>Jeux</th></tr>
+            </thead>
+            <tbody>
+              ${rows.length ? rows.map((r,i)=>`
+                <tr>
+                  <td>${i + 1}</td>
+                  <td>${esc(r.teamName)}</td>
+                  <td>${r.points}</td>
+                  <td>${r.wins}</td>
+                  <td>${r.setsWon - r.setsLost}</td>
+                  <td>${r.gamesWon - r.gamesLost}</td>
+                </tr>
+              `).join("") : `<tr><td colspan="6">Classement à venir</td></tr>`}
+            </tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    const complete = poolsComplete();
+    const validated = poolsValidated();
+
+    const validationHtml = `
+      <div class="validation-box ${validated ? "validation-ok" : "validation-warn"}">
+        <div>
+          ${validated
+            ? "✅ Classements de poules validés. Les phases finales utilisent ce classement."
+            : complete
+              ? "⚠️ Tous les matchs de poule sont saisis. Validation nécessaire avant phases finales."
+              : "⏳ Les classements de poules pourront être validés quand tous les matchs de poule seront terminés."}
+        </div>
+
+        <div class="grid two">
+          <button class="btn green" id="btnValidatePools" type="button" ${complete && !validated ? "" : "disabled"}>
+            ✅ Valider les classements de poules
+          </button>
+
+          <button class="btn danger" id="btnUnvalidatePools" type="button" ${validated ? "" : "disabled"}>
+            ↩️ Annuler la validation
+          </button>
+        </div>
+      </div>
+    `;
+
+    return table(a, "Poule A") + table(b, "Poule B") + validationHtml;
+  }
+
+  function render(){
+    const matches = normalMatches();
+
+    statusText.textContent = currentProg
+      ? `${matches.length} match(s) affiché(s)`
+      : "Programmation introuvable.";
+
+    if(!currentProg){
+      adminList.innerHTML = `<p class="muted">Génère d’abord la programmation générale.</p>`;
+      return;
+    }
+
+    adminList.innerHTML = `
+      ${renderStandings()}
+      <div class="match-list">${matches.map(renderMatch).join("")}</div>
+    `;
+
+    const btnValidatePools = document.getElementById("btnValidatePools");
+    const btnUnvalidatePools = document.getElementById("btnUnvalidatePools");
+
+    if(btnValidatePools){
+      btnValidatePools.onclick = validatePools;
+    }
+
+    if(btnUnvalidatePools){
+      btnUnvalidatePools.onclick = unvalidatePools;
+    }
+  }
+
+  async function validatePools(){
+    if(!poolsComplete()){
+      alert("Tous les matchs de poule doivent être terminés avant validation.");
+      return;
+    }
+
+    await setDoc(poolValidationRef(), {
+      validated:true,
+      signature:poolResultSignature(),
+      rankingA:buildPoolRanking("A"),
+      rankingB:buildPoolRanking("B"),
+      validatedAt:serverTimestamp(),
+      validatedBy:auth.currentUser?.uid || null,
+      updatedAt:serverTimestamp()
+    }, { merge:true });
+  }
+
+  async function unvalidatePools(){
+    const ok = confirm("Annuler la validation des classements de poules ?");
+    if(!ok) return;
+
+    await setDoc(poolValidationRef(), {
+      validated:false,
+      signature:null,
+      unvalidatedAt:serverTimestamp(),
+      unvalidatedBy:auth.currentUser?.uid || null,
+      updatedAt:serverTimestamp()
+    }, { merge:true });
+  }
+
+  async function invalidatePoolsIfPoolMatch(mid){
+    const m = matchById(mid);
+    if(!m) return;
+
+    if(!poolKeyFromMatch(m)) return;
+    if(!poolValidation?.validatedAt) return;
+
+    await setDoc(poolValidationRef(), {
+      validated:false,
+      signature:null,
+      invalidatedReason:"pool_score_modified",
+      invalidatedMatchId:mid,
+      invalidatedAt:serverTimestamp(),
+      invalidatedBy:auth.currentUser?.uid || null,
+      updatedAt:serverTimestamp()
+    }, { merge:true });
+  }
+
+  adminList.addEventListener("click", async (event) => {
+    const btn = event.target.closest("[data-save]");
+    if(!btn) return;
+
+    const mid = btn.dataset.save;
+    const card = btn.closest(".match-card");
+
+    const get = (k) => (card.querySelector(`[data-k="${k}"]`)?.value || "").trim();
+
+    const payload = {
+      s1A:get("s1A"),
+      s2A:get("s2A"),
+      s3A:get("s3A"),
+      s1B:get("s1B"),
+      s2B:get("s2B"),
+      s3B:get("s3B"),
+      updatedAt:serverTimestamp(),
+      updatedBy:auth.currentUser?.uid || null
+    };
+
+    payload.winnerSide = winnerSide(payload);
+
+    btn.disabled = true;
+
+    try{
+      await setDoc(doc(resultsCollection(), mid), payload, { merge:true });
+      await invalidatePoolsIfPoolMatch(mid);
+    }catch(error){
+      console.error(error);
+      alert("Erreur Firestore ❌");
+    }finally{
+      btn.disabled = false;
+    }
+  });
+
+  function startListeners(){
+    stopListeners();
+
+    unsubProg = onSnapshot(generalProgRef(), (snap) => {
+      currentProg = snap.exists() ? (snap.data() || null) : null;
+      render();
+    });
+
+    unsubResults = onSnapshot(resultsCollection(), (snap) => {
+      resultsMap = new Map();
+      snap.forEach(d => resultsMap.set(d.id, d.data() || {}));
+      render();
+    });
+
+    unsubValidation = onSnapshot(poolValidationRef(), (snap) => {
+      poolValidation = snap.exists() ? (snap.data() || null) : null;
+      render();
+    });
+  }
+
+  function stopListeners(){
+    if(unsubProg) unsubProg();
+    if(unsubResults) unsubResults();
+    if(unsubValidation) unsubValidation();
+
+    unsubProg = null;
+    unsubResults = null;
+    unsubValidation = null;
+  }
+
+  function showDenied(){
+    accessDenied.style.display = "block";
+    pageContent.style.display = "none";
+    panelResults.style.display = "none";
+    stopListeners();
+  }
+
+  function showJat(){
+    accessDenied.style.display = "none";
+    pageContent.style.display = "block";
+    panelResults.style.display = "block";
+    startListeners();
+  }
+
+  onAuthStateChanged(auth, async (user) => {
+    accessDenied.style.display = "none";
+    pageContent.style.display = "none";
+    panelResults.style.display = "none";
+
+    if(!user){
+      showDenied();
+      return;
+    }
+
+    try{
+      const role = await getRoleByUid(user.uid);
+
+      if(role !== "admin" && role !== "jat"){
+        showDenied();
+        return;
+      }
+
+      showJat();
+
+    }catch(error){
+      console.error(error);
+      showDenied();
+    }
+  });
+</script>
+
+</body>
+</html>
