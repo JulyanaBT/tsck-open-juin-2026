@@ -3,20 +3,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Admin — Tirage — Open Beach Tennis TSCK</title>
+  <title>Admin — Tirage manuel — Open Beach Tennis TSCK</title>
 
   <style>
     :root{
-      --palm:#0b7a3b;
-      --palm-dark:#064d28;
-      --palm-light:#15a658;
-      --navy:#06284a;
-      --navy-dark:#03172b;
-      --sun:#ffd21f;
-      --sun-dark:#f3b800;
-      --text:#17212b;
-      --muted:#667085;
-      --card:rgba(255,255,255,.95);
+      --palm:#0b7a3b; --palm-dark:#064d28; --palm-light:#15a658;
+      --navy:#06284a; --navy-dark:#03172b;
+      --sun:#ffd21f; --sun-dark:#f3b800;
+      --text:#17212b; --muted:#667085; --card:rgba(255,255,255,.95);
       --shadow:0 16px 40px rgba(16,24,40,.12);
       --container:1180px;
     }
@@ -104,11 +98,7 @@
 
     .status-box strong{color:var(--navy-dark);}
 
-    .grid{
-      display:grid;
-      grid-template-columns:1fr;
-      gap:10px;
-    }
+    .grid{display:grid;grid-template-columns:1fr;gap:10px;}
 
     .btn{
       appearance:none;
@@ -147,26 +137,7 @@
       border-color:#f1b2b2;
     }
 
-    .btn:disabled{
-      opacity:.55;
-      cursor:not-allowed;
-    }
-
-    .roulette-wheel{
-      min-height:72px;
-      border-radius:18px;
-      border:1px solid rgba(16,24,40,.08);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-weight:1000;
-      font-size:18px;
-      background:linear-gradient(180deg,#fff,#fafafa);
-      text-align:center;
-      padding:12px;
-      box-shadow:0 8px 18px rgba(16,24,40,.06);
-      color:var(--navy-dark);
-    }
+    .btn:disabled{opacity:.55;cursor:not-allowed;}
 
     .pool-grid{
       display:grid;
@@ -192,52 +163,64 @@
       margin-bottom:10px;
     }
 
-    .pool-list,
-    .item-list{
+    .select-row{
       display:grid;
+      grid-template-columns:1fr auto;
       gap:8px;
+      align-items:center;
+      margin-top:8px;
     }
 
-    .pool-slot{
-      border:1px solid #eee;
+    select{
+      width:100%;
+      min-height:46px;
+      border-radius:15px;
+      border:1px solid rgba(16,24,40,.14);
+      background:#fff;
+      padding:0 12px;
+      font-size:15px;
+      font-weight:900;
+      color:#17212b;
+      outline:none;
+      font-family:inherit;
+    }
+
+    .mini-btn{
+      border:1px solid rgba(16,24,40,.10);
+      background:#fff;
+      border-radius:999px;
+      width:42px;
+      height:42px;
+      cursor:pointer;
+      font-weight:1000;
+    }
+
+    .team-list{
+      display:grid;
+      gap:8px;
+      margin-top:12px;
+    }
+
+    .team-chip{
+      border:1px solid rgba(16,24,40,.08);
       border-radius:14px;
       background:#fafafa;
       padding:10px 12px;
       font-weight:1000;
-      font-size:14px;
-      line-height:1.2;
-      min-width:0;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-
-    .pool-slot.empty{
-      background:#f7fbff;
-      border-color:#d9ebfb;
-      color:#667085;
-      font-style:italic;
-    }
-
-    .pool-slot.seed{
-      background:#fff9e8;
-      border-color:#f1dca1;
-      color:var(--navy-dark);
-    }
-
-    .item-list{
-      margin-top:10px;
-    }
-
-    .item-card{
-      border:1px solid rgba(16,24,40,.08);
-      border-radius:16px;
-      background:#fff;
-      padding:11px 12px;
-      box-shadow:0 6px 14px rgba(16,24,40,.05);
       display:flex;
       justify-content:space-between;
-      gap:10px;
+      gap:8px;
       align-items:center;
+    }
+
+    .team-chip.seed{
+      background:#fff9e8;
+      border-color:#f1dca1;
+    }
+
+    .team-chip.unused{
+      background:#f8fafc;
+      color:#475467;
     }
 
     .pill{
@@ -253,11 +236,7 @@
       font-weight:1000;
     }
 
-    .muted{
-      color:var(--muted);
-      font-size:14px;
-      line-height:1.45;
-    }
+    .muted{color:var(--muted);font-size:14px;line-height:1.45;}
 
     @media (min-width:760px){
       .panel{padding:22px;}
@@ -267,10 +246,7 @@
     }
 
     @media (max-width:759px){
-      main{
-        padding-top:calc(var(--admin-total-top, 222px) + 28px);
-      }
-
+      main{padding-top:calc(var(--admin-total-top, 222px) + 28px);}
       .panel-title{font-size:24px;}
     }
   </style>
@@ -290,9 +266,9 @@
   <section class="section panel" id="pageContent" style="display:none;">
     <div class="panel-head">
       <div>
-        <h1 class="panel-title">🎲 Tirage au sort</h1>
+        <h1 class="panel-title">🎲 Tirage manuel</h1>
         <p class="panel-text">
-          Tirage simplifié TSCK : uniquement Double Messieurs. Double Dames annulé.
+          Remplis les poules manuellement en choisissant les équipes, puis valide le tirage.
         </p>
       </div>
       <div class="panel-tag">Admin</div>
@@ -302,7 +278,7 @@
       Épreuve sélectionnée :
       <strong id="zoneLabel">Double Messieurs</strong>
       <br>
-      TS1 est placée en Poule A, TS2 en Poule B, puis tirage aléatoire des autres équipes.
+      Le tirage validé sera utilisé ensuite pour générer la programmation.
     </div>
   </section>
 
@@ -316,8 +292,8 @@
     </div>
 
     <div class="grid two">
-      <button class="btn" id="btnPublicHide">🔒 Mettre en maintenance</button>
-      <button class="btn" id="btnPublicShow">✅ Rendre visible</button>
+      <button class="btn" id="btnPublicHide" type="button">🔒 Mettre en maintenance</button>
+      <button class="btn" id="btnPublicShow" type="button">✅ Rendre visible</button>
     </div>
   </section>
 
@@ -348,57 +324,44 @@
 
     <div class="grid three">
       <button class="btn primary" id="btnLoad" type="button">🔄 Charger équipes</button>
-      <button class="btn green" id="btnStart" type="button">▶️ Lancer</button>
-      <button class="btn" id="btnNext" type="button">🎰 Tirage suivant</button>
-      <button class="btn primary" id="btnValidate" type="button">✅ Valider</button>
+      <button class="btn green" id="btnSaveDraft" type="button">💾 Enregistrer brouillon</button>
+      <button class="btn primary" id="btnValidate" type="button">✅ Valider les poules</button>
+      <button class="btn danger" id="btnUnvalidate" type="button">↩️ Dévalider</button>
       <button class="btn danger" id="btnReset" type="button">🧨 Réinitialiser</button>
-      <a class="btn" id="btnPublic" href="../public/tirage.html?adminPreview=1">👀 Vue publique</a>
+      <a class="btn" href="../public/tirage.html?adminPreview=1">👀 Vue publique</a>
     </div>
 
-    <div class="status-box" id="ruleText">
-      Règle : deux poules A et B. TS1 en Poule A, TS2 en Poule B.
+    <div class="status-box">
+      Sélectionne une équipe dans chaque emplacement. Une même équipe ne peut apparaître qu’une seule fois.
     </div>
   </section>
 
   <section class="section panel" id="panelDraw" style="display:none;">
     <div class="panel-head">
       <div>
-        <h2 class="panel-title">📌 Aperçu du tirage</h2>
+        <h2 class="panel-title">🏖️ Composition des poules</h2>
         <p class="panel-text" id="drawInfo">—</p>
       </div>
-      <div class="panel-tag">Direct</div>
+      <div class="panel-tag">Manuel</div>
     </div>
 
-    <div>
-      <div style="font-weight:1000;margin-bottom:8px;">🎰 Roulette admin</div>
-      <div class="roulette-wheel" id="wheel">—</div>
-      <div class="muted" id="wheelSub" style="margin-top:8px;">—</div>
-    </div>
+    <div class="pool-grid">
+      <div class="pool-card">
+        <div class="pool-title">Poule A</div>
+        <div id="poolASelects"></div>
+        <div id="poolAList" class="team-list"></div>
+      </div>
 
-    <div style="margin-top:16px;">
-      <div style="font-weight:1000;margin-bottom:8px;">🏖️ Poules</div>
-
-      <div class="pool-grid">
-        <div class="pool-card">
-          <div class="pool-title">Poule A</div>
-          <div id="drawPoolAList" class="pool-list"></div>
-        </div>
-
-        <div class="pool-card">
-          <div class="pool-title">Poule B</div>
-          <div id="drawPoolBList" class="pool-list"></div>
-        </div>
+      <div class="pool-card">
+        <div class="pool-title">Poule B</div>
+        <div id="poolBSelects"></div>
+        <div id="poolBList" class="team-list"></div>
       </div>
     </div>
 
     <div style="margin-top:16px;">
-      <div style="font-weight:1000;margin-bottom:8px;">📥 Urne</div>
-      <div id="remainingList" class="item-list"></div>
-    </div>
-
-    <div style="margin-top:16px;">
-      <div style="font-weight:1000;margin-bottom:8px;">📌 Déjà révélés</div>
-      <div id="revealedList" class="item-list"></div>
+      <div style="font-weight:1000;margin-bottom:8px;">📥 Équipes non placées</div>
+      <div id="unusedList" class="team-list"></div>
     </div>
   </section>
 
@@ -410,9 +373,7 @@
   import { auth, db } from "../assets/js/firebase.js";
   import { getRoleByUid } from "../assets/js/session.js";
 
-  import {
-    onAuthStateChanged
-  } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+  import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 
   import {
     collection,
@@ -420,7 +381,6 @@
     query,
     orderBy,
     doc,
-    getDoc,
     setDoc,
     updateDoc,
     onSnapshot,
@@ -450,22 +410,22 @@
   const btnPublicShow = document.getElementById("btnPublicShow");
 
   const btnLoad = document.getElementById("btnLoad");
-  const btnStart = document.getElementById("btnStart");
-  const btnNext = document.getElementById("btnNext");
+  const btnSaveDraft = document.getElementById("btnSaveDraft");
   const btnValidate = document.getElementById("btnValidate");
+  const btnUnvalidate = document.getElementById("btnUnvalidate");
   const btnReset = document.getElementById("btnReset");
 
-  const wheel = document.getElementById("wheel");
-  const wheelSub = document.getElementById("wheelSub");
-
-  const drawPoolAList = document.getElementById("drawPoolAList");
-  const drawPoolBList = document.getElementById("drawPoolBList");
-  const remainingList = document.getElementById("remainingList");
-  const revealedList = document.getElementById("revealedList");
+  const poolASelects = document.getElementById("poolASelects");
+  const poolBSelects = document.getElementById("poolBSelects");
+  const poolAList = document.getElementById("poolAList");
+  const poolBList = document.getElementById("poolBList");
+  const unusedList = document.getElementById("unusedList");
 
   let currentEpreuve = "DM";
   let cachedTeams = [];
   let currentDraw = null;
+  let manualPools = { A:[], B:[] };
+
   let unsubDraw = null;
   let unsubVisibility = null;
   let isAdminReady = false;
@@ -474,7 +434,9 @@
     return (s ?? "").toString()
       .replaceAll("&","&amp;")
       .replaceAll("<","&lt;")
-      .replaceAll(">","&gt;");
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
   }
 
   function toNum(v){
@@ -510,38 +472,25 @@
     return collection(db, "events", EVENT_ID, "equipes");
   }
 
-  function randomShuffle(arr){
-    const a = arr.slice();
-
-    const rand = (n) => {
-      const u = new Uint32Array(1);
-      crypto.getRandomValues(u);
-      return u[0] % n;
-    };
-
-    for(let i = a.length - 1; i > 0; i--){
-      const j = rand(i + 1);
-      [a[i], a[j]] = [a[j], a[i]];
-    }
-
-    return a;
-  }
-
-  function teamNameOnly(t){
-    return t?.teamName || "Équipe";
-  }
-
   function teamLabel(t){
     if(!t) return "—";
     return `${t.teamName || "Équipe"} (${t.joueur1FirstName || "?"} / ${t.joueur2FirstName || "?"})`;
   }
 
+  function teamName(t){
+    return t?.teamName || "Équipe";
+  }
+
   function poolSizes(){
     const total = cachedTeams.length;
     return {
-      A: Math.ceil(total / 2),
-      B: Math.floor(total / 2)
+      A:Math.ceil(total / 2),
+      B:Math.floor(total / 2)
     };
+  }
+
+  function findTeam(id){
+    return cachedTeams.find(t => t.id === id) || null;
   }
 
   async function fetchTeams(){
@@ -552,6 +501,7 @@
       const x = d.data() || {};
 
       if(String(x.epreuve || "").trim() !== currentEpreuve) return;
+      if(String(x.categorie || "Seniors").trim() !== "Seniors") return;
       if(x.stby === true) return;
       if(x.list === "wait") return;
 
@@ -560,7 +510,9 @@
         createdAtMs:x.createdAt?.toMillis ? x.createdAt.toMillis() : 0,
         teamName:x.teamName || "",
         joueur1FirstName:x.joueur1FirstName || x.p1FirstName || x.joueur1?.firstName || "",
+        joueur1LastName:x.joueur1LastName || x.p1LastName || x.joueur1?.lastName || "",
         joueur2FirstName:x.joueur2FirstName || x.p2FirstName || x.joueur2?.firstName || "",
+        joueur2LastName:x.joueur2LastName || x.p2LastName || x.joueur2?.lastName || "",
         p1Rank:x.p1Rank ?? x.joueur1Rank ?? x.joueur1?.rank ?? null,
         p2Rank:x.p2Rank ?? x.joueur2Rank ?? x.joueur2?.rank ?? null
       });
@@ -576,81 +528,149 @@
     return rows;
   }
 
-  function parseToken(token){
-    const s = String(token || "");
-    if(s.startsWith("A:")) return { pool:"A", id:s.slice(2) };
-    if(s.startsWith("B:")) return { pool:"B", id:s.slice(2) };
-    return { pool:null, id:s };
-  }
+  function cleanManualPools(){
+    const ids = new Set(cachedTeams.map(t => t.id));
+    const seen = new Set();
 
-  function findTeam(id){
-    return cachedTeams.find(t => t.id === id) || null;
-  }
+    function clean(arr){
+      const out = [];
 
-  function remainingTokens(){
-    const order = Array.isArray(currentDraw?.order) ? currentDraw.order : [];
-    const revealed = Number(currentDraw?.revealed || 0);
-    return order.slice(revealed);
-  }
-
-  function revealedTokens(){
-    const order = Array.isArray(currentDraw?.order) ? currentDraw.order : [];
-    const revealed = Number(currentDraw?.revealed || 0);
-    return order.slice(0, revealed);
-  }
-
-  function tokenLabel(token){
-    const p = parseToken(token);
-    const team = findTeam(p.id);
-    const dest = p.pool === "A" ? "Poule A" : "Poule B";
-    return `${dest} → ${teamLabel(team)}`;
-  }
-
-  function buildDrawState(){
-    const seed1 = currentDraw?.seed1 || cachedTeams[0] || null;
-    const seed2 = currentDraw?.seed2 || cachedTeams[1] || null;
-
-    const state = {
-      seed1,
-      seed2,
-      poolA: seed1 ? [seed1] : [],
-      poolB: seed2 ? [seed2] : []
-    };
-
-    for(const token of revealedTokens()){
-      const p = parseToken(token);
-      const team = findTeam(p.id);
-      if(!team) continue;
-
-      if(p.pool === "A" && !state.poolA.some(t => t.id === team.id)){
-        state.poolA.push(team);
+      for(const id of Array.isArray(arr) ? arr : []){
+        if(!ids.has(id)) continue;
+        if(seen.has(id)) continue;
+        seen.add(id);
+        out.push(id);
       }
 
-      if(p.pool === "B" && !state.poolB.some(t => t.id === team.id)){
-        state.poolB.push(team);
-      }
+      return out;
     }
 
-    return state;
+    manualPools = {
+      A:clean(manualPools.A),
+      B:clean(manualPools.B)
+    };
   }
 
-  function teamHtml(t, opts = {}){
-    const cls = opts.seed ? "pool-slot seed" : "pool-slot";
-    const suffix = opts.seedLabel ? ` — ${esc(opts.seedLabel)}` : "";
-    return `<div class="${cls}">${esc(teamNameOnly(t))}${suffix}</div>`;
+  function loadPoolsFromDraw(){
+    manualPools = { A:[], B:[] };
+
+    if(Array.isArray(currentDraw?.pools?.A)){
+      manualPools.A = currentDraw.pools.A.map(t => typeof t === "string" ? t : t.id).filter(Boolean);
+    }
+
+    if(Array.isArray(currentDraw?.pools?.B)){
+      manualPools.B = currentDraw.pools.B.map(t => typeof t === "string" ? t : t.id).filter(Boolean);
+    }
+
+    if(!manualPools.A.length && currentDraw?.seed1?.id){
+      manualPools.A.push(currentDraw.seed1.id);
+    }
+
+    if(!manualPools.B.length && currentDraw?.seed2?.id){
+      manualPools.B.push(currentDraw.seed2.id);
+    }
+
+    const order = Array.isArray(currentDraw?.order) ? currentDraw.order : [];
+    const revealed = Number(currentDraw?.revealed || 0);
+
+    order.slice(0, revealed || order.length).forEach(token => {
+      const s = String(token || "");
+      const pool = s.startsWith("A:") ? "A" : s.startsWith("B:") ? "B" : null;
+      const id = s.slice(2);
+
+      if(pool && id && !manualPools[pool].includes(id)){
+        manualPools[pool].push(id);
+      }
+    });
+
+    cleanManualPools();
   }
 
-  function emptyHtml(text = "—"){
-    return `<div class="pool-slot empty">${esc(text)}</div>`;
+  function selectedIds(){
+    return [...manualPools.A, ...manualPools.B].filter(Boolean);
   }
 
-  function itemCardHtml(text, badge){
+  function unusedTeams(){
+    const used = new Set(selectedIds());
+    return cachedTeams.filter(t => !used.has(t.id));
+  }
+
+  function optionHtml(selectedId){
+    const used = new Set(selectedIds());
+
     return `
-      <div class="item-card">
-        <div style="min-width:0;"><b>${esc(text)}</b></div>
+      <option value="">— Choisir une équipe —</option>
+      ${cachedTeams.map(t => {
+        const disabled = used.has(t.id) && t.id !== selectedId ? "disabled" : "";
+        const selected = t.id === selectedId ? "selected" : "";
+
+        return `<option value="${esc(t.id)}" ${selected} ${disabled}>${esc(teamLabel(t))}</option>`;
+      }).join("")}
+    `;
+  }
+
+  function renderSelects(pool){
+    const size = poolSizes()[pool];
+    const arr = manualPools[pool];
+
+    return Array.from({ length:size }, (_, index) => {
+      const selectedId = arr[index] || "";
+
+      return `
+        <div class="select-row">
+          <select data-pool="${pool}" data-index="${index}">
+            ${optionHtml(selectedId)}
+          </select>
+
+          <button class="mini-btn" type="button" data-clear="${pool}:${index}" title="Vider">×</button>
+        </div>
+      `;
+    }).join("");
+  }
+
+  function chipHtml(team, badge, seed = false){
+    return `
+      <div class="team-chip ${seed ? "seed" : ""}">
+        <span style="min-width:0;overflow:hidden;text-overflow:ellipsis;">${esc(teamName(team))}</span>
         <span class="pill">${esc(badge)}</span>
       </div>
     `;
+  }
+
+  function renderPoolList(pool){
+    const ids = manualPools[pool] || [];
+
+    if(!ids.length){
+      return `<p class="muted" style="margin:0;">Aucune équipe placée.</p>`;
+    }
+
+    return ids.map((id, i) => {
+      const t = findTeam(id);
+      if(!t) return "";
+
+      const badge = i === 0 && pool === "A"
+        ? "TS1"
+        : i === 0 && pool === "B"
+          ? "TS2"
+          : `#${i + 1}`;
+
+      return chipHtml(t, badge, i === 0);
+    }).join("");
+  }
+
+  function renderUnused(){
+    const list = unusedTeams();
+
+    if(!list.length){
+      return `<p class="muted" style="margin:0;">Toutes les équipes sont placées.</p>`;
+    }
+
+    return list.map(t => `
+      <div class="team-chip unused">
+        <span style="min-width:0;overflow:hidden;text-overflow:ellipsis;">${esc(teamLabel(t))}</span>
+        <span class="pill">non placée</span>
+      </div>
+    `).join("");
   }
 
   function updateZoneDisplay(){
@@ -674,75 +694,91 @@
   }
 
   function renderDraw(){
-    const size = poolSizes();
-    const state = buildDrawState();
-
-    if(!currentDraw){
-      statusEl.textContent = "ℹ️ Aucun tirage préparé. Clique sur “Charger équipes”.";
-      drawInfo.textContent = "—";
-      wheel.textContent = "—";
-      wheelSub.textContent = "—";
-      drawPoolAList.innerHTML = emptyHtml("En attente");
-      drawPoolBList.innerHTML = emptyHtml("En attente");
-      remainingList.innerHTML = `<p class="muted" style="margin:0;">—</p>`;
-      revealedList.innerHTML = `<p class="muted" style="margin:0;">—</p>`;
-      setDrawButtons();
+    if(!cachedTeams.length){
+      statusEl.textContent = "ℹ️ Clique sur “Charger équipes”.";
+      drawInfo.textContent = "Aucune équipe chargée.";
+      poolASelects.innerHTML = "";
+      poolBSelects.innerHTML = "";
+      poolAList.innerHTML = `<p class="muted" style="margin:0;">—</p>`;
+      poolBList.innerHTML = `<p class="muted" style="margin:0;">—</p>`;
+      unusedList.innerHTML = `<p class="muted" style="margin:0;">—</p>`;
+      setButtons();
       return;
     }
 
-    if(currentDraw.status === "running"){
-      statusEl.textContent = "▶️ Tirage en cours.";
-    }else if(currentDraw.status === "pending_validation"){
-      statusEl.textContent = "🏁 Tirage terminé — en attente de validation.";
-    }else if(currentDraw.status === "validated"){
-      statusEl.textContent = "✅ Tirage validé.";
-    }else{
-      statusEl.textContent = "✅ Tirage prêt.";
-    }
+    cleanManualPools();
 
-    drawPoolAList.innerHTML = Array.from({ length:size.A }, (_, i) => {
-      return state.poolA[i]
-        ? teamHtml(state.poolA[i], i === 0 ? { seed:true, seedLabel:"TS1" } : {})
-        : emptyHtml(`Place ${i + 1} en attente`);
-    }).join("");
+    const total = cachedTeams.length;
+    const placed = selectedIds().length;
+    const valid = currentDraw?.status === "validated";
 
-    drawPoolBList.innerHTML = Array.from({ length:size.B }, (_, i) => {
-      return state.poolB[i]
-        ? teamHtml(state.poolB[i], i === 0 ? { seed:true, seedLabel:"TS2" } : {})
-        : emptyHtml(`Place ${i + 1} en attente`);
-    }).join("");
+    statusEl.textContent = valid
+      ? `✅ Tirage validé — ${placed}/${total} équipe(s) placée(s).`
+      : `📝 Brouillon manuel — ${placed}/${total} équipe(s) placée(s).`;
 
-    const remaining = remainingTokens();
-    const revealed = revealedTokens();
+    drawInfo.textContent = `${total} équipe(s) chargée(s). ${unusedTeams().length} équipe(s) non placée(s).`;
 
-    remainingList.innerHTML = remaining.length
-      ? `<p class="muted" style="margin:0;">🎲 ${remaining.length} équipe${remaining.length > 1 ? "s" : ""} encore dans l’urne — noms masqués.</p>`
-      : `<p class="muted" style="margin:0;">Aucune équipe restante.</p>`;
+    poolASelects.innerHTML = renderSelects("A");
+    poolBSelects.innerHTML = renderSelects("B");
 
-    revealedList.innerHTML = revealed.length
-      ? revealed.map((tok, i) => itemCardHtml(`#${i + 1} — ${tokenLabel(tok)}`, "tiré")).join("")
-      : `<p class="muted" style="margin:0;">Aucun tirage révélé.</p>`;
+    poolAList.innerHTML = renderPoolList("A");
+    poolBList.innerHTML = renderPoolList("B");
+    unusedList.innerHTML = renderUnused();
 
-    const placed = state.poolA.length + state.poolB.length;
-    drawInfo.textContent = `${placed}/${cachedTeams.length} équipe(s) placée(s).`;
-
-    setDrawButtons();
+    setButtons();
   }
 
-  function setDrawButtons(){
-    const status = currentDraw?.status || "idle";
-    const ready = Array.isArray(currentDraw?.order);
-    const total = Array.isArray(currentDraw?.order) ? currentDraw.order.length : 0;
-    const revealed = Number(currentDraw?.revealed || 0);
+  function setButtons(){
+    const total = cachedTeams.length;
+    const placed = selectedIds().length;
+    const complete = total > 0 && placed === total && unusedTeams().length === 0;
+    const valid = currentDraw?.status === "validated";
 
     btnLoad.disabled = false;
-    btnStart.disabled = !ready || status === "running" || status === "pending_validation" || status === "validated";
-    btnNext.disabled = !(status === "running") || revealed >= total;
-    btnValidate.disabled = !(status === "pending_validation");
+    btnSaveDraft.disabled = !cachedTeams.length;
+    btnValidate.disabled = !complete || valid;
+    btnUnvalidate.disabled = !valid;
     btnReset.disabled = false;
   }
 
-  async function prepareDraw(){
+  function buildDrawPayload(status){
+    cleanManualPools();
+
+    const poolA = manualPools.A.map(findTeam).filter(Boolean);
+    const poolB = manualPools.B.map(findTeam).filter(Boolean);
+
+    const seed1 = poolA[0] || null;
+    const seed2 = poolB[0] || null;
+
+    const order = [
+      ...poolA.slice(seed1 ? 1 : 0).map(t => `A:${t.id}`),
+      ...poolB.slice(seed2 ? 1 : 0).map(t => `B:${t.id}`)
+    ];
+
+    return {
+      eventId:EVENT_ID,
+      categorie:"Seniors",
+      epreuve:currentEpreuve,
+      key:zoneKey(),
+      status,
+      mode:"manual",
+      seed1,
+      seed2,
+      teams:cachedTeams,
+      pools:{
+        A:poolA,
+        B:poolB
+      },
+      order,
+      revealed:order.length,
+      revealedAtMs:order.map(() => Date.now()),
+      updatedAt:serverTimestamp(),
+      updatedBy:auth.currentUser?.uid || null,
+      validatedAt:status === "validated" ? serverTimestamp() : null
+    };
+  }
+
+  async function prepareManual(){
     cachedTeams = await fetchTeams();
 
     if(currentEpreuve !== "DM"){
@@ -751,153 +787,55 @@
     }
 
     if(cachedTeams.length < 3){
-      throw new Error(`Il faut au moins 3 équipes pour faire deux poules. Actuellement : ${cachedTeams.length}.`);
+      throw new Error(`Il faut au moins 3 équipes. Actuellement : ${cachedTeams.length}.`);
     }
 
-    const seed1 = cachedTeams[0] || null;
-    const seed2 = cachedTeams[1] || null;
-    const others = randomShuffle(cachedTeams.slice(2));
+    manualPools = { A:[], B:[] };
 
-    const size = poolSizes();
-    const order = [];
+    if(cachedTeams[0]) manualPools.A.push(cachedTeams[0].id);
+    if(cachedTeams[1]) manualPools.B.push(cachedTeams[1].id);
 
-    let countA = 1;
-    let countB = 1;
-
-    for(const team of others){
-      if(countA < size.A && (countA <= countB || countB >= size.B)){
-        order.push(`A:${team.id}`);
-        countA++;
-      }else{
-        order.push(`B:${team.id}`);
-        countB++;
-      }
-    }
-
-    await setDoc(drawRef(), {
-      eventId:EVENT_ID,
-      categorie:"Seniors",
-      epreuve:currentEpreuve,
-      key:zoneKey(),
-      status:"idle",
-      mode:"draw",
-      seed1,
-      seed2,
-      teams:cachedTeams,
-      order,
-      revealed:0,
-      revealedAtMs:[],
-      createdAt:serverTimestamp(),
-      updatedAt:serverTimestamp(),
-      validatedAt:null,
-      updatedBy:auth.currentUser?.uid || null
-    }, { merge:true });
-
-    wheel.textContent = "—";
-    wheelSub.textContent = "Tirage préparé.";
+    await setDoc(drawRef(), buildDrawPayload("draft"), { merge:true });
   }
 
-  async function startDraw(){
-    const snap = await getDoc(drawRef());
-    const d = snap.exists() ? (snap.data() || {}) : null;
+  async function saveDraft(){
+    if(!cachedTeams.length) return;
 
-    if(!d || !Array.isArray(d.order)){
-      alert("Prépare d’abord le tirage avec “Charger équipes”.");
-      return;
-    }
-
-    await updateDoc(drawRef(), {
-      status:"running",
-      revealed:0,
-      revealedAtMs:[],
-      validatedAt:null,
-      updatedAt:serverTimestamp(),
-      updatedBy:auth.currentUser?.uid || null
-    });
-
-    wheel.textContent = "—";
-    wheelSub.textContent = "Tirage lancé.";
-  }
-
-  async function rouletteSpin(finalText, durationMs = 1200){
-    const start = Date.now();
-    const fake = ["🎾", "🌪️", "🔥", "🍀", "⚡️", "🎲", "🏖️"];
-
-    wheelSub.textContent = "La roulette tourne…";
-
-    return new Promise(resolve => {
-      const tick = () => {
-        const elapsed = Date.now() - start;
-
-        if(elapsed >= durationMs){
-          wheel.textContent = finalText;
-          wheelSub.textContent = "✅ Révélé";
-          resolve();
-          return;
-        }
-
-        wheel.textContent =
-          fake[Math.floor(Math.random() * fake.length)] + " " +
-          fake[Math.floor(Math.random() * fake.length)];
-
-        requestAnimationFrame(tick);
-      };
-
-      tick();
-    });
-  }
-
-  async function nextPick(){
-    if(!currentDraw || currentDraw.status !== "running"){
-      alert("Le tirage n’est pas en cours.");
-      return;
-    }
-
-    const order = Array.isArray(currentDraw.order) ? currentDraw.order : [];
-    const revealed = Number(currentDraw.revealed || 0);
-
-    if(revealed >= order.length){
-      alert("Tout a déjà été tiré.");
-      return;
-    }
-
-    const token = order[revealed];
-
-    await rouletteSpin(tokenLabel(token), 1200);
-
-    const newRevealed = revealed + 1;
-    const revealedAtMs = Array.isArray(currentDraw.revealedAtMs)
-      ? currentDraw.revealedAtMs.slice()
-      : [];
-
-    revealedAtMs.push(Date.now());
-
-    await updateDoc(drawRef(), {
-      revealed:newRevealed,
-      revealedAtMs,
-      updatedAt:serverTimestamp(),
-      updatedBy:auth.currentUser?.uid || null
-    });
-
-    if(newRevealed >= order.length){
-      await updateDoc(drawRef(), {
-        status:"pending_validation",
-        updatedAt:serverTimestamp(),
-        updatedBy:auth.currentUser?.uid || null
-      });
-    }
+    await setDoc(drawRef(), buildDrawPayload("draft"), { merge:true });
   }
 
   async function validateDraw(){
-    const ok = confirm("Valider le tirage Double Messieurs ?");
+    cleanManualPools();
+
+    const total = cachedTeams.length;
+    const placed = selectedIds().length;
+
+    if(!total){
+      alert("Charge d’abord les équipes.");
+      return;
+    }
+
+    if(placed !== total || unusedTeams().length){
+      alert("Toutes les équipes doivent être placées avant validation.");
+      return;
+    }
+
+    if(!manualPools.A.length || !manualPools.B.length){
+      alert("Les deux poules doivent contenir au moins une équipe.");
+      return;
+    }
+
+    const ok = confirm("Valider définitivement ces poules ?");
     if(!ok) return;
 
-    await updateDoc(drawRef(), {
-      status:"validated",
-      validatedAt:serverTimestamp(),
-      updatedAt:serverTimestamp(),
-      updatedBy:auth.currentUser?.uid || null
-    });
+    await setDoc(drawRef(), buildDrawPayload("validated"), { merge:true });
+  }
+
+  async function unvalidateDraw(){
+    const ok = confirm("Repasser le tirage en brouillon ?");
+    if(!ok) return;
+
+    await setDoc(drawRef(), buildDrawPayload("draft"), { merge:true });
   }
 
   async function resetDraw(){
@@ -910,26 +848,26 @@
       return;
     }
 
+    manualPools = { A:[], B:[] };
+
     await setDoc(drawRef(), {
       eventId:EVENT_ID,
       categorie:"Seniors",
       epreuve:currentEpreuve,
       key:zoneKey(),
-      status:"idle",
-      mode:"draw",
+      status:"draft",
+      mode:"manual",
       seed1:null,
       seed2:null,
-      teams:[],
+      teams:cachedTeams,
+      pools:{ A:[], B:[] },
       order:[],
       revealed:0,
       revealedAtMs:[],
-      updatedAt:serverTimestamp(),
       validatedAt:null,
+      updatedAt:serverTimestamp(),
       updatedBy:auth.currentUser?.uid || null
     }, { merge:true });
-
-    wheel.textContent = "—";
-    wheelSub.textContent = "Réinitialisé.";
   }
 
   async function setPublicVisible(value){
@@ -979,6 +917,7 @@
 
     currentDraw = null;
     cachedTeams = [];
+    manualPools = { A:[], B:[] };
 
     if(currentEpreuve === "DD"){
       renderCurrent();
@@ -988,6 +927,11 @@
     unsubDraw = onSnapshot(drawRef(), async (snap) => {
       currentDraw = snap.exists() ? (snap.data() || {}) : null;
       cachedTeams = await fetchTeams();
+
+      if(currentDraw){
+        loadPoolsFromDraw();
+      }
+
       renderCurrent();
     }, (error) => {
       console.error(error);
@@ -997,8 +941,6 @@
 
   async function changeZone(epreuve){
     currentEpreuve = epreuve || currentEpreuve;
-    wheel.textContent = "—";
-    wheelSub.textContent = "—";
 
     if(isAdminReady){
       startDrawListener();
@@ -1011,41 +953,57 @@
     await changeZone(detail.epreuve);
   });
 
-  btnPublicHide.onclick = async () => {
-    await setPublicVisible(false);
-  };
+  panelDraw.addEventListener("change", (event) => {
+    const sel = event.target.closest("select[data-pool]");
+    if(!sel) return;
 
-  btnPublicShow.onclick = async () => {
-    await setPublicVisible(true);
-  };
+    const pool = sel.dataset.pool;
+    const index = Number(sel.dataset.index);
+    const value = sel.value;
+
+    manualPools[pool][index] = value;
+    manualPools[pool] = manualPools[pool].filter(Boolean);
+
+    cleanManualPools();
+    renderDraw();
+  });
+
+  panelDraw.addEventListener("click", (event) => {
+    const btn = event.target.closest("[data-clear]");
+    if(!btn) return;
+
+    const [pool, indexRaw] = String(btn.dataset.clear || "").split(":");
+    const index = Number(indexRaw);
+
+    if(!manualPools[pool]) return;
+
+    manualPools[pool].splice(index, 1);
+    cleanManualPools();
+    renderDraw();
+  });
+
+  btnPublicHide.onclick = () => setPublicVisible(false);
+  btnPublicShow.onclick = () => setPublicVisible(true);
 
   btnLoad.onclick = async () => {
     btnLoad.disabled = true;
     statusEl.textContent = "Chargement des équipes…";
 
     try{
-      await prepareDraw();
+      await prepareManual();
       startDrawListener();
     }catch(error){
       console.error(error);
-      alert("Erreur ❌\n\n" + (error?.message || "Impossible de préparer le tirage."));
+      alert("Erreur ❌\n\n" + (error?.message || "Impossible de charger les équipes."));
     }finally{
       btnLoad.disabled = false;
     }
   };
 
-  btnStart.onclick = async () => {
+  btnSaveDraft.onclick = async () => {
     try{
-      await startDraw();
-    }catch(error){
-      console.error(error);
-      alert("Erreur ❌");
-    }
-  };
-
-  btnNext.onclick = async () => {
-    try{
-      await nextPick();
+      await saveDraft();
+      alert("Brouillon enregistré ✅");
     }catch(error){
       console.error(error);
       alert("Erreur ❌");
@@ -1055,6 +1013,15 @@
   btnValidate.onclick = async () => {
     try{
       await validateDraw();
+    }catch(error){
+      console.error(error);
+      alert("Erreur ❌");
+    }
+  };
+
+  btnUnvalidate.onclick = async () => {
+    try{
+      await unvalidateDraw();
     }catch(error){
       console.error(error);
       alert("Erreur ❌");
